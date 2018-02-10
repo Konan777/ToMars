@@ -1,0 +1,72 @@
+﻿@model ToMars.Model.Models.AnketaModel
+
+@using (Html.BeginForm("SaveAnketa", "Home", FormMethod.Post, new { id = "anketa-edit" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID, new { htmlAttributes = new { @id = "ID" } })
+        @Html.HiddenFor(model => model.FileId, new { htmlAttributes = new { @id = "FileId" } })
+
+        <div class="pad-left">
+            <div class="input-group">
+                @Html.LabelFor(model => model.FIO, htmlAttributes: new { @class = "input-group-addon" })
+                @Html.EditorFor(model => model.FIO, new { htmlAttributes = new { @id="fio", @class = "form-control" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.FIO, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="pad-left">
+            <div class="input-group">
+                @Html.LabelFor(model => model.Birthday, htmlAttributes: new { @class = "input-group-addon"})
+                @Html.TextBoxFor(m => m.Birthday, new { @class = "form-control", @id = "birthday", Value = Model.Birthday.ToString("dd'/'MM'/'yyyy") })
+            </div>
+            @Html.ValidationMessageFor(model => model.Birthday, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="pad-left">
+            <div class="input-group">
+                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "input-group-addon" })
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @id = "email", @class = "form-control" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="pad-left">
+            <div class="input-group">
+                @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "input-group-addon" })
+                @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @id = "phone", @class = "form-control numeric"
+                } })
+            </div>
+            @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+        </div>
+    </div>
+}
+
+
+@Scripts.Render("~/bundles/jqueryval")
+
+
+<script type="text/javascript">
+
+    jQuery(function ($) {
+        $("#birthday").mask("99/99/9999", placeholder = "dd/mm/yyyy");
+        $("#phone").mask("(999) 999-9999");
+    });
+
+    // Валидация даты вида dd/mm/yyyy в unobtrusive.validation
+    jQuery.validator.methods["date"] = function (value, element) {
+        var shortDateFormat = "dd/mm/yy";
+        var res = true;
+        try {
+            $.datepicker.parseDate(shortDateFormat, value);
+        } catch (error) {
+            console.log('invalid date');
+            res = false;
+        }
+        return res;
+    }
+</script>
+
+

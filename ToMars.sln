@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToMars.WPF", "ToMars.WPF\ToMars.WPF.csproj", "{39BCF296-1C15-4108-AF2E-2CFFD7F9E4A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToMars.Tests", "ToMars.Tests\ToMars.Tests.csproj", "{B6DE62E6-C4C5-43AD-8352-06E9BD40C962}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToMars.Model", "ToMars.Model\ToMars.Model.csproj", "{719A2B76-8428-48E4-BC36-7CC754396433}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToMars.Web", "ToMars.Web\ToMars.Web.csproj", "{F2742776-A665-4DDD-A70B-75E6C12B4772}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{39BCF296-1C15-4108-AF2E-2CFFD7F9E4A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39BCF296-1C15-4108-AF2E-2CFFD7F9E4A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39BCF296-1C15-4108-AF2E-2CFFD7F9E4A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39BCF296-1C15-4108-AF2E-2CFFD7F9E4A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6DE62E6-C4C5-43AD-8352-06E9BD40C962}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6DE62E6-C4C5-43AD-8352-06E9BD40C962}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6DE62E6-C4C5-43AD-8352-06E9BD40C962}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6DE62E6-C4C5-43AD-8352-06E9BD40C962}.Release|Any CPU.Build.0 = Release|Any CPU
+		{719A2B76-8428-48E4-BC36-7CC754396433}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{719A2B76-8428-48E4-BC36-7CC754396433}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{719A2B76-8428-48E4-BC36-7CC754396433}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{719A2B76-8428-48E4-BC36-7CC754396433}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2742776-A665-4DDD-A70B-75E6C12B4772}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2742776-A665-4DDD-A70B-75E6C12B4772}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2742776-A665-4DDD-A70B-75E6C12B4772}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2742776-A665-4DDD-A70B-75E6C12B4772}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

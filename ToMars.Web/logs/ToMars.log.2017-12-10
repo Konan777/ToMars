@@ -1,0 +1,44 @@
+﻿2017-12-10 08:35:29,294 [ 9] ERROR File - Could not find file 'C:\Work\ToMars\ToMars.Web\ToMars.ini'.
+System.IO.FileNotFoundException: Could not find file 'C:\Work\ToMars\ToMars.Web\ToMars.ini'.
+File name: 'C:\Work\ToMars\ToMars.Web\ToMars.ini'
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.File.InternalReadAllText(String path, Encoding encoding, Boolean checkHost)
+   at System.IO.File.ReadAllText(String path)
+   at ToMars.Model.Settings.SettingsToFile.Load() in C:\Work\ToMars\ToMars.Model\Settings\SettingKeeper.cs:line 23
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 57
+2017-12-10 08:36:13,033 [ 9] ERROR File - Could not find file 'C:\Work\ToMars\ToMars.Web\ToMars.ini'.
+System.IO.FileNotFoundException: Could not find file 'C:\Work\ToMars\ToMars.Web\ToMars.ini'.
+File name: 'C:\Work\ToMars\ToMars.Web\ToMars.ini'
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.File.InternalReadAllText(String path, Encoding encoding, Boolean checkHost)
+   at System.IO.File.ReadAllText(String path)
+   at ToMars.Model.Settings.SettingsToFile.Load() in C:\Work\ToMars\ToMars.Model\Settings\SettingKeeper.cs:line 23
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 57
+2017-12-10 08:37:03,323 [ 9] ERROR File - Could not find file 'C:\Work\ToMars\ToMars.Web\ToMars.ini'.
+System.IO.FileNotFoundException: Could not find file 'C:\Work\ToMars\ToMars.Web\ToMars.ini'.
+File name: 'C:\Work\ToMars\ToMars.Web\ToMars.ini'
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.File.InternalReadAllText(String path, Encoding encoding, Boolean checkHost)
+   at System.IO.File.ReadAllText(String path)
+   at ToMars.Model.Settings.SettingsToFile.Load() in C:\Work\ToMars\ToMars.Model\Settings\SettingKeeper.cs:line 23
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 57
+2017-12-10 08:37:10,348 [10] ERROR File - Could not find file 'C:\Work\ToMars\ToMars.Web\ToMars.ini'.
+System.IO.FileNotFoundException: Could not find file 'C:\Work\ToMars\ToMars.Web\ToMars.ini'.
+File name: 'C:\Work\ToMars\ToMars.Web\ToMars.ini'
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.File.InternalReadAllText(String path, Encoding encoding, Boolean checkHost)
+   at System.IO.File.ReadAllText(String path)
+   at ToMars.Model.Settings.SettingsToFile.Load() in C:\Work\ToMars\ToMars.Model\Settings\SettingKeeper.cs:line 23
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 57

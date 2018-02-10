@@ -1,0 +1,672 @@
+﻿2017-12-15 08:33:53,958 [ 7] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:34:11,064 [ 9] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:35:18,150 [ 6] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:35:35,137 [ 9] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:35:53,141 [ 6] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:35:58,733 [ 7] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:38:03,672 [ 7] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:38:09,596 [ 6] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:39:25,728 [ 8] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:39:31,303 [ 7] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:47:53,422 [ 6] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:47:59,607 [ 8] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:48:29,401 [ 6] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:48:34,503 [ 7] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:49:04,527 [ 6] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:49:16,050 [ 6] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:51:20,606 [ 8] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:51:28,695 [ 9] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:52:03,436 [ 6] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:52:08,590 [ 7] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:54:23,118 [ 6] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:54:27,802 [ 7] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 08:56:21,757 [ 7] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 09:02:50,575 [ 6] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 09:03:07,659 [ 8] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 09:05:59,377 [ 6] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 09:06:07,029 [ 8] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 09:10:44,582 [ 7] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 09:10:51,279 [ 8] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 09:20:34,554 [ 6] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 09:20:40,262 [ 7] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 09:29:47,367 [ 8] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 09:29:53,591 [ 5] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 09:33:47,432 [ 8] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 09:33:58,743 [ 8] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 09:34:04,219 [ 5] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 09:34:27,261 [ 8] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 18:09:05,337 [ 9] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 18:09:21,226 [11] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 18:09:23,878 [10] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 18:09:25,146 [ 9] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 18:09:27,272 [12] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 18:09:28,546 [11] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 18:09:29,729 [10] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 18:09:31,656 [12] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 18:09:35,177 [10] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 18:09:40,599 [ 9] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 18:09:44,420 [11] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 18:09:46,255 [ 3] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 18:09:54,252 [ 3] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 20:40:47,060 [ 9] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 20:40:54,054 [10] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 20:40:56,809 [11] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 20:41:03,345 [15] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 20:41:09,614 [11] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56
+2017-12-15 20:41:10,994 [11] ERROR File - Unknown type ToMars.Model.Databases.MSSQL_Database
+System.Exception: Unknown type ToMars.Model.Databases.MSSQL_Database
+   at ExtendedXmlSerialization.Cache.TypeDefinitionCache.GetTypeFromName(String typeName)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.GetElementTypeDefinition(XElement element, Type defuaultType)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXmlArray(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.ReadXml(XElement currentNode, TypeDefinition type, Object instance)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize(String xml, Type type)
+   at ExtendedXmlSerialization.ExtendedXmlSerializer.Deserialize[T](String xml)
+   at ToMars.Model.Settings.MarsXmlSerializer.Deserialize(String data) in C:\Work\ToMars\ToMars.Model\Settings\SettingsSerializer.cs:line 22
+   at ToMars.Model.Settings.Setting.Restore() in C:\Work\ToMars\ToMars.Model\Settings\Settings.cs:line 56

@@ -1,0 +1,55 @@
+﻿@using PagedList.Mvc
+@using ToMars.Model.Models;
+
+@model PagedList.IPagedList<ToMars.Model.Entities.Anketa>
+
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <th>
+                <button type="button" id="b-add" class="btn btn-primary butt-fixed">Добавить</button>
+                <button type="button" id="b-del" class="btn btn-primary butt-fixed disabled">Удалить</button>
+                <button type="button" id="b-chg" class="btn btn-primary butt-fixed disabled">Изменить</button>
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr>
+            <th>
+                @Html.ActionLink("ФИО", "Index", null, htmlAttributes: new { data_column="fio" } )
+                @if (@ViewBag.SortModel.GetSort("fio") == "asc") { <span class="glyphicon glyphicon-arrow-up"></span> }
+                @if (@ViewBag.SortModel.GetSort("fio") == "desc") { <span class="glyphicon glyphicon-arrow-down"></span> }
+            </th>
+            <th>
+                @Html.ActionLink("Дата рождения", "Index", null, htmlAttributes: new { data_column = "birthday" })
+                @if (@ViewBag.SortModel.GetSort("birthday") == "asc") { <span class="glyphicon glyphicon-arrow-up"></span> }
+                @if (@ViewBag.SortModel.GetSort("birthday") == "desc") { <span class="glyphicon glyphicon-arrow-down"></span> }
+            </th>
+            <th>
+                @Html.ActionLink("Email", "Index", null, htmlAttributes: new { data_column = "email" })
+                @if (@ViewBag.SortModel.GetSort("email") == "asc") { <span class="glyphicon glyphicon-arrow-up"></span> }
+                @if (@ViewBag.SortModel.GetSort("email") == "desc") { <span class="glyphicon glyphicon-arrow-down"></span> }
+            </th>
+            <th>
+                @Html.ActionLink("Телефон", "Index", null, htmlAttributes: new { data_column = "phone" })
+                @if (@ViewBag.SortModel.GetSort("phone") == "asc") { <span class="glyphicon glyphicon-arrow-up"></span> }
+                @if (@ViewBag.SortModel.GetSort("phone") == "desc") { <span class="glyphicon glyphicon-arrow-down"></span> }
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(m => item.FIO)</td>
+                <td>@item.Birthday.ToString("dd'/'MM'/'yyyy")</td>
+                <td>@Html.DisplayFor(m => item.Email)</td>
+                <td>@Html.DisplayFor(m => item.Phone)</td>
+                <th class="hidden">@item.ID</th>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { fileId= ViewBag.FileId, page }))

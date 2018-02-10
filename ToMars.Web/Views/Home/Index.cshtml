@@ -1,0 +1,497 @@
+﻿@using ToMars.Model.Settings
+
+@model PagedList.IPagedList<ToMars.Model.Entities.Anketa>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container drop-shadow" id="menu">
+    <table id="main">
+        <thead></thead>
+        <tbody>
+            <tr></tr>
+            <tr>
+                <td><button type="button" id="b-select" class="btn btn-primary butt-fixed">Выбрать файл</button></td>
+                <td><button type="button" id="b-deploy" class="btn btn-primary butt-fixed disabled">Выгрузить</button></td>
+                <td>
+                    <div class="input-group">
+                        <span class="input-group-addon">Файл для загрузки</span>
+                        <input id="filename" type="text" class="form-control text-fixed" disabled>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><button type="button" id="b-oneth" class="btn btn-primary butt-fixed disabled">Вставка в один поток</button></td>
+                <td><button type="button" id="b-stop" class="btn btn-primary butt-fixed disabled">Остановить обработку</button></td>
+                <td>
+                    <div class="input-group">
+                        <span class="input-group-addon">Строка соединения</span>
+                        @if (!@ViewBag.WrongConnection) {
+                            <input id="cnnstr" type="text" class="form-control text-fixed" value="@ViewBag.ConnectionString">
+                        } else {
+                            <input id="cnnstr" type="text" class="form-control text-fixed wrong" value="@ViewBag.ConnectionString">
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><button type="button" id="b-multi" class="btn btn-primary butt-fixed disabled">Вставка многопоточно</button></td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle butt-fixed" type="button" data-toggle="dropdown">
+                            Загруженные файлы
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" id="file-list">
+                            @foreach (var item in ViewBag.Files)
+                            {
+                                <li><a href="#" data-value="@item.Value" data-text="@item.Text">@item.Text</a></li>
+                            }
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div class="input-group">
+                        <span id="file-name" class="input-group-addon">Имя файла</span>
+                    </div>
+                </td>
+                <td><button type="button" id="apply" class="btn btn-primary butt-fixed">Применить настройки</button></td>
+                <td><span class="label label-danger hidden-msg">Выполняем...</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<h1></h1>
+
+<div class="container hidden" id="progress-div">
+    <input id="fileupload" type="file" name="files" data-url="/Home/Upload" class="hidden">
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped" style="width:0%" id="progress-bar"></div>
+    </div>
+</div>
+
+<div class="container drop-shadow" id="anketa-list">
+    @if (ViewBag.FileId > 0)
+    {
+        @Html.Partial("AnketaList", Model);
+    }
+</div>
+<div id="message-form" title="Внимание!"></div>
+<div id="edit-form"  title="Редакция данных"></div>
+
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        // Adding popstate event listener to handle browser back button
+        window.addEventListener("popstate",
+            function(e) {
+                $.ajax({
+                    url: location.href,
+                    success: function(result) {
+                        $('#anketa-list').html(result);
+                    }
+                });
+            });
+
+        function ChangeUrl(page, url) {
+            if (typeof (history.pushState) != "undefined") {
+                var obj = { Page: page, Url: url };
+                history.pushState(null, obj.Page, obj.Url);
+            } else {
+                alert("Browser does not support HTML5.");
+            }
+        }
+
+
+        $(function() {
+
+            function ShowAwaiter() {
+                $(".hidden-msg").css({ 'display': 'table-cell' });
+            }
+
+            function HideAwaiter() {
+                $(".hidden-msg").css({ 'display': 'none' });
+            }
+
+            // Кнопка "выбрать файл"
+            $('#b-select').click(function(e) {
+                e.preventDefault();
+
+                // console.log('click fired');
+                var file = $('#fileupload');
+                if (file) {
+                    file.click();
+                }
+            });
+
+            // скрытый элемент type="file"
+            $('#fileupload').change(function(e) {
+                var fileName = $(this).val().split('\\').pop();
+                $('#filename').val(fileName);
+                // console.log('name:' + fileName);
+                var file = $(this)[0].files[0];
+                // console.log(file);
+                upload(file);
+            });
+
+            // Загрузка файла с индикацией прогресса
+            function upload(file) {
+                // console.log('upload');
+                var xhr = new XMLHttpRequest();
+
+                $('#progress-div').removeClass('hidden');
+                $('#progress-bar').css("width", 0)
+
+                // console.log('now:' + $('#progress-bar').attr('aria-valuenow'))
+                // console.log('max:' + $('#progress-bar').attr('aria-valuemax'))
+
+                // обработчик для закачки
+                xhr.upload.onprogress = function(event) {
+                    $('#progress-bar').css("width", Math.round((event.loaded / event.total) * 100).toString() + '%')
+                    $('#progress-bar')
+                        .html('Загружено : ' + (Math.round((event.loaded / event.total) * 100)).toString() + '%');
+                    // console.log(event.loaded + ' / ' + event.total);
+                }
+
+                // обработчики успеха и ошибки
+                xhr.onload = xhr.onerror = function() {
+                    if (this.status == 200) {
+                        // console.log('success');
+                        $('#progress-div').addClass('hidden');
+                        $('#b-oneth').removeClass('disabled')
+                        $('#b-multi').removeClass('disabled')
+                    } else {
+                        // console.log('error ' + this.status);
+                        $('#progress-div').addClass('hidden');
+                    }
+                };
+
+                xhr.open("POST", "/Home/Upload", true);
+
+                // console.log('name:' + file.name);
+
+                xhr.setRequestHeader("Content-Type", "multipart/form-data");
+                xhr.setRequestHeader("X-File-Name", encodeURIComponent(file.name));
+                xhr.setRequestHeader("X-File-Size", file.size);
+                xhr.setRequestHeader("X-File-Type", file.type);
+
+                xhr.send(file);
+
+            }
+
+
+            var selectedFile, selectedPage;
+
+            var btn = $.fn.button.noConflict(); // reverts $.fn.button to jqueryui btn
+
+            function ShowMessage(message) {
+                // console.log(message);
+                $("#message-form").html(message);
+                dialog.dialog("open");
+            }
+
+            // Применение настроек
+            $("#apply").click(function() {
+                var str = $("#cnnstr").val();
+                ShowAwaiter();
+                $.get('/Home/ApplySettings',
+                    { cnnstr: str },
+                    function(rv) {
+                        HideAwaiter();
+                        if (rv.indexOf('успешно') > 0) {
+                            $('#cnnstr').removeClass('wrong');
+                        } else {
+                            $('#cnnstr').addClass('wrong');
+                        }
+                        ShowMessage(rv);
+                    });
+            });
+
+            // Диалог настроек
+            var dialog = $("#message-form").dialog({
+                autoOpen: false,
+                modal: true,
+                show: { effect: "blind", duration: 300 },
+                hide: { effect: "blind", duration: 300 },
+                buttons: {
+                    Ok: function() {
+                        dialog.dialog("close");
+                    }
+                },
+            });
+
+            function LoadAnketas(url) {
+                // console.log('LoadAnketas url:' + url);
+                ShowAwaiter();
+                $.ajax({
+                    async: true,
+                    url: url,
+                    //data: { fileId: selectedFile, page: selectedPage },
+                    success: function(result) {
+                        HideAwaiter();
+                        ChangeUrl('AnketaList', url);
+                        $('#anketa-list').html(result);
+                    }
+                });
+            }
+
+            // Выбор файла
+            $(".dropdown-menu li a").on("click",
+                function(event) {
+                    event.preventDefault();
+                    // console.log('file select');
+                    selectedFile = $(this).data().value;
+                    selectedPage = '';
+                    $("#file-name").text($(this).data().text);
+                    $('#b-deploy').removeClass('disabled');
+                    LoadAnketas('/Home/Index/' + selectedFile + '/-1');
+                });
+
+            // Выбор страницы
+            $('body').on('click',
+                '#anketa-list .pagination a',
+                function(event) {
+                    event.preventDefault();
+                    var url = $(this).attr('href').replace('/?', '&');
+                    selectedPage = url.split('/')[4];
+                    console.log('page select:' + url);
+                    LoadAnketas(url);
+                });
+
+            // Сортировка
+            $('body').on('click',
+                '#anketa-list #myTable thead a',
+                function (event) {
+                    event.preventDefault();
+                    var column = $(this).data('column');
+                    if (event.shiftKey) {
+                        // console.log('shift pressed');
+                        column = 'add_' + column;
+                    }
+                    if (!selectedPage)
+                        selectedPage = 1;
+                    var url = '/Home/Index/' + selectedFile + '/' + selectedPage + '/' + column;
+                    console.log('url:' + url);
+                    LoadAnketas(url);
+                });
+
+            // Выбор записи
+            $('#anketa-list').on('click', 'table tbody tr', function() {
+                    event.preventDefault();
+                    // console.log('table click');
+                    if ($(this).hasClass('bg-primary')) {
+                        $(this).removeClass('bg-primary');
+                        $('#b-del').addClass('disabled');
+                        $('#b-chg').addClass('disabled');
+                    } else {
+                        $('#myTable tr.bg-primary').removeClass('bg-primary');
+                        $(this).addClass('bg-primary');
+                        $('#b-del').removeClass('disabled');
+                        $('#b-chg').removeClass('disabled');
+                    }
+                });
+
+            // Добавить
+            $('body').on('click',
+                '#b-add',
+                function(event) {
+                    event.preventDefault();
+                    // console.log('add click');
+                    EditAnketa(0);
+                });
+
+            // Удалить
+            $('body').on('click',
+                '#b-del',
+                function(event) {
+                    event.preventDefault();
+                    if (!$('#b-del').hasClass('disabled')) {
+                        var id = $('#myTable tbody tr.bg-primary th.hidden').html();
+                        // console.log('del click on id:' + id);
+                        RemoveAnketa(id);
+                    }
+                });
+
+            // Изменить
+            $('body').on('click',
+                '#b-chg',
+                function(event) {
+                    event.preventDefault();
+                    if (!$('#b-chg').hasClass('disabled')) {
+                        var id = $('#myTable tbody tr.bg-primary th.hidden').html();
+                        // console.log('chg click on id:' + id);
+                        EditAnketa(id);
+                    }
+                });
+
+            // Ловим все ошибки ajax
+            $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
+                event.stopPropagation();
+                // console.log('jqxhr.responseText:' + jqxhr.responseText);
+                if (jqxhr != null)
+                    window.location.href = '/Error/AjaxError?exception=' + jqxhr.responseText;
+            });
+
+            // Редакция
+            function EditAnketa(id) {
+                ShowAwaiter();
+                // console.log('selectedFile:' + selectedFile+", id:"+id);
+                $.ajax({
+                    url: "/Home/EditAnketa",
+                    type: "POST",
+                    data: { FileID: selectedFile, ID: id }
+                }).done(function(obj) {
+                    // console.log('EditAnketa done');
+                    HideAwaiter();
+                    $('#edit-form').html(obj);
+                    $('#edit-form').dialog("open");
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    // needs to implement if it fails
+                    // console.log('EditAnketa fail:');
+                    HideAwaiter();
+                });
+            }
+
+            // Диалог редакции данных
+            var edit = $("#edit-form").dialog({
+                autoOpen: false,
+                modal: true,
+                resizable: false,
+                width: 480,
+                height: 330,
+                show: { effect: "blind", duration: 300 },
+                hide: { effect: "clip", duration: 300 },
+                buttons: [
+                    {
+                        text: "Отменить",
+                        click: function() {
+                            edit.dialog("close");
+                        }
+                    }, {
+                        text: "Сохранить",
+                        click: function() {
+                            SaveAnketa();
+                        }
+                    }
+                ]
+            });
+
+            function SaveAnketa(ank) {
+                if (!$('form').valid()) {
+                    return;
+                }
+                ShowAwaiter();
+                $.post({
+                    url: '/Home/SaveAnketa',
+                    data: $('#anketa-edit').serialize(),
+                    success: function (res) {
+                        LoadAnketas('/Home/Index/' + selectedFile +'/'+ selectedPage);
+                        HideAwaiter();
+                        edit.dialog("close");
+                    }
+                });
+            }
+
+            function RemoveAnketa(id) {
+                // Отправляем данные на сервер
+                ShowAwaiter();
+                $.ajax({
+                    url: "/Home/RemoveAnketa",
+                    type: "POST",
+                    data: { ID: id }
+                }).done(function(obj) {
+                    // console.log('delete done');
+                    LoadAnketas('/Home/Index/' + selectedFile +'/'+ selectedPage);
+                    HideAwaiter();
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    // needs to implement if it fails
+                    // console.log('delete fail');
+                    HideAwaiter();
+                });
+            }
+
+
+            // { SignalR + обработка файлов
+            var progress = $.connection.progressHub;
+            var connectionId
+
+            $.connection.hub.start().done(function () {
+                connectionId = $.connection.hub.id;
+                // console.log(connectionId);
+            });
+
+            progress.client.addProgress = function (current, total) {
+                if (current < total) {
+                    $('#progress-div').removeClass('hidden');
+                }
+                $('#progress-bar').css("width", Math.round((current / total) * 100).toString() + '%')
+                $('#progress-bar').html('Загружено : ' + (Math.round((current / total) * 100)).toString() + '%');
+            };
+
+            progress.client.ShowMessage = function (message) {
+                // console.log('ShowMessage:'+message);
+                ShowMessage(message);
+            };
+
+            progress.client.hideProgress = function () {
+                // console.log('hideProgress');
+                $('#progress-div').addClass('hidden');
+                $('#b-stop').addClass('disabled');
+            };
+
+
+            progress.client.parsingCompleted = function (fileId) {
+                var file = $('#filename').val();
+                //console.log('parsingCompleted:'+file);
+                progress.client.hideProgress();
+                progress.client.ShowMessage('Обработка завершена!');
+                selectedFile = fileId;
+                $('#file-name').text(file);
+                $('#file-list').append('<li><a href="#" data-value=' + fileId + ' data-text="' + file + '">'+file+'</a></li>');
+                LoadAnketas('/Home/Index/' + fileId + '/-1');
+            };
+            // } SignalR + обработка файлов
+
+			// Остановить
+            $('#b-stop').click(function (event) {
+                event.preventDefault();
+                // console.log('stop clicked');
+                $.post({
+                    url: '/Home/StopParsing',
+                    data: { connectionID: connectionId },
+                });
+            });
+			// В один поток
+            $('#b-oneth').click(function (event) {
+                event.preventDefault();
+                $('#b-stop').removeClass('disabled')
+                $.post({
+                    url: '/Home/ParseSingleThread',
+                    data: { connectionID: connectionId }
+                });
+            });
+
+			// Многопоточно
+            $('#b-multi').click(function (event) {
+                event.preventDefault();
+                $('#b-stop').removeClass('disabled')
+                $.post({
+                    url: '/Home/ParseMultithread',
+                    data: { connectionID: connectionId }
+                });
+            });
+
+			// Выгрузить
+            $('#b-deploy').click(function (event) {
+                event.preventDefault();
+                // console.log('deploy clicked');
+                window.location.href = '/Home/DeployAnketa?fileId=' + selectedFile;
+            });
+
+        });
+
+    </script>
+}    

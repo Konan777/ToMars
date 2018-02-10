@@ -1,0 +1,9 @@
+﻿2017-12-21 16:51:22,554 [ 9] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-21 16:51:22,759 [ 6] INFO  File - 
+   Email Неверный EMail
+   At line:Соколова Марина Юрьевна	06.04.1982	qznfnghkzn.hlf	1828104217
+2017-12-21 16:51:22,931 [ 6] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-21 16:51:38,493 [ 6] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-21 16:51:55,598 [ 6] INFO  File - Writing done.

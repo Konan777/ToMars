@@ -1,0 +1,157 @@
+﻿2017-12-18 11:00:13,264 [ 9] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 11:00:13,435 [ 8] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 11:00:29,027 [ 8] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-18 11:00:38,476 [ 8] INFO  File - Writing done.
+2017-12-18 11:03:54,625 [ 6] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 11:03:54,755 [ 8] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 11:04:10,261 [ 8] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-18 11:04:20,910 [ 8] INFO  File - Writing done.
+2017-12-18 11:14:08,950 [ 8] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 11:14:09,075 [ 5] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 11:14:24,599 [ 5] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-18 11:14:35,848 [ 9] INFO  File - Writing done.
+2017-12-18 11:15:44,451 [ 7] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 11:15:52,968 [10] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 11:19:17,680 [ 8] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 11:19:17,813 [ 7] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 11:19:54,482 [ 6] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 11:19:54,613 [ 9] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 11:22:07,448 [ 9] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 11:22:07,581 [ 7] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 11:29:18,938 [ 8] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 11:29:19,072 [ 9] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 11:40:45,256 [ 9] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 11:40:45,381 [ 8] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 11:41:00,906 [ 8] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-18 11:41:09,724 [ 8] INFO  File - Writing done.
+2017-12-18 11:49:41,966 [10] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 11:49:42,119 [ 9] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 11:49:57,691 [ 9] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-18 11:50:06,471 [ 8] INFO  File - Writing done.
+2017-12-18 11:53:06,680 [ 8] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 11:53:06,824 [ 9] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 11:56:35,123 [ 8] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 11:56:35,258 [ 9] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 15:35:44,683 [10] INFO  File - Begin parding of file: Анкета_001.csv
+2017-12-18 15:35:45,109 [ 8] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-18 15:35:45,614 [10] INFO  File - Writing done.
+2017-12-18 16:03:42,692 [ 9] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 16:03:42,902 [10] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 16:04:57,609 [ 6] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 16:04:57,708 [ 7] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 16:05:13,239 [ 7] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-18 16:05:22,955 [15] INFO  File - Writing done.
+2017-12-18 16:08:10,012 [ 9] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 16:08:10,134 [ 8] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 16:08:25,635 [ 8] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-18 16:08:34,899 [ 8] INFO  File - Writing done.
+2017-12-18 16:13:56,073 [ 9] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 16:13:56,173 [10] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 16:14:11,724 [10] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-18 16:14:20,354 [11] INFO  File - Writing done.
+2017-12-18 16:16:26,545 [ 7] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 16:16:26,623 [ 9] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 16:16:42,241 [ 9] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-18 16:16:51,348 [ 9] INFO  File - Writing done.
+2017-12-18 16:29:32,949 [10] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 16:29:33,068 [ 7] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 16:29:48,640 [ 7] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-18 16:29:57,542 [ 7] INFO  File - Writing done.
+2017-12-18 16:32:59,934 [ 9] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 16:33:00,026 [ 8] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 16:34:51,932 [10] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 16:34:52,031 [ 9] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 16:35:07,646 [ 9] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-18 16:35:15,758 [ 6] INFO  File - Writing done.
+2017-12-18 16:57:44,122 [ 8] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 16:57:51,937 [10] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 16:57:53,061 [24] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-18 16:58:01,990 [10] INFO  File - Writing done.
+2017-12-18 16:58:49,030 [10] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 16:58:49,155 [ 8] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 17:00:09,960 [ 8] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 17:00:10,148 [ 6] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 17:00:27,763 [12] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 17:00:27,800 [ 6] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 17:01:15,322 [ 8] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 17:01:15,509 [ 9] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 17:02:07,869 [ 8] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 17:02:07,962 [ 9] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 17:03:05,259 [13] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 17:03:05,309 [ 8] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 17:07:59,119 [ 6] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 17:07:59,323 [ 9] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 17:08:43,663 [ 9] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 17:08:43,801 [ 7] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 17:11:39,751 [11] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 17:11:39,847 [ 5] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 17:21:03,672 [ 9] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 17:21:03,769 [ 7] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 17:21:12,778 [ 6] INFO  File - Begin parding of file: Анкета_000.csv
+2017-12-18 17:21:12,855 [ 7] INFO  File - 
+   String was not recognized as a valid DateTime.
+   At line:Васильева Наталья Васильевна	15.13.1995	nqxdp@vlngn.vua	1939221649
+2017-12-18 17:21:14,293 [13] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-18 17:21:22,858 [ 7] INFO  File - Writing done.

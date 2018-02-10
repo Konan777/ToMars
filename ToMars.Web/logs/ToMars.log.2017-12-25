@@ -1,0 +1,6 @@
+﻿2017-12-25 08:45:49,419 [ 8] INFO  File - Begin parding of file: Анкета_001.csv
+2017-12-25 08:45:49,797 [10] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-25 08:45:50,491 [10] INFO  File - Writing done.
+2017-12-25 14:00:33,233 [ 8] INFO  File - Begin parding of file: Анкета_002.csv
+2017-12-25 14:00:33,855 [12] INFO  File - Parsing is done. Writing parsed data to database
+2017-12-25 14:00:34,664 [12] INFO  File - Writing done.
