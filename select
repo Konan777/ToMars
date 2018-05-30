@@ -1,0 +1,11 @@
+-- Используем оконные функции для поиска комментария со старшей ChangeDate
+select mix.[TestResultId]
+,FIRST_VALUE(mix.[Comment]) OVER(PARTITION BY mix.[TestResultId] order by mix.[ChangeDate] desc) as [Comment]
+from (
+	-- Джойним три таблицы в поисках всех комментариев
+	select tr.[TestResultId], trh.[TestResultHistoryID], trh.[ChangeDate], trc.[Comment]
+	from [TestResult] tr
+	inner join [TestResultHistory] as trh on trh.TestResultId=tr.TestResultId
+	left outer join [TestResultHistoryComment] as trc on trc.TestResultHistoryId=trh.TestResultHistoryId
+	where trc.[Comment] is not null
+) as mix
