@@ -9,3 +9,30 @@ from (
 	left outer join [TestResultHistoryComment] as trc on trc.TestResultHistoryId=trh.TestResultHistoryId
 	where trc.[Comment] is not null
 ) as mix
+
+select * FROM [SampleTech]
+INNER JOIN [SampleTechTest] ON [SampleTech].[SampleTechId] = [SampleTechTest].[SampleTechId]
+INNER JOIN [TestResult] ON [SampleTechTest].[SampleTechTestId] = [TestResult].[SampleTechTestId]
+where [TestResult].[TestResultId]='6237A3F0-B30B-4E71-A1E4-0001994AFFAD'
+
+-- { KVT 30.05.18
+-- таблица с комментами для [TestResult]
+declare @TRH_LastComment as table (
+	TestResultId uniqueidentifier
+	,[Comment] nvarchar(255)
+);
+insert into @TRH_LastComment
+	-- Используем оконные функции для поиска комментария со старшей ChangeDate
+	select distinct mix.[TestResultId]
+	,FIRST_VALUE(mix.[Comment]) OVER(PARTITION BY mix.[TestResultId] order by mix.[ChangeDate] desc) as [Comment]
+	from (
+		-- Джойним три таблицы в поисках всех комментариев
+		select tr.[TestResultId], trh.[TestResultHistoryID], trh.[ChangeDate], trc.[Comment]
+		from [TestResult] tr
+		inner join [TestResultHistory] as trh on trh.TestResultId=tr.TestResultId
+		left outer join [TestResultHistoryComment] as trc on trc.TestResultHistoryId=trh.TestResultHistoryId
+		where trc.[Comment] is not null 
+	) as mix
+-- } KVT 30.05.18
+, TLC.Comment -- KVT 30.05.18
+left outer join @TRH_LastComment TLC on TLC.TestResultId = [TestResult].TestResultId -- KVT 30.05.18
