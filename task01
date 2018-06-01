@@ -17,3 +17,10 @@ TestResultHistoryComment Комментарий к записи истории �
 Добавить новое поле
 Добавить данные в таблицу
 Снова вызвать печать этикетки
+
+select tr.TestResultId, stt.SampleTechTestId, st.SampleTechId, s.*
+from [TestResult] tr
+inner join [SampleTechTest] stt on stt.SampleTechTestId=tr.SampleTechTestId
+inner join [SampleTech] st on st.SampleTechId=stt.SampleTechId
+inner join [Sample] s on s.SampleId=st.SampleId
+where TestResultId='6237A3F0-B30B-4E71-A1E4-0001994AFFAD'
