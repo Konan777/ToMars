@@ -15,3 +15,27 @@ RETURN
 GO
 
 select * from [dbo].[fun_test_tabl](Cast('01.01.2016' as datetime))
+
+выходит последняя запись о проверке оборудования, а не соответствующая дате выполнения анализа.
+
+Выбирать на ту же дату, что и в образце
+
+Данные в протокол при вызове метода SRDataProvider.Instance.GetEqp(sampleTechTestUids.ToArray()) в методе FillData(IWin32Window owner, bool requestParameters) класса BaseSRTFormDataSet
+Данные по проверкам оборудования при вызове метода SRDataProvider.Instance.EqpDataService.GetEqpCheckLogsWithCheckType(eqpUids.ToArray());
+
+Дата выполнения анализа это где?
+
+Таблицы: 
+Eqp 			- оборудование, 
+EqpCheck 		- проверки оборудования
+ArchMsgSamples 	- ArchMsgSamples
+Sample 		   	- образец
+EqpObj 			- Базовый объект оборудования
+EqpState 		- Состояния оборудования
+EqpCheckLog 	- Журнал проверок оборудования
+ - CheckDate Дата проверки
+ - NextDate Дата следующей проверки
+ - DocDate Дата документа
+EqpCheckType 	- Типы проверок оборудования
+EqpTypeTest 	- Определяемые харктеристики типа оборудования
+EqpTestLimit 	- Предел определяемой характеристики оборудования
