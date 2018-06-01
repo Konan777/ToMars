@@ -19,11 +19,25 @@ select * from [dbo].[fun_test_tabl](Cast('01.01.2016' as datetime))
 выходит последняя запись о проверке оборудования, а не соответствующая дате выполнения анализа.
 
 Выбирать на ту же дату, что и в образце
-
-Данные в протокол при вызове метода SRDataProvider.Instance.GetEqp(sampleTechTestUids.ToArray()) в методе FillData(IWin32Window owner, bool requestParameters) класса BaseSRTFormDataSet
-Данные по проверкам оборудования при вызове метода SRDataProvider.Instance.EqpDataService.GetEqpCheckLogsWithCheckType(eqpUids.ToArray());
-
+Выбирать дату о проверке оборудования на дату _выполнения анализа_
 Дата выполнения анализа это где?
+
+1) Данные в протокол при вызове метода SRDataProvider.Instance.GetEqp(sampleTechTestUids.ToArray()) в методе FillData(IWin32Window owner, bool requestParameters) класса BaseSRTFormDataSet
+ - c:\temp\indus\source\indusoft.lds.client.sr\data\srdataprovider.cs -> GetEqp
+   - srDataService.GetEqpBySampleTechTest(sampleTechTestUids)
+ - C:\Temp\Indus\Source\Indusoft.LDS.Server.Services.SR\SRDataService.cs -> GetEqpBySampleTechTest
+   - result = dbm.SetCommand(string.Format(@"SELECT * FROM v_Eqp, SampleTechTestEqp 
+     where v_Eqp.EqpUid=SampleTechTestEqp.EqpUid and SampleTechTestEqp.SampleTechTestUid in ({0})", ids)).ExecuteList<Eqp>();
+ 
+2) Данные по проверкам оборудования при вызове метода SRDataProvider.Instance.EqpDataService.GetEqpCheckLogsWithCheckType(eqpUids.ToArray());
+ - Сгребет данные по EqpUid из шага 1
+ - c:\temp\indus\source\indusoft.lds.server.services.eqp\eqpdataservice.cs -> GetEqpCheckLogsWithCheckType
+   - SELECT t.*, dbo.EqpCheckType.Name AS EqpCheckTypeName 
+	 FROM (SELECT * FROM [dbo].[EqpCheckLog_Get_ALL](@eqpUid, NULL, NULL)) t
+     	INNER JOIN EqpCheck ON t.EqpCheckUid = EqpCheck.EqpCheckUid
+        INNER JOIN EqpCheckType ON EqpCheck.EqpCheckTypeUid = EqpCheckType.EqpCheckTypeUid
+        ORDER BY [CheckDate]"
+
 
 Таблицы: 
 Eqp 			- оборудование, 
@@ -39,3 +53,4 @@ EqpCheckLog 	- Журнал проверок оборудования
 EqpCheckType 	- Типы проверок оборудования
 EqpTypeTest 	- Определяемые харктеристики типа оборудования
 EqpTestLimit 	- Предел определяемой характеристики оборудования
+
