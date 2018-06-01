@@ -24,3 +24,23 @@ inner join [SampleTechTest] stt on stt.SampleTechTestId=tr.SampleTechTestId
 inner join [SampleTech] st on st.SampleTechId=stt.SampleTechId
 inner join [Sample] s on s.SampleId=st.SampleId
 where TestResultId='6237A3F0-B30B-4E71-A1E4-0001994AFFAD'
+
+	select distinct mix.[TestResultId]
+	,FIRST_VALUE(mix.[Comment]) OVER (PARTITION BY mix.[TestResultId] order by mix.[ChangeDate] desc) as [Comment]
+	from (
+		select tr.[TestResultId], trh.[ChangeDate], trc.[Comment]
+		from [TestResult] tr
+		inner join [TestResultHistory] as trh on trh.TestResultId=tr.TestResultId
+		inner join [TestResultHistoryComment] as trc on trc.TestResultHistoryId=trh.TestResultHistoryId
+	) as mix		
+
+	select mix.[TestResultId], trc.[Comment] from (
+		select tr.[TestResultId], max(trh.[ChangeDate]) as [ChangeDate]
+		from [TestResult] tr
+		inner join [TestResultHistory] as trh on trh.TestResultId=tr.TestResultId
+		inner join [TestResultHistoryComment] as trc on trc.TestResultHistoryId=trh.TestResultHistoryId
+		group by tr.[TestResultId]
+	) as mix
+	inner join [TestResultHistory] as trh on trh.TestResultId=mix.TestResultId
+	inner join [TestResultHistoryComment] as trc on trc.TestResultHistoryId=trh.TestResultHistoryId 
+	where trh.[ChangeDate]=mix.[ChangeDate]
