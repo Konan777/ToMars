@@ -1,0 +1,17 @@
+use [I-LDS_2]
+go
+drop function [dbo].[fun_test_tabl]  
+go
+CREATE FUNCTION [dbo].[fun_test_tabl]  
+(	
+	@date datetime
+)
+RETURNS TABLE 
+AS
+RETURN 
+(
+	SELECT * from v_Eqp where DocDate>=@date
+)
+GO
+
+select * from [dbo].[fun_test_tabl](Cast('01.01.2016' as datetime))
