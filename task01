@@ -1,46 +1,49 @@
-Задания->1. Задания->Продукт, правый клик -> Печать->Образцы->Этикетка
+-- список журналов проверок оборудования, с тестированием образца
+select ecl.EqpCheckUid, 
+CONVERT(varchar,ecl.DocDate  ,104)+' '+CONVERT(varchar,ecl.DocDate  ,108) as DocDate,
+CONVERT(varchar,ecl.CheckDate  ,104)+' '+CONVERT(varchar,ecl.CheckDate  ,108) as CheckDate,
+ecl.Doc
+from Eqp 
+inner join EqpCheckLog ecl on ecl.EqpUid=Eqp.EqpUid
+LEFT JOIN [EqpCheck] ec ON ec.[EqpCheckUid] = ecl.[EqpCheckUid]
+where exists(
+	select * from SampleTechTestEqp stt where stt.EqpUid=Eqp.EqpUid
+)
+and ecl.EqpCheckUid='CFC4F3B2-F389-4FF5-8C10-CD946DB010B3'
+order by ecl.EqpCheckUid, ecl.DocDate desc
 
-SampleTech 		- Методика образца
-SampleTechTest 	- Показатель образца
-TestResult		- Результат измерений показателя
-TestResultAnalog- Измерение аналогового показателя
-TestResultHistory История изменения рузультата измерений показателя образца
-TestResultHistoryComment Комментарий к записи истории изменения рузльтат измерений показателя
+-- Находим образец проверенные с помощью оборудования
+-- Три первые колонки для поиска образца
+-- SampleTechTestUid для выборки выше
+select distinct sm.SampleId, sm.code, 
+CONVERT(varchar,sm.CreationDate,104)+' '+CONVERT(varchar,sm.CreationDate,108) as CreationDate,
+mix.SampleTechTestUid from (
+select stt.SampleTechTestEqpUid, stt.SampleTechTestUid  from Eqp 
+inner join EqpCheckLog ecl on ecl.EqpUid=Eqp.EqpUid
+LEFT JOIN [EqpCheck] ec ON ec.[EqpCheckUid] = ecl.[EqpCheckUid]
+left join SampleTechTestEqp stt on stt.EqpUid=Eqp.EqpUid
+where ecl.EqpCheckUid='CFC4F3B2-F389-4FF5-8C10-CD946DB010B3' and stt.SampleTechTestEqpUid is not null
+) mix
+inner join SampleTechTest stt on stt.SampleTechTestId=mix.SampleTechTestUid
+inner join SampleTech st on stt.SampleTechId=st.SampleTechId
+inner join [Sample] sm on sm.SampleId=st.SampleId
+order by CreationDate
 
-[TestResult]->[TestResultHistory]->[TestResultHistoryComment]=Результат измерений показателя+История изменения+Коммент
-[TestResult]->[SampleTechTest]->[SampleTech]=Результат измерений показателя+Показатель образца+Методика образца
+-- Проверяем что вернет v_Eqp для нашего случая
+SELECT v_Eqp.EqpUid, v_Eqp.NextDate, v_Eqp.Doc, 
+CONVERT(varchar,v_Eqp.DocDate,104)+' '+CONVERT(varchar,v_Eqp.DocDate,108) as DocDate
+FROM v_Eqp, SampleTechTestEqp where v_Eqp.EqpUid=SampleTechTestEqp.EqpUid and SampleTechTestEqp.SampleTechTestUid in (
+	select distinct  mix.SampleTechTestUid from (
+	select stt.SampleTechTestEqpUid, stt.SampleTechTestUid  from Eqp 
+	inner join EqpCheckLog ecl on ecl.EqpUid=Eqp.EqpUid
+	LEFT JOIN [EqpCheck] ec ON ec.[EqpCheckUid] = ecl.[EqpCheckUid]
+	left join SampleTechTestEqp stt on stt.EqpUid=Eqp.EqpUid
+	--where ecl.EqpCheckUid='CFC4F3B2-F389-4FF5-8C10-CD946DB010B3' and stt.SampleTechTestEqpUid is not null
+	where stt.SampleTechTestEqpUid is not null
+	) mix
+	inner join SampleTechTest stt on stt.SampleTechTestId=mix.SampleTechTestUid
+	inner join SampleTech st on stt.SampleTechId=st.SampleTechId
+	inner join [Sample] sm on sm.SampleId=st.SampleId
+	where mix.SampleTechTestUid='4B0BCA2E-2C66-41F4-B211-64B0B1778564'
+) and v_Eqp.Doc is not null
 
-
-Нужно создать или найти задание на тестирование показателя образца
-Затем сделать для образца этикетку
-Посмотреть ее на печати
-Добавить новое поле
-Добавить данные в таблицу
-Снова вызвать печать этикетки
-
-select tr.TestResultId, stt.SampleTechTestId, st.SampleTechId, s.*
-from [TestResult] tr
-inner join [SampleTechTest] stt on stt.SampleTechTestId=tr.SampleTechTestId
-inner join [SampleTech] st on st.SampleTechId=stt.SampleTechId
-inner join [Sample] s on s.SampleId=st.SampleId
-where TestResultId='6237A3F0-B30B-4E71-A1E4-0001994AFFAD'
-
-	select distinct mix.[TestResultId]
-	,FIRST_VALUE(mix.[Comment]) OVER (PARTITION BY mix.[TestResultId] order by mix.[ChangeDate] desc) as [Comment]
-	from (
-		select tr.[TestResultId], trh.[ChangeDate], trc.[Comment]
-		from [TestResult] tr
-		inner join [TestResultHistory] as trh on trh.TestResultId=tr.TestResultId
-		inner join [TestResultHistoryComment] as trc on trc.TestResultHistoryId=trh.TestResultHistoryId
-	) as mix		
-
-	select mix.[TestResultId], trc.[Comment] from (
-		select tr.[TestResultId], max(trh.[ChangeDate]) as [ChangeDate]
-		from [TestResult] tr
-		inner join [TestResultHistory] as trh on trh.TestResultId=tr.TestResultId
-		inner join [TestResultHistoryComment] as trc on trc.TestResultHistoryId=trh.TestResultHistoryId
-		group by tr.[TestResultId]
-	) as mix
-	inner join [TestResultHistory] as trh on trh.TestResultId=mix.TestResultId
-	inner join [TestResultHistoryComment] as trc on trc.TestResultHistoryId=trh.TestResultHistoryId 
-	where trh.[ChangeDate]=mix.[ChangeDate]
