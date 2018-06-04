@@ -166,12 +166,24 @@ FROM [Eqp]
 INNER JOIN [EqpObj] ON [Eqp].[EqpUid] = [EqpObj].[EqpObjUid]
 INNER JOIN [v_EqpType] ON [Eqp].[EqpTypeUid] = [v_EqpType].[EqpTypeUid]
 INNER JOIN [EqpState] ON [Eqp].[EqpStateId] = [EqpState].[EqpStateId]
+/*
+LEFT JOIN (
+	SELECT [ca].* FROM (
+		SELECT EqpUid, MIN(NextDate) AS nextdate
+		FROM [dbo].[EqpCheckLog]
+		WHERE NextDate > GETDATE()
+		GROUP BY EqpUid
+	) AS [MaxDates] CROSS APPLY (
+		SELECT TOP 1 * FROM [dbo].[EqpCheckLog]
+		WHERE dbo.EqpCheckLog.EqpUid = [MaxDates].EqpUid
+		AND EqpCheckLog.NextDate = [MaxDates].nextdate) AS [ca]
+) AS [CheckLog] ON [CheckLog].[EqpUid] = [dbo].[Eqp].EqpUid
+*/
 LEFT JOIN (
 	-- Найдем действующую на дату образца запись в журнале проверок оборудования
-	select distinct ECL.*
+	select top 1 ECL.*
 	from [dbo].[SampleTechTestEqp] STTE
-	inner join [dbo].[Eqp] EPQ on EPQ.[EqpUid]=STTE.EqpUid
-	inner join [dbo].[EqpCheckLog] ECL on ECL.EqpUid=EPQ.EqpUid
+	inner join [dbo].[EqpCheckLog] ECL on ECL.EqpUid=STTE.EqpUid
 	inner join (
 		-- Найдем дату образца
 		select distinct STTE.SampleTechTestUid, SM.CreationDate, SM.SampleId
@@ -189,6 +201,7 @@ LEFT JOIN (
 ) AS [CheckLog] ON [CheckLog].[EqpUid] = Eqp.EqpUid
 LEFT JOIN [dbo].[EqpCheck] ON [EqpCheck].[EqpCheckUid] = [CheckLog].[EqpCheckUid]
 LEFT JOIN [dbo].[EqpCheckType] ON [EqpCheckType].[EqpCheckTypeUid] = [EqpCheck].[EqpCheckTypeUid]
+
 inner join SampleTechTestEqp stte on stte.EqpUid=Eqp.EqpUid and stte.SampleTechTestUid=@sampleTechTestUid
 
 
@@ -212,8 +225,7 @@ select * from [dbo].[EqpOnSampleDate](cast('82D582F8-05C5-423A-99DB-02F9584E0BE5
 	CONVERT(varchar,NextDate  ,104)+' '+CONVERT(varchar,NextDate  ,108) as NextDate,
 	ECL.*
 	from [dbo].[SampleTechTestEqp] STTE
-	inner join [dbo].[Eqp] EPQ on EPQ.[EqpUid]=STTE.EqpUid
-	inner join [dbo].[EqpCheckLog] ECL on ECL.EqpUid=EPQ.EqpUid
+	inner join [dbo].[EqpCheckLog] ECL on ECL.EqpUid=STTE.EqpUid
 	inner join (
 		-- Найдем дату образца (13.06.2017)
 		select distinct STTE.SampleTechTestUid, SM.CreationDate, SM.SampleId
@@ -231,8 +243,7 @@ select * from [dbo].[EqpOnSampleDate](cast('82D582F8-05C5-423A-99DB-02F9584E0BE5
 
 
 
-	select * from [dbo].[SampleTechTestEqp] STTE
-	--inner join [dbo].[Eqp] EPQ on EPQ.[EqpUid]=STTE.EqpUid
-	--inner join [dbo].[EqpCheckLog] ECL on ECL.EqpUid=EPQ.EqpUid
+	select * from [dbo].[SampleTechTestEqp] as STTE
+	inner join [dbo].[EqpCheckLog] ECL on ECL.EqpUid=STTE.EqpUid
 	where STTE.SampleTechTestUid = cast('82D582F8-05C5-423A-99DB-02F9584E0BE5' as uniqueidentifier)
-		and STTE.EqpUid=
+		
