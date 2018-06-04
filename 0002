@@ -1,0 +1,27 @@
+-- Проверяем что вернет v_Eqp для нашего случая, или берем все оборудование по которому есть образцы
+SELECT distinct v_Eqp.EqpUid, SampleTechTestEqp.SampleTechTestUid
+,v_Eqp.Doc, 
+CONVERT(varchar,v_Eqp.DocDate,104)+' '+CONVERT(varchar,v_Eqp.DocDate,108) as DocDate,
+CONVERT(varchar,v_Eqp.NextDate,104)+' '+CONVERT(varchar,v_Eqp.NextDate,108) as DocDate
+FROM v_Eqp
+inner join SampleTechTestEqp on v_Eqp.EqpUid=SampleTechTestEqp.EqpUid 
+	and NextDate is not null
+	and SampleTechTestEqpUid in (
+		--select s.SampleId, s.ReceiveDate, stte.EqpUid, stte.SampleTechTestEqpUid  
+		select stte.SampleTechTestEqpUid  
+		from sample s
+		inner join SampleTech st on st.SampleId=s.SampleId
+		inner join SampleTechTest stt on stt.SampleTechId=st.SampleTechId
+		inner join SampleTechTestEqp stte on stte.SampleTechTestUid=stt.SampleTechTestId
+	)
+where SampleTechTestEqp.SampleTechTestUid='82D582F8-05C5-423A-99DB-02F9584E0BE5'
+
+		select s.*
+		from sample s
+		inner join SampleTech st on st.SampleId=s.SampleId
+		inner join SampleTechTest stt on stt.SampleTechId=st.SampleTechId
+		inner join SampleTechTestEqp stte on stte.SampleTechTestUid=stt.SampleTechTestId
+		where stte.SampleTechTestUid='82D582F8-05C5-423A-99DB-02F9584E0BE5'
+
+		SELECT * FROM v_Eqp, SampleTechTestEqp where v_Eqp.EqpUid=SampleTechTestEqp.EqpUid and SampleTechTestEqp.SampleTechTestUid='82D582F8-05C5-423A-99DB-02F9584E0BE5'
+		
