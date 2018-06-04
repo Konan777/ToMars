@@ -1,3 +1,16 @@
+1) Откуда идут данные в документ?
+2) v_eqp используется только в одном месте?
+3) какая дата в sample является датой анализа?
+
+В случае если из v_eqp:
+При выборе дат проверки оборудования нам неизвестен образец и его дата
+1) переписать v_eqp чтобы на вход подавались SampleTechTestEqp.SampleTechTestUid
+  потом идти на SampleTechTestEqp->SampleTechTest->SampleTech->Sample за датой образца
+  потом идти в EqpCheckLog и сворачивать выборку  [NextDate], [Doc], [DocDate]
+2) пишем табличную функицю которая для набора SampleTechTestUid которая вернет три поля
+  затем апдейтить поля в нужной таблице в приложении
+
+
 use [I-LDS_2]
 go
 drop function [dbo].[fun_test_tabl]  
