@@ -38,3 +38,14 @@ LEFT JOIN (
 			AND EqpCheckLog.NextDate = [MaxDates].nextdate
 		) AS [ca]
 ) AS [CheckLog]ON [CheckLog].[EqpUid] = [dbo].[Eqp].EqpUid
+
+
+-- Проверяем что вернет новый скрипт для тестового случая
+select EqpUid, Doc, 
+CONVERT(varchar,DocDate  ,104)+' '+CONVERT(varchar,DocDate  ,108) as DocDate,
+CONVERT(varchar,NextDate  ,104)+' '+CONVERT(varchar,NextDate  ,108) as NextDate,
+CONVERT(varchar,CreationDate  ,104)+' '+CONVERT(varchar,CreationDate  ,108) as CreationDate,
+SampleId from [dbo].[v_Eqp_by_sample](cast('3DCB89D1-DCE9-4EF8-8CCE-820C5C53FB15' as uniqueidentifier)) z_Eqp
+
+
+
