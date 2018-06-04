@@ -12,15 +12,15 @@
 -- список журналов проверок оборудования, с тестированием образца
 select Eqp.EqpUid,  
 CONVERT(varchar,ecl.DocDate  ,104)+' '+CONVERT(varchar,ecl.DocDate  ,108) as DocDate,
-CONVERT(varchar,ecl.CheckDate  ,104)+' '+CONVERT(varchar,ecl.CheckDate  ,108) as CheckDate,
-ecl.Doc, ecl.EqpCheckUid, ecl.EqpUid
+CONVERT(varchar,ecl.NextDate  ,104)+' '+CONVERT(varchar,ecl.NextDate  ,108) as CheckDate,
+ecl.Doc, ecl.EqpCheckLogUid, ecl.EqpCheckUid
 from Eqp 
 inner join EqpCheckLog ecl on ecl.EqpUid=Eqp.EqpUid
 LEFT JOIN [EqpCheck] ec ON ec.[EqpCheckUid] = ecl.[EqpCheckUid]
 where exists(
 	select * from SampleTechTestEqp stt where stt.EqpUid=Eqp.EqpUid
-)
-and ecl.EqpCheckUid='CFC4F3B2-F389-4FF5-8C10-CD946DB010B3'
+) and year(ecl.DocDate)<>year(ecl.NextDate)
+--and ecl.EqpCheckUid='CFC4F3B2-F389-4FF5-8C10-CD946DB010B3'
 order by ecl.EqpUid, ecl.DocDate desc
 
 -- Находим образец проверенные с помощью оборудования
