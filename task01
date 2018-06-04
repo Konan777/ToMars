@@ -41,20 +41,20 @@ inner join [Sample] sm on sm.SampleId=st.SampleId
 order by CreationDate
 
 -- Проверяем что вернет v_Eqp для нашего случая
-SELECT v_Eqp.EqpUid, v_Eqp.NextDate, v_Eqp.Doc, 
-CONVERT(varchar,v_Eqp.DocDate,104)+' '+CONVERT(varchar,v_Eqp.DocDate,108) as DocDate
-FROM v_Eqp, SampleTechTestEqp where v_Eqp.EqpUid=SampleTechTestEqp.EqpUid and SampleTechTestEqp.SampleTechTestUid in (
-	select distinct  mix.SampleTechTestUid from (
-	select stt.SampleTechTestEqpUid, stt.SampleTechTestUid  from Eqp 
-	inner join EqpCheckLog ecl on ecl.EqpUid=Eqp.EqpUid
-	LEFT JOIN [EqpCheck] ec ON ec.[EqpCheckUid] = ecl.[EqpCheckUid]
-	left join SampleTechTestEqp stt on stt.EqpUid=Eqp.EqpUid
-	--where ecl.EqpCheckUid='CFC4F3B2-F389-4FF5-8C10-CD946DB010B3' and stt.SampleTechTestEqpUid is not null
-	where stt.SampleTechTestEqpUid is not null
-	) mix
-	inner join SampleTechTest stt on stt.SampleTechTestId=mix.SampleTechTestUid
-	inner join SampleTech st on stt.SampleTechId=st.SampleTechId
-	inner join [Sample] sm on sm.SampleId=st.SampleId
-	where mix.SampleTechTestUid='4B0BCA2E-2C66-41F4-B211-64B0B1778564'
-) and v_Eqp.Doc is not null
+SELECT distinct v_Eqp.EqpUid, SampleTechTestEqp.SampleTechTestUid
+,v_Eqp.Doc, 
+CONVERT(varchar,v_Eqp.DocDate,104)+' '+CONVERT(varchar,v_Eqp.DocDate,108) as DocDate,
+CONVERT(varchar,v_Eqp.NextDate,104)+' '+CONVERT(varchar,v_Eqp.NextDate,108) as DocDate
+FROM v_Eqp
+inner join SampleTechTestEqp on v_Eqp.EqpUid=SampleTechTestEqp.EqpUid 
+	and NextDate is not null
+	and SampleTechTestEqpUid in (
+		--select s.SampleId, s.ReceiveDate, stte.EqpUid, stte.SampleTechTestEqpUid  
+		select stte.SampleTechTestEqpUid  
+		from sample s
+		inner join SampleTech st on st.SampleId=s.SampleId
+		inner join SampleTechTest stt on stt.SampleTechId=st.SampleTechId
+		inner join SampleTechTestEqp stte on stte.SampleTechTestUid=stt.SampleTechTestId
+	)
+--where SampleTechTestEqp.SampleTechTestEqpUid=''
 
