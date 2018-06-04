@@ -1,7 +1,7 @@
 ALTER FUNCTION [dbo].[EqpOnSampleDate]
 (
-	--@SampleTechTestUid GuidList READONLY
-	@SampleTechTestUid uniqueidentifier
+	@SampleTechTestUid GuidList READONLY
+	--@SampleTechTestUid uniqueidentifier
 )
 
 RETURNS TABLE AS RETURN
@@ -117,6 +117,10 @@ SELECT
  ,[Eqp].[LegalBasis]
  ,[Eqp].[Note]
  ,[Eqp].[InScopeAccreditation]
+ ,[CheckLog].[NextDate]
+ ,[EqpCheckType].[Name] AS [CheckTypeName]
+ ,[CheckLog].[Doc]
+ ,[CheckLog].[DocDate]
  ,[Eqp].[UseOperationControl]
  ,[Eqp].[InMetrologyScope]
  ,[Eqp].[RV]
@@ -157,11 +161,6 @@ SELECT
                  ELSE 1
                END
  ,[Eqp].[RoomUid]
- ,[EqpCheckType].[Name] AS [CheckTypeName]
- ,[CheckLog].[NextDate]
- ,[CheckLog].[Doc]
- ,[CheckLog].[DocDate]
-
 FROM [Eqp]
 INNER JOIN [EqpObj] ON [Eqp].[EqpUid] = [EqpObj].[EqpObjUid]
 INNER JOIN [v_EqpType] ON [Eqp].[EqpTypeUid] = [v_EqpType].[EqpTypeUid]
@@ -186,23 +185,27 @@ LEFT JOIN (
 	inner join [dbo].[EqpCheckLog] ECL on ECL.EqpUid=STTE.EqpUid
 	inner join (
 		-- Найдем дату образца
-		select distinct STTE.SampleTechTestUid, SM.CreationDate, SM.SampleId
+		select distinct STTE.SampleTechTestUid, SM.ReceiveDate, SM.SampleId
 		from [dbo].[SampleTechTestEqp] STTE
 		inner join [dbo].[SampleTechTest] STT on STT.SampleTechTestId=STTE.SampleTechTestUid
 		inner join [dbo].[SampleTech] ST on ST.SampleTechId=STT.SampleTechId
 		inner join [dbo].[Sample] SM on SM.SampleId=ST.SampleId
-		where STTE.SampleTechTestUid = @sampleTechTestUid
-			--in (SELECT [uid] FROM  @sampleTechTestUid)
+		--where STTE.SampleTechTestUid = @sampleTechTestUid
+		where STTE.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
 	) as SDT on SDT.SampleTechTestUid=STTE.SampleTechTestUid
-	where STTE.SampleTechTestUid = @sampleTechTestUid
-		--in (SELECT [uid] FROM  @sampleTechTestUid)
-	and SDT.CreationDate>=ECL.DocDate
-	and SDT.CreationDate<=ECL.NextDate
+	--where STTE.SampleTechTestUid = @sampleTechTestUid
+	where STTE.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
+	and SDT.ReceiveDate>=ECL.DocDate
+	and SDT.ReceiveDate<=ECL.NextDate
 ) AS [CheckLog] ON [CheckLog].[EqpUid] = Eqp.EqpUid
 LEFT JOIN [dbo].[EqpCheck] ON [EqpCheck].[EqpCheckUid] = [CheckLog].[EqpCheckUid]
 LEFT JOIN [dbo].[EqpCheckType] ON [EqpCheckType].[EqpCheckTypeUid] = [EqpCheck].[EqpCheckTypeUid]
+inner join SampleTechTestEqp stte on stte.EqpUid=Eqp.EqpUid 
+--and stte.SampleTechTestUid=@sampleTechTestUid
+and stte.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
 
-inner join SampleTechTestEqp stte on stte.EqpUid=Eqp.EqpUid and stte.SampleTechTestUid=@sampleTechTestUid
+
+
 
 
 
@@ -233,11 +236,11 @@ select * from [dbo].[EqpOnSampleDate](cast('82D582F8-05C5-423A-99DB-02F9584E0BE5
 		inner join [dbo].[SampleTechTest] STT on STT.SampleTechTestId=STTE.SampleTechTestUid
 		inner join [dbo].[SampleTech] ST on ST.SampleTechId=STT.SampleTechId
 		inner join [dbo].[Sample] SM on SM.SampleId=ST.SampleId
-		where STTE.SampleTechTestUid = cast('82D582F8-05C5-423A-99DB-02F9584E0BE5' as uniqueidentifier)
-			--in (SELECT [uid] FROM  @sampleTechTestUid)
+		--where STTE.SampleTechTestUid --= cast('82D582F8-05C5-423A-99DB-02F9584E0BE5' as uniqueidentifier)
+		where STTE.SampleTechTestUid in (SELECT [uid] FROM  @SampleTechTestUid)
 	) as SDT on SDT.SampleTechTestUid=STTE.SampleTechTestUid
-	where STTE.SampleTechTestUid = cast('82D582F8-05C5-423A-99DB-02F9584E0BE5' as uniqueidentifier)
-		--in (SELECT [uid] FROM  @sampleTechTestUid)
+	where STTE.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
+	--where STTE.SampleTechTestUid = cast('82D582F8-05C5-423A-99DB-02F9584E0BE5' as uniqueidentifier)
 	and SDT.CreationDate>=ECL.DocDate
 	and SDT.CreationDate<=ECL.NextDate
 
