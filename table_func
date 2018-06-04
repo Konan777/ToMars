@@ -47,5 +47,29 @@ CONVERT(varchar,NextDate  ,104)+' '+CONVERT(varchar,NextDate  ,108) as NextDate,
 CONVERT(varchar,CreationDate  ,104)+' '+CONVERT(varchar,CreationDate  ,108) as CreationDate,
 SampleId from [dbo].[v_Eqp_by_sample](cast('3DCB89D1-DCE9-4EF8-8CCE-820C5C53FB15' as uniqueidentifier)) z_Eqp
 
+LEFT JOIN (
+	-- Найдем действующую на дату образца запись в журнале проверок оборудования
+	select distinct ECL.*, SDT.SampleId, SDT.CreationDate
+	from [dbo].[SampleTechTestEqp] STTE
+	inner join [dbo].[Eqp] EPQ on EPQ.[EqpUid]=STTE.EqpUid
+	inner join [dbo].[EqpCheckLog] ECL on ECL.EqpUid=EPQ.EqpUid
+	inner join [dbo].[EqpCheck] EC on EC.[EqpCheckUid]=ECL.[EqpCheckUid]
+	inner join (
+		-- Найдем дату образца
+		select distinct STTE.SampleTechTestUid, SM.CreationDate, SM.SampleId
+		from [dbo].[SampleTechTestEqp] STTE
+		inner join [dbo].[SampleTechTest] STT on STT.SampleTechTestId=STTE.SampleTechTestUid
+		inner join [dbo].[SampleTech] ST on ST.SampleTechId=STT.SampleTechId
+		inner join [dbo].[Sample] SM on SM.SampleId=ST.SampleId
+		where STTE.SampleTechTestUid = @sampleTechTestUid
+			--in (SELECT [uid] FROM  @sampleTechTestUid)
+	) as SDT on SDT.SampleTechTestUid=STTE.SampleTechTestUid
+	where STTE.SampleTechTestUid = @sampleTechTestUid
+		--in (SELECT [uid] FROM  @sampleTechTestUid)
+	and SDT.CreationDate>=ECL.DocDate
+	and SDT.CreationDate<=ECL.NextDate
+) AS [CheckLog] ON [CheckLog].[EqpUid] = [dbo].[Eqp].EqpUid 
+
+
 
 
