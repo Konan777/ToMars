@@ -1,170 +1,85 @@
 ALTER FUNCTION [dbo].[EqpOnSampleDate]
 (
-	@SampleTechTestUid GuidList READONLY
-	--@SampleTechTestUid uniqueidentifier
+	--@SampleTechTestUid GuidList READONLY
+	@SampleTechTestUid uniqueidentifier
 )
 
 RETURNS TABLE AS RETURN
 
+-- Берем представление v_Eqp за основу. Сохраняем порядок следования колонок. Ограничиваем выборку by SampleTechTestUid.
+-- Данные по проверкам оборудования берем на дату получения образца.
 SELECT 
-  [Eqp].[EqpUid]
- ,[EqpObj].[Name] AS [EqpName]
- ,[Eqp].[EqpTypeUid]
- ,[v_EqpType].[Name] AS [EqpTypeName]
- ,[Eqp].[EqpKindId]
- ,[Eqp].[EqpStateId]
- ,[EqpState].[Name] AS [EqpStateName]
- ,[EqpState].[Active] AS [EqpStateActive]
- ,CASE WHEN EXISTS (SELECT TOP 1 * FROM EqpTestLimit etl WHERE etl.EqpUid = [Eqp].EqpUid) THEN
-    STUFF((
-    SELECT N'; ' + ettl.Name
-      FROM EqpTestLimit etl
-      INNER JOIN EqpTypeTestLimit ettl ON etl.EqpTypeTestLimitUid = ettl.EqpTypeTestLimitUid
-      INNER JOIN EqpTypeTest ett ON ettl.EqpTypeTestUid = ett.EqpTypeTestUid
-    WHERE etl.EqpUid = [Eqp].EqpUid
-    ORDER BY ett.[Order], ettl.[Order]
-    FOR XML PATH(N''), TYPE).value(N'.[1]', N'nvarchar(max)'), 1, 1, N'')
-  ELSE
-    STUFF((
-    SELECT N'; ' + ettl.Name
-      FROM EqpTypeTest ett
-      INNER JOIN EqpTypeTestLimit ettl ON ett.EqpTypeTestUid = ettl.EqpTypeTestUid
-    WHERE ett.EqpTypeUid = [Eqp].EqpTypeUid
-    ORDER BY ett.[Order], ettl.[Order]
-    FOR XML PATH(N''), TYPE).value(N'.[1]', N'nvarchar(max)'), 1, 1, N'')
-  END AS Limits
- ,CASE WHEN EXISTS (SELECT TOP 1 * FROM EqpTestLimit etl WHERE etl.EqpUid = [Eqp].EqpUid) THEN
-    STUFF((
-    SELECT * FROM (
-    SELECT DISTINCT  N'; ' + ett.AccuracyClass AS AccuracyClass
-      FROM EqpTestLimit etl
-      INNER JOIN EqpTypeTestLimit ettl ON etl.EqpTypeTestLimitUid = ettl.EqpTypeTestLimitUid
-      INNER JOIN EqpTypeTest ett ON ettl.EqpTypeTestUid = ett.EqpTypeTestUid
-    WHERE etl.EqpUid = [Eqp].EqpUid AND ett.AccuracyClass <> N''
-    UNION
-    SELECT DISTINCT N'; ' + ettl.AccuracyClass AS AccuracyClass
-      FROM EqpTestLimit etl
-      INNER JOIN EqpTypeTestLimit ettl ON etl.EqpTypeTestLimitUid = ettl.EqpTypeTestLimitUid
-    WHERE etl.EqpUid = [Eqp].EqpUid AND ettl.AccuracyClass <> N'') AS t1
-    FOR XML PATH(N''), TYPE).value(N'.[1]', N'nvarchar(max)'), 1, 1, N'')
-  ELSE
-    STUFF((
-    SELECT * FROM (
-    SELECT DISTINCT N'; ' + ett.AccuracyClass AS AccuracyClass
-      FROM EqpTypeTest ett
-    WHERE ett.EqpTypeUid = [Eqp].EqpTypeUid AND ett.AccuracyClass <> N''
-    UNION
-    SELECT DISTINCT N'; ' + ettl.AccuracyClass AS AccuracyClass
-      FROM EqpTypeTest ett
-      INNER JOIN EqpTypeTestLimit ettl ON ett.EqpTypeTestUid = ettl.EqpTypeTestUid
-    WHERE ett.EqpTypeUid = [Eqp].EqpTypeUid AND ettl.AccuracyClass <> N'') AS t1
-    FOR XML PATH(N''), TYPE).value(N'.[1]', N'nvarchar(max)'), 1, 1, N'')
-  END AS AccuracyClass
- ,[Eqp].[Mnf]
- ,[Eqp].[MnfNum]
- ,[Eqp].[MnfDate]
- ,[Eqp].[InvNum]
- ,[Eqp].[Location]
- ,CASE WHEN EXISTS (SELECT TOP 1 * FROM EqpTestLimit etl WHERE etl.EqpUid = [Eqp].EqpUid) THEN
-    STUFF((
-    SELECT * FROM (
-    SELECT DISTINCT N'; ' + ett.Accuracy AS Accuracy
-      FROM EqpTestLimit etl
-      INNER JOIN EqpTypeTestLimit ettl ON etl.EqpTypeTestLimitUid = ettl.EqpTypeTestLimitUid
-      INNER JOIN EqpTypeTest ett ON ettl.EqpTypeTestUid = ett.EqpTypeTestUid
-    WHERE etl.EqpUid = [Eqp].EqpUid AND ett.Accuracy <> N''
-    UNION
-    SELECT DISTINCT N'; ' + ettl.Accuracy AS Accuracy
-      FROM EqpTestLimit etl
-      INNER JOIN EqpTypeTestLimit ettl ON etl.EqpTypeTestLimitUid = ettl.EqpTypeTestLimitUid
-    WHERE etl.EqpUid = [Eqp].EqpUid AND ettl.Accuracy <> N'') AS t1
-    FOR XML PATH(N''), TYPE).value(N'.[1]', N'nvarchar(max)'), 1, 1, N'')
-  ELSE
-    STUFF((
-    SELECT * FROM (
-    SELECT DISTINCT N'; ' + ett.Accuracy AS Accuracy
-      FROM EqpTypeTest ett
-    WHERE ett.EqpTypeUid = [Eqp].EqpTypeUid AND ett.Accuracy <> N''
-    UNION    
-    SELECT DISTINCT N'; ' + ettl.Accuracy AS Accuracy
-      FROM EqpTypeTest ett
-      INNER JOIN EqpTypeTestLimit ettl ON ett.EqpTypeTestUid = ettl.EqpTypeTestUid
-    WHERE ett.EqpTypeUid = [Eqp].EqpTypeUid AND ettl.Accuracy <> N'') AS t1
-    FOR XML PATH(N''), TYPE).value(N'.[1]', N'nvarchar(max)'), 1, 1, N'') 
-  END AS Accuracy
- ,[Eqp].[EngUnitId]
-  ,CASE WHEN EXISTS (SELECT TOP 1 * FROM EqpTestLimit etl WHERE etl.EqpUid = [Eqp].EqpUid) THEN
-    STUFF((
-    SELECT * FROM (
-    SELECT DISTINCT N'; ' + ettl.ScaleInterval AS ScaleInterval
-      FROM EqpTestLimit etl
-      INNER JOIN EqpTypeTestLimit ettl ON etl.EqpTypeTestLimitUid = ettl.EqpTypeTestLimitUid
-    WHERE etl.EqpUid = [Eqp].EqpUid AND ettl.Accuracy <> N'') AS t1
-    FOR XML PATH(N''), TYPE).value(N'.[1]', N'nvarchar(max)'), 1, 1, N'')
-  ELSE
-    STUFF((
-    SELECT * FROM (
-    SELECT DISTINCT N'; ' + ettl.ScaleInterval AS ScaleInterval
-      FROM EqpTypeTest ett
-      INNER JOIN EqpTypeTestLimit ettl ON ett.EqpTypeTestUid = ettl.EqpTypeTestUid
-    WHERE ett.EqpTypeUid = [Eqp].EqpTypeUid AND ettl.Accuracy <> N'') AS t1
-    FOR XML PATH(N''), TYPE).value(N'.[1]', N'nvarchar(max)'), 1, 1, N'') 
-  END AS [ScaleInterval]
- ,[Eqp].[Purpose]
- ,[Eqp].[TechnicalProps]
- ,[Eqp].[UserId]
- ,[Eqp].[StartUp]
- ,[Eqp].[LegalBasis]
- ,[Eqp].[Note]
- ,[Eqp].[InScopeAccreditation]
+ v_Eqp.[EqpUid], [EqpName], v_Eqp.[EqpTypeUid], [EqpTypeName], [EqpKindId], [EqpStateId], [EqpStateName], [EqpStateActive]
+ ,[Limits], [AccuracyClass], [Mnf], [MnfNum], [MnfDate], [InvNum], [Location], [Accuracy], [EngUnitId], [ScaleInterval]
+ ,[Purpose], [TechnicalProps], [UserId], [StartUp], [LegalBasis], [Note], [InScopeAccreditation]
  ,[CheckLog].[NextDate]
  ,[EqpCheckType].[Name] AS [CheckTypeName]
  ,[CheckLog].[Doc]
  ,[CheckLog].[DocDate]
- ,[Eqp].[UseOperationControl]
- ,[Eqp].[InMetrologyScope]
- ,[Eqp].[RV]
- ,CASE WHEN EXISTS (SELECT TOP 1 * FROM EqpTestLimit etl WHERE etl.EqpUid = [Eqp].EqpUid) THEN
-    STUFF((
-    SELECT * FROM (
-    SELECT DISTINCT N'; ' + ISNULL(eut.LName, eut.Name) AS EngUnits
-      FROM EqpTestLimit etl
-      INNER JOIN EqpTypeTestLimit ettl ON etl.EqpTypeTestLimitUid = ettl.EqpTypeTestLimitUid
-      INNER JOIN EqpTypeTest ett ON ettl.EqpTypeTestUid = ett.EqpTypeTestUid
-      LEFT JOIN EngUnit eut ON ett.EngUnitId = eut.EngUnitId
-    WHERE etl.EqpUid = [Eqp].EqpUid
-    UNION
-    SELECT DISTINCT N'; ' + ISNULL(eutl.LName, eutl.Name) AS EngUnits
-      FROM EqpTestLimit etl
-      INNER JOIN EqpTypeTestLimit ettl ON etl.EqpTypeTestLimitUid = ettl.EqpTypeTestLimitUid
-      LEFT JOIN EngUnit eutl ON ettl.EngUnitId = eutl.EngUnitId
-    WHERE etl.EqpUid = [Eqp].EqpUid) AS t1
-    FOR XML PATH(N''), TYPE).value(N'.[1]', N'nvarchar(max)'), 1, 1, N'')
-  ELSE
-    STUFF((
-    SELECT * FROM (
-    SELECT DISTINCT N'; ' + ISNULL(eut.LName, eut.Name) AS EngUnit
-      FROM EqpTypeTest ett
-      LEFT JOIN EngUnit eut ON ett.EngUnitId = eut.EngUnitId
-    WHERE ett.EqpTypeUid = [Eqp].EqpTypeUid
-    UNION    
-    SELECT DISTINCT N'; ' + ISNULL(eutl.LName, eutl.Name) AS EngUnit
-      FROM EqpTypeTest ett
-      INNER JOIN EqpTypeTestLimit ettl ON ett.EqpTypeTestUid = ettl.EqpTypeTestUid
-      LEFT JOIN EngUnit eutl ON ettl.EngUnitId = eutl.EngUnitId
-    WHERE ett.EqpTypeUid = [Eqp].EqpTypeUid) AS t1
-    FOR XML PATH(N''), TYPE).value(N'.[1]', N'nvarchar(max)'), 1, 1, N'')
-  END AS EngUnits
- ,"DocExists" =
-               CASE
-                 WHEN Eqp.DocContent IS NULL THEN 0
-                 ELSE 1
-               END
- ,[Eqp].[RoomUid]
-FROM [Eqp]
-INNER JOIN [EqpObj] ON [Eqp].[EqpUid] = [EqpObj].[EqpObjUid]
-INNER JOIN [v_EqpType] ON [Eqp].[EqpTypeUid] = [v_EqpType].[EqpTypeUid]
-INNER JOIN [EqpState] ON [Eqp].[EqpStateId] = [EqpState].[EqpStateId]
+ ,[UseOperationControl], [InMetrologyScope], [RV], [EngUnits], [DocExists],[RoomUid]
+from v_Eqp
+
+-- В случае если не нужно оборудование без проверок заменить LEFT JOIN на INNER JOIN
+LEFT JOIN (
+	-- Найдем действующую на дату образца запись в журнале проверок оборудования
+	-- top 1 потому, что может быть несколько записей в ECL подходящих по дате
+	select top 1 ECL.* 
+	from [dbo].[SampleTechTestEqp] STT2
+	inner join [dbo].[EqpCheckLog] ECL on ECL.EqpUid=STT2.EqpUid
+	inner join (
+		-- Найдем дату образца
+		select distinct STTE.SampleTechTestUid, SM.ReceiveDate, SM.SampleId
+		from [dbo].[SampleTechTestEqp] STTE
+		inner join [dbo].[SampleTechTest] STT on STT.SampleTechTestId=STTE.SampleTechTestUid
+		inner join [dbo].[SampleTech] ST on ST.SampleTechId=STT.SampleTechId
+		inner join [dbo].[Sample] SM on SM.SampleId=ST.SampleId
+		--where STTE.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
+		where STTE.SampleTechTestUid = @sampleTechTestUid
+	) as SDT on SDT.SampleTechTestUid=STT2.SampleTechTestUid
+	--where STT2.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
+	where STT2.SampleTechTestUid = @sampleTechTestUid
+	and SDT.ReceiveDate>=ECL.DocDate
+	and SDT.ReceiveDate<=ECL.NextDate
+	order by ECL.Doc desc -- Чтобы подхватилась старшая по дате из нескольких
+) AS [CheckLog] ON [CheckLog].[EqpUid] = v_Eqp.EqpUid
+LEFT JOIN [dbo].[EqpCheck] ON [EqpCheck].[EqpCheckUid] = [CheckLog].[EqpCheckUid]
+LEFT JOIN [dbo].[EqpCheckType] ON [EqpCheckType].[EqpCheckTypeUid] = [EqpCheck].[EqpCheckTypeUid]
+inner join SampleTechTestEqp stte on stte.EqpUid= v_Eqp.EqpUid 
+	--and stte.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
+	and stte.SampleTechTestUid=@sampleTechTestUid
+
+
+
+
+
+
+
+select * from [dbo].[EqpOnSampleDate](cast('82D582F8-05C5-423A-99DB-02F9584E0BE5' as uniqueidentifier)) as z_Eqp
+order by z_Eqp.EqpUid
+
+
+
+	select top 1 ECL.*
+	from [dbo].[SampleTechTestEqp] STT2
+	inner join [dbo].[EqpCheckLog] ECL on ECL.EqpUid=STT2.EqpUid
+	inner join (
+		-- Найдем дату образца
+		select distinct STTE.SampleTechTestUid, SM.ReceiveDate, SM.SampleId
+		from [dbo].[SampleTechTestEqp] STTE
+		inner join [dbo].[SampleTechTest] STT on STT.SampleTechTestId=STTE.SampleTechTestUid
+		inner join [dbo].[SampleTech] ST on ST.SampleTechId=STT.SampleTechId
+		inner join [dbo].[Sample] SM on SM.SampleId=ST.SampleId
+		--where STTE.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
+		where STTE.SampleTechTestUid = cast('82D582F8-05C5-423A-99DB-02F9584E0BE5' as uniqueidentifier)
+	) as SDT on SDT.SampleTechTestUid=STT2.SampleTechTestUid
+	--where STT2.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
+	where STT2.SampleTechTestUid = cast('82D582F8-05C5-423A-99DB-02F9584E0BE5' as uniqueidentifier)
+	and SDT.ReceiveDate>=ECL.DocDate
+	and SDT.ReceiveDate<=ECL.NextDate
+	order by ECL.Doc desc
+
+
+
 /*
 LEFT JOIN (
 	SELECT [ca].* FROM (
@@ -178,75 +93,3 @@ LEFT JOIN (
 		AND EqpCheckLog.NextDate = [MaxDates].nextdate) AS [ca]
 ) AS [CheckLog] ON [CheckLog].[EqpUid] = [dbo].[Eqp].EqpUid
 */
-LEFT JOIN (
-	-- Найдем действующую на дату образца запись в журнале проверок оборудования
-	select top 1 ECL.*
-	from [dbo].[SampleTechTestEqp] STTE
-	inner join [dbo].[EqpCheckLog] ECL on ECL.EqpUid=STTE.EqpUid
-	inner join (
-		-- Найдем дату образца
-		select distinct STTE.SampleTechTestUid, SM.ReceiveDate, SM.SampleId
-		from [dbo].[SampleTechTestEqp] STTE
-		inner join [dbo].[SampleTechTest] STT on STT.SampleTechTestId=STTE.SampleTechTestUid
-		inner join [dbo].[SampleTech] ST on ST.SampleTechId=STT.SampleTechId
-		inner join [dbo].[Sample] SM on SM.SampleId=ST.SampleId
-		--where STTE.SampleTechTestUid = @sampleTechTestUid
-		where STTE.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
-	) as SDT on SDT.SampleTechTestUid=STTE.SampleTechTestUid
-	--where STTE.SampleTechTestUid = @sampleTechTestUid
-	where STTE.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
-	and SDT.ReceiveDate>=ECL.DocDate
-	and SDT.ReceiveDate<=ECL.NextDate
-) AS [CheckLog] ON [CheckLog].[EqpUid] = Eqp.EqpUid
-LEFT JOIN [dbo].[EqpCheck] ON [EqpCheck].[EqpCheckUid] = [CheckLog].[EqpCheckUid]
-LEFT JOIN [dbo].[EqpCheckType] ON [EqpCheckType].[EqpCheckTypeUid] = [EqpCheck].[EqpCheckTypeUid]
-inner join SampleTechTestEqp stte on stte.EqpUid=Eqp.EqpUid 
---and stte.SampleTechTestUid=@sampleTechTestUid
-and stte.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
-
-
-
-
-
-
-
--- Проверяем что вернет новый скрипт для тестового случая
-select EqpUid, Doc, 
-CONVERT(varchar,DocDate  ,104)+' '+CONVERT(varchar,DocDate  ,108) as DocDate,
-CONVERT(varchar,NextDate  ,104)+' '+CONVERT(varchar,NextDate  ,108) as NextDate,
-CONVERT(varchar,CreationDate  ,104)+' '+CONVERT(varchar,CreationDate  ,108) as CreationDate,
-SampleId from [dbo].[EqpOnSampleDate](cast('82D582F8-05C5-423A-99DB-02F9584E0BE5' as uniqueidentifier)) z_Eqp
-
-
-
-
-select * from [dbo].[EqpOnSampleDate](cast('82D582F8-05C5-423A-99DB-02F9584E0BE5' as uniqueidentifier)) as z_Eqp
-
-
-	select distinct 
-	CONVERT(varchar,DocDate  ,104)+' '+CONVERT(varchar,DocDate  ,108) as DocDate,
-	CONVERT(varchar,NextDate  ,104)+' '+CONVERT(varchar,NextDate  ,108) as NextDate,
-	ECL.*
-	from [dbo].[SampleTechTestEqp] STTE
-	inner join [dbo].[EqpCheckLog] ECL on ECL.EqpUid=STTE.EqpUid
-	inner join (
-		-- Найдем дату образца (13.06.2017)
-		select distinct STTE.SampleTechTestUid, SM.CreationDate, SM.SampleId
-		from [dbo].[SampleTechTestEqp] STTE
-		inner join [dbo].[SampleTechTest] STT on STT.SampleTechTestId=STTE.SampleTechTestUid
-		inner join [dbo].[SampleTech] ST on ST.SampleTechId=STT.SampleTechId
-		inner join [dbo].[Sample] SM on SM.SampleId=ST.SampleId
-		--where STTE.SampleTechTestUid --= cast('82D582F8-05C5-423A-99DB-02F9584E0BE5' as uniqueidentifier)
-		where STTE.SampleTechTestUid in (SELECT [uid] FROM  @SampleTechTestUid)
-	) as SDT on SDT.SampleTechTestUid=STTE.SampleTechTestUid
-	where STTE.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
-	--where STTE.SampleTechTestUid = cast('82D582F8-05C5-423A-99DB-02F9584E0BE5' as uniqueidentifier)
-	and SDT.CreationDate>=ECL.DocDate
-	and SDT.CreationDate<=ECL.NextDate
-
-
-
-	select * from [dbo].[SampleTechTestEqp] as STTE
-	inner join [dbo].[EqpCheckLog] ECL on ECL.EqpUid=STTE.EqpUid
-	where STTE.SampleTechTestUid = cast('82D582F8-05C5-423A-99DB-02F9584E0BE5' as uniqueidentifier)
-		
