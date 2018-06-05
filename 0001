@@ -7,7 +7,7 @@ ALTER FUNCTION [dbo].[EqpOnSampleDate]
 RETURNS TABLE AS RETURN
 
 -- Берем представление v_Eqp за основу. Сохраняем порядок следования колонок. Ограничиваем выборку by SampleTechTestUid.
--- Данные по проверкам оборудования берем на дату получения образца.
+-- Меняем алгоритм получаения данных по проверкам оборудования. Берем проверку на дату получения образца.
 SELECT 
  v_Eqp.[EqpUid], [EqpName], v_Eqp.[EqpTypeUid], [EqpTypeName], [EqpKindId], [EqpStateId], [EqpStateName], [EqpStateActive]
  ,[Limits], [AccuracyClass], [Mnf], [MnfNum], [MnfDate], [InvNum], [Location], [Accuracy], [EngUnitId], [ScaleInterval]
@@ -17,6 +17,7 @@ SELECT
  ,[CheckLog].[Doc]
  ,[CheckLog].[DocDate]
  ,[UseOperationControl], [InMetrologyScope], [RV], [EngUnits], [DocExists],[RoomUid]
+ ,stte.[SampleTechTestEqpUid], stte.[SampleTechTestUid], stte.[Comment]
 from v_Eqp
 
 -- В случае если не нужно оборудование без проверок заменить LEFT JOIN на INNER JOIN
