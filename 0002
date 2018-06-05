@@ -20,8 +20,23 @@ where SampleTechTestEqp.SampleTechTestUid='82D582F8-05C5-423A-99DB-02F9584E0BE5'
 		from sample s
 		inner join SampleTech st on st.SampleId=s.SampleId
 		inner join SampleTechTest stt on stt.SampleTechId=st.SampleTechId
-		inner join SampleTechTestEqp stte on stte.SampleTechTestUid=stt.SampleTechTestId
+		inner join SampleTechTestEqp stte on stte.SampleTechTestUid=stt.SampleTechTestId -- RecieveDate='13.06.2017 14:57:00'
 		where stte.SampleTechTestUid='82D582F8-05C5-423A-99DB-02F9584E0BE5'
 
 		SELECT * FROM v_Eqp, SampleTechTestEqp where v_Eqp.EqpUid=SampleTechTestEqp.EqpUid and SampleTechTestEqp.SampleTechTestUid='82D582F8-05C5-423A-99DB-02F9584E0BE5'
-		
+		order by v_Eqp.EqpUid
+
+
+-- список журналов проверок оборудования, с тестированием образца
+select Eqp.EqpUid,  
+CONVERT(varchar,ecl.DocDate  ,104)+' '+CONVERT(varchar,ecl.DocDate  ,108) as DocDate,
+CONVERT(varchar,ecl.NextDate  ,104)+' '+CONVERT(varchar,ecl.NextDate  ,108) as CheckDate,
+ecl.Doc, ecl.EqpCheckLogUid, ecl.EqpCheckUid, ecl.Place
+from Eqp 
+inner join EqpCheckLog ecl on ecl.EqpUid=Eqp.EqpUid
+LEFT JOIN [EqpCheck] ec ON ec.[EqpCheckUid] = ecl.[EqpCheckUid]
+where exists(
+	select * from SampleTechTestEqp stt where stt.EqpUid=Eqp.EqpUid
+) and year(ecl.DocDate)<>year(ecl.NextDate)
+and Eqp.EqpUid='6F81E436-024D-4CFC-AE7B-50C55BB7F10E'
+order by ecl.EqpUid, ecl.DocDate desc
