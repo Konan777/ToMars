@@ -1,44 +1,26 @@
--- В случае если не нужно оборудование без проверок заменить LEFT JOIN на INNER JOIN
-LEFT JOIN (
-	-- Найдем действующую на дату образца запись в журнале проверок оборудования
-	select  ECL.* 
-	from [dbo].[SampleTechTestEqp] STT2
-	inner join [dbo].[EqpCheckLog] ECL on ECL.EqpUid=STT2.EqpUid
+	-- Найдем старшую действующую на дату образца запись в журнале проверок оборудования
+	select * from [dbo].[EqpCheckLog] ECLU
 	inner join (
-		-- Найдем дату образца
-		select distinct STTE.SampleTechTestUid, SM.ReceiveDate, SM.SampleId
-		from [dbo].[SampleTechTestEqp] STTE
-		inner join [dbo].[SampleTechTest] STT on STT.SampleTechTestId=STTE.SampleTechTestUid
-		inner join [dbo].[SampleTech] ST on ST.SampleTechId=STT.SampleTechId
-		inner join [dbo].[Sample] SM on SM.SampleId=ST.SampleId
-		--where STTE.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
-		where STTE.SampleTechTestUid in (
-			cast('2de19b65-f002-423a-ba06-5cfbc364991f' as uniqueidentifier),
-			cast('630b5b61-b4f4-45c3-bb6b-2957109dd9cc' as uniqueidentifier),
-			cast('4fb36cf7-acb7-4c8c-ad7d-24878e1cc879' as uniqueidentifier),
-			cast('82d582f8-05c5-423a-99db-02f9584e0be5' as uniqueidentifier),
-			cast('2ab306ea-4bed-4a97-a0de-3938f55bcde4' as uniqueidentifier)
+		-- Найдем Оборудование и старшую дату проверки 
+		--select  ECL.EqpUid,  max(ECL.CheckDate) as CheckDate
+		select  ECL.EqpUid,  max(ECL.CheckDate) as CheckDate
+		from [dbo].[EqpCheckLog] ECL 
+		inner join (
+			-- Найдем дату образца и оборудование
+			select distinct STTE.EqpUid, SM.ReceiveDate
+			from [dbo].[SampleTechTestEqp] STTE
+			inner join [dbo].[SampleTechTest] STT on STT.SampleTechTestId=STTE.SampleTechTestUid
+			inner join [dbo].[SampleTech] ST on ST.SampleTechId=STT.SampleTechId
+			inner join [dbo].[Sample] SM on SM.SampleId=ST.SampleId
+			where STTE.SampleTechTestUid in (
+				cast('2de19b65-f002-423a-ba06-5cfbc364991f' as uniqueidentifier),
+				cast('630b5b61-b4f4-45c3-bb6b-2957109dd9cc' as uniqueidentifier),
+				cast('82d582f8-05c5-423a-99db-02f9584e0be5' as uniqueidentifier),
+				cast('2ab306ea-4bed-4a97-a0de-3938f55bcde4' as uniqueidentifier)
 			)
-	) as SDT on SDT.SampleTechTestUid=STT2.SampleTechTestUid
-	--where STT2.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
-	where STT2.SampleTechTestUid  in (
-			cast('2de19b65-f002-423a-ba06-5cfbc364991f' as uniqueidentifier),
-			cast('630b5b61-b4f4-45c3-bb6b-2957109dd9cc' as uniqueidentifier),
-			cast('4fb36cf7-acb7-4c8c-ad7d-24878e1cc879' as uniqueidentifier),
-			cast('82d582f8-05c5-423a-99db-02f9584e0be5' as uniqueidentifier),
-			cast('2ab306ea-4bed-4a97-a0de-3938f55bcde4' as uniqueidentifier)
-	)
-	and SDT.ReceiveDate>=ECL.DocDate
-	and SDT.ReceiveDate<=ECL.NextDate
-) AS [CheckLog] ON [CheckLog].[EqpUid] = v_Eqp.EqpUid
-LEFT JOIN [dbo].[EqpCheck] ON [EqpCheck].[EqpCheckUid] = [CheckLog].[EqpCheckUid]
-LEFT JOIN [dbo].[EqpCheckType] ON [EqpCheckType].[EqpCheckTypeUid] = [EqpCheck].[EqpCheckTypeUid]
-inner join [dbo].[SampleTechTestEqp] stte on stte.EqpUid= v_Eqp.EqpUid 
-	--and stte.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
-	and stte.SampleTechTestUid in (
-			cast('2de19b65-f002-423a-ba06-5cfbc364991f' as uniqueidentifier),
-			cast('630b5b61-b4f4-45c3-bb6b-2957109dd9cc' as uniqueidentifier),
-			cast('4fb36cf7-acb7-4c8c-ad7d-24878e1cc879' as uniqueidentifier),
-			cast('82d582f8-05c5-423a-99db-02f9584e0be5' as uniqueidentifier),
-			cast('2ab306ea-4bed-4a97-a0de-3938f55bcde4' as uniqueidentifier)
-	)
+		) as SDT on SDT.EqpUid=ECL.EqpUid
+		where  SDT.ReceiveDate>=ECL.DocDate and SDT.ReceiveDate<=ECL.NextDate
+		group by ECL.EqpUid
+	) as OUCL on ECLU.EqpUid=OUCL.EqpUid and ECLU.CheckDate=OUCL.CheckDate
+	
+
