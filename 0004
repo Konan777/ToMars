@@ -1,5 +1,7 @@
 Добавить скриптом новое свойство: Samples.AuxTestsCreationMode 
 
+ALTER TABLE [dbo].[Sample] ADD [AuxTestsCreationMode] [BIT] NOT NULL DEFAULT 0
+
 Добавить свойство в интерфейс
 C:\Temp\Indus\Source\Indusoft.LDS.Services.Contracts.Repository\ISysDatabasePropsDataService.cs
 Добавить свойство в реализацию
