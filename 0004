@@ -7,6 +7,11 @@ C:\Temp\Indus\Source\Indusoft.LDS.Services.Contracts.Repository\ISysDatabaseProp
 Добавить свойство в реализацию
 C:\Temp\Indus\Source\Indusoft.LDS.Server.Services.Repository\SysDatabasePropsDataService.cs
 
+C:\Temp\Indus\Source\Indusoft.LDS.Services.Contracts.Samples\SamplesDataModel.cs
+C:\Temp\Indus\Source\Indusoft.LDS.Client.Samples\Features\UI\??
+C:\Temp\Indus\Source\Indusoft.LDS.Client.AnalysisInputControl\Controls\Model\AICAddinSample.cs
+
+
 Формирование первичного списка показателей для планового образца выполняется в
 
 Здесь описатель наполняется показателями из ШО согласно настроек содержимого задания. 
