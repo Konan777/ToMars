@@ -1,0 +1,22 @@
+Добавить скриптом новое свойство: Samples.AuxTestsCreationMode 
+
+Добавить свойство в интерфейс
+C:\Temp\Indus\Source\Indusoft.LDS.Services.Contracts.Repository\ISysDatabasePropsDataService.cs
+Добавить свойство в реализацию
+C:\Temp\Indus\Source\Indusoft.LDS.Server.Services.Repository\SysDatabasePropsDataService.cs
+
+Формирование первичного списка показателей для планового образца выполняется в
+
+Здесь описатель наполняется показателями из ШО согласно настроек содержимого задания. 
+C:\Temp\Indus\Source\Indusoft.LDS.Client.AnalysisInputControl\Controls\AnalysisTableInputControl.cs
+#region Creating new sample
+C:\Temp\Indus\Source\Indusoft.LDS.Client.AnalysisInputControl\Controls\Model\SampleMeasuresDataTable.cs
+private static SampleInfo CreateSampleInfo(DataRow row, STCPContext stcpRow, Task task)
+
+Метод DataManager.FindAuxTests ищет вспомогательные показатели в ШО и добавляет их к описателям.
+C:\Temp\Indus\Source\Indusoft.LDS.Client.AnalysisInputControl\Data\DataManager.cs
+public STCPTTContext[] FindAuxTests(STCPTContext stcpt)
+
+
+Необходимо переписать метод добавления вспомогательных показателей с учетом настройки. 
+Все необходимые данные либо уже получены, либо можно получить через DataManager.
