@@ -9,7 +9,7 @@ enum делаем в:
 C:\Temp\Indus\Source\Indusoft.LDS.Services.Contracts.Repository\SampleType.cs
 
 При анализе нужны свойства:Группа, вспомогательный/основной(требуется заполнение?), частота контроля
-
+Группа:if (stcpttRow.STCPTT.TestType == (int)TestType.Group)
 
 
 
