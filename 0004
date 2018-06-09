@@ -3,6 +3,7 @@ todo:
 - словить настройку базы в отладке на клиенте
 - сделать шаблон на БД малахита
 - дебажить и искать где-что..
+Indusoft.LDS.Client.SR, Indusoft.LDS.Client.ST - вероятно редактор шаблона..
 
 enum делаем в:
 C:\Temp\Indus\Source\Indusoft.LDS.Services.Contracts.Repository\SampleType.cs
