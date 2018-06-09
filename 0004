@@ -8,6 +8,12 @@ Indusoft.LDS.Client.SR, Indusoft.LDS.Client.ST - вероятно редакто
 enum делаем в:
 C:\Temp\Indus\Source\Indusoft.LDS.Services.Contracts.Repository\SampleType.cs
 
+При анализе нужны свойства:Группа, вспомогательный/основной(требуется заполнение?), частота контроля
+
+
+
+
+
 Добавить скриптом новое свойство: Samples.AuxTestsCreationMode 
 
 ALTER TABLE [dbo].[Sample] ADD [AuxTestsCreationMode] [BIT] NOT NULL DEFAULT 0
