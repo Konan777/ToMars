@@ -1,3 +1,47 @@
-Indusoft.LDS.Services.Contracts.ST->ISTDataService
-проверить как заполняется AcsItem и AcsItemEventFreq
-https://www.pochta.ru/TRACKING#45413923108778
+http://tfs2012:8080/tfs/Indusoft/BMU/_workitems?id=107838&_a=edit - поле комментарий
+
+/*
+	select distinct tr.[TestResultId]
+		,FIRST_VALUE(trc.[Comment]) OVER (PARTITION BY trh.[TestResultId] order by trh.[ChangeDate] desc) as [Comment]
+	from [TestResult] tr
+	inner join [TestResultHistory] as trh on trh.TestResultId=tr.TestResultId
+	inner join [TestResultHistoryComment] as trc on trc.TestResultHistoryId=trh.TestResultHistoryId
+*/
+	select distinct tr.[TestResultId]
+		,FIRST_VALUE(com.[CommentText]) OVER (PARTITION BY tr.[TestResultId] order by al.timestamp desc) as [Comment]
+	from [TestResult] tr
+	inner join TestResultComment trc on trc.TestResultUid=tr.TestResultId
+	inner join Comment com on com.CommentUid=trc.CommentUid
+	inner join CommentItem ci on ci.CommentItemUid=CommentItemUid
+	inner join [dbo].[ActionLog] AL ON  [AL].[Key] =  ci.[CommentItemUid] AND [AL].[IsLast] = 1
+  
+	select distinct tr.[TestResultId], s.SampleId
+		,FIRST_VALUE(com.[CommentText]) OVER (PARTITION BY tr.[TestResultId] order by al.timestamp desc) as [Comment]
+	from [TestResult] tr
+	inner join TestResultComment trc on trc.TestResultUid=tr.TestResultId
+	inner join Comment com on com.CommentUid=trc.CommentUid
+	inner join CommentItem ci on ci.CommentItemUid=CommentItemUid
+	inner join [dbo].[ActionLog] AL ON  [AL].[Key] =  ci.[CommentItemUid] AND [AL].[IsLast] = 1
+	inner join [SampleTechTest] stt on STT.SampleTechTestId = TR.SampleTechTestId
+	inner join [SampleTech] as ST on STT.SampleTechId = ST.SampleTechId
+	inner join [Sample] as S on ST.SampleId = S.SampleId
+	order by Comment
+  
+  
+  
+
+К Поталицину как тестировать http://tfs2012:8080/tfs/Indusoft/BMU/_workitems?id=109063&_a=edit
+
+как я понял задачу:
+
+1) Добавлять все вспомогательные показатели НД;
+- и так понятно, добавляем все вспомогательные показатели
+2) При наличии групп добавлять только вспомогательные показатели из групп, основные показатели которых добавлены;
+- добавлять только вспомогательные показатели которых находятся в группах, где есть основные показатели с расписанием
+3) При наличии групп добавлять вспомогательные показатели из групп, основные показатели которых добавлены и показатели не добавленные в группы;
+- пункт 2 +  вспомогательные показатели без групп
+
+возникает вопрос кстати к постановке, а бывают основные показатели без расписания?
+я бы постарался сделать так чтобы FindSTCPTT вовзращался признак и не нужно было делать запрос
+в тех реализации написано что за формирование отвечает метод FindAuxTests
+
