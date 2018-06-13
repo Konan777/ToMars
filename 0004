@@ -1,33 +1,28 @@
-http://tfs2012:8080/tfs/Indusoft/BMU/_workitems?id=107838&_a=edit - поле комментарий
+// Соберем все записи
+List<STCPTContext> stcpttRows = new List<STCPTContext>()
+foreach (TaskContent keyInfo in tcs)
+{
+    STCPTTContext stcpttRow = stcpRow.FindSTCPTT(keyInfo.ContentUid, date);
+    if (stcpttRow != null)
+        stcpttRows.Add(stcpttRow)
+}
+// Найдем все записи на добавление
+List<STCPTContext> rowsToAdd = new List<STCPTContext>()
 
-/*
-	select distinct tr.[TestResultId]
-		,FIRST_VALUE(trc.[Comment]) OVER (PARTITION BY trh.[TestResultId] order by trh.[ChangeDate] desc) as [Comment]
-	from [TestResult] tr
-	inner join [TestResultHistory] as trh on trh.TestResultId=tr.TestResultId
-	inner join [TestResultHistoryComment] as trc on trc.TestResultHistoryId=trh.TestResultHistoryId
-*/
-	select distinct tr.[TestResultId]
-		,FIRST_VALUE(com.[CommentText]) OVER (PARTITION BY tr.[TestResultId] order by al.timestamp desc) as [Comment]
-	from [TestResult] tr
-	inner join TestResultComment trc on trc.TestResultUid=tr.TestResultId
-	inner join Comment com on com.CommentUid=trc.CommentUid
-	inner join CommentItem ci on ci.CommentItemUid=CommentItemUid
-	inner join [dbo].[ActionLog] AL ON  [AL].[Key] =  ci.[CommentItemUid] AND [AL].[IsLast] = 1
-  
-	select distinct tr.[TestResultId], s.SampleId
-		,FIRST_VALUE(com.[CommentText]) OVER (PARTITION BY tr.[TestResultId] order by al.timestamp desc) as [Comment]
-	from [TestResult] tr
-	inner join TestResultComment trc on trc.TestResultUid=tr.TestResultId
-	inner join Comment com on com.CommentUid=trc.CommentUid
-	inner join CommentItem ci on ci.CommentItemUid=CommentItemUid
-	inner join [dbo].[ActionLog] AL ON  [AL].[Key] =  ci.[CommentItemUid] AND [AL].[IsLast] = 1
-	inner join [SampleTechTest] stt on STT.SampleTechTestId = TR.SampleTechTestId
-	inner join [SampleTech] as ST on STT.SampleTechId = ST.SampleTechId
-	inner join [Sample] as S on ST.SampleId = S.SampleId
-	order by Comment
-  
-  
+// Повторяем старую логику
+foreach (STCPTContext stcpttRow in rowsToAdd)
+{
+    STCPTContext stcptRow = stcpRow.FindSTCPT(stcpttRow.STCPTT.STCPTUid);
+    if (stcpttRow.STCPTT.TestType == (int)TestType.Group)
+    {
+        STCPTTContext[] cRows = stcptRow.FindChildSTCPTT(stcpttRow.STCPTT.TechTestUid);
+        if (cRows != null)
+            Array.ForEach(cRows, cRow => sType = AddDescriptor(tech, helper, sType, keyInfo, stcptRow, cRow, date));
+    }
+    else
+        sType = AddDescriptor(tech, helper, sType, keyInfo, stcptRow, stcpttRow, date);
+}
+
   
 
 Вопросы к димону по http://tfs2012:8080/tfs/Indusoft/BMU/_workitems?id=109063&_a=edit
