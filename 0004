@@ -23,6 +23,14 @@ foreach (STCPTContext stcpttRow in rowsToAdd)
         sType = AddDescriptor(tech, helper, sType, keyInfo, stcptRow, stcpttRow, date);
 }
 
+        private T GetPropValueEnum<T>(string propName)
+        {
+            var value = GetPropValue("Samples.WriteRejectedToPI");
+            var result = default(T);
+            if (Enum.GetNames(typeof(T)).Any(a => a.ToUpper()==propName.ToUpper()))
+                result = (T)Enum.Parse(typeof(T), value, true);
+            return result;
+        }
   
 
 Вопросы к димону по http://tfs2012:8080/tfs/Indusoft/BMU/_workitems?id=109063&_a=edit
