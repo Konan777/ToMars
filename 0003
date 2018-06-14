@@ -1,4 +1,12 @@
-        Расширяем новыми методами
+Начинаем тут:
+C:\Temp\Indus\Source\Indusoft.LDS.Client.ST\Data\STHelper.cs->GetFreqDesc
+
+Логика работы с БД:
+C:\Temp\Indus\Source\Indusoft.LDS.Server.Services.ST\STDataService.cs->GetSTContext
+#region AcsItem
+
+
+Расширяем новыми методами
         Indusoft.LDS.Services.Contracts.Acss->IAcsDataService
         Indusoft.LDS.Server.Services.Acs\AcsDataService.cs
         using Indusoft.LDS.Services.Contracts.Acss;
