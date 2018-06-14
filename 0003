@@ -1,26 +1,43 @@
-	-- Найдем старшую действующую на дату образца запись в журнале проверок оборудования
-	select * from [dbo].[EqpCheckLog] ECLU
-	inner join (
-		-- Найдем Оборудование и старшую дату проверки 
-		--select  ECL.EqpUid,  max(ECL.CheckDate) as CheckDate
-		select  ECL.EqpUid,  max(ECL.CheckDate) as CheckDate
-		from [dbo].[EqpCheckLog] ECL 
-		inner join (
-			-- Найдем дату образца и оборудование
-			select distinct STTE.EqpUid, SM.ReceiveDate
-			from [dbo].[SampleTechTestEqp] STTE
-			inner join [dbo].[SampleTechTest] STT on STT.SampleTechTestId=STTE.SampleTechTestUid
-			inner join [dbo].[SampleTech] ST on ST.SampleTechId=STT.SampleTechId
-			inner join [dbo].[Sample] SM on SM.SampleId=ST.SampleId
-			where STTE.SampleTechTestUid in (
-				cast('2de19b65-f002-423a-ba06-5cfbc364991f' as uniqueidentifier),
-				cast('630b5b61-b4f4-45c3-bb6b-2957109dd9cc' as uniqueidentifier),
-				cast('82d582f8-05c5-423a-99db-02f9584e0be5' as uniqueidentifier),
-				cast('2ab306ea-4bed-4a97-a0de-3938f55bcde4' as uniqueidentifier)
-			)
-		) as SDT on SDT.EqpUid=ECL.EqpUid
-		where  SDT.ReceiveDate>=ECL.DocDate and SDT.ReceiveDate<=ECL.NextDate
-		group by ECL.EqpUid
-	) as OUCL on ECLU.EqpUid=OUCL.EqpUid and ECLU.CheckDate=OUCL.CheckDate
-	
+        Расширяем новыми методами
+        Indusoft.LDS.Services.Contracts.Acss->IAcsDataService
+        Indusoft.LDS.Server.Services.Acs\AcsDataService.cs
+        using Indusoft.LDS.Services.Contracts.Acss;
 
+            private void Some2(Guid stUid)
+        {
+            IDataServiceManager dsm = ServiceProvider.GetService<IDataServiceManager>();
+            IAcsDataService stsrv = dsm.GetService<IAcsDataService>();
+            var dt = stsrv.AcsItem_GetAsDataTable(
+                sqlQuery = @"
+    SELECT ai.AcsItemUid ,
+            ai.AcsPartVerId ,
+            ai.STCPTTUid ,
+            ai.IsActive
+    FROM ST 
+    	JOIN STCP ON STCP.STUid = ST.STUid
+    	JOIN STCPT ON STCPT.STCPUid = STCP.STCPUid
+    	JOIN STCPTT ON STCPTT.STCPTUid = STCPT.STCPTUid
+    	JOIN AcsItem ai ON STCPTT.STCPTTUid = ai.STCPTTUid
+    WHERE ST.STUid = @stUid";
+            stPool.AcsItems = DbManager.SetCommand(sqlQuery,
+                DbManager.Parameter("@stUid", stUid)).ExecuteList<AcsItem>().ToArray();
+
+            #region AcsItemEventFreq
+            sqlQuery = @"
+    SELECT f.AcsItemEventFreqId ,
+            f.AcsItemUid ,
+            f.EventFreqUid ,
+            f.Start ,
+            f.Stop ,
+            f.OccurrenceCount ,
+            f.LabelUid ,
+            f.Description
+    FROM ST 
+    	JOIN STCP ON STCP.STUid = ST.STUid
+    	JOIN STCPT ON STCPT.STCPUid = STCP.STCPUid
+    	JOIN STCPTT ON STCPTT.STCPTUid = STCPT.STCPTUid
+    	JOIN AcsItem ai ON STCPTT.STCPTTUid = ai.STCPTTUid
+    	JOIN AcsItemEventFreq f ON ai.AcsItemUid = f.AcsItemUid
+    WHERE ST.STUid = @stUid";
+
+        }
