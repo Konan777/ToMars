@@ -37,7 +37,7 @@ foreach (STCPTContext stcpttRow in rowsToAdd)
         {
             IDataServiceManager dsm = ServiceProvider.GetService<IDataServiceManager>();
             ISTDataService stsrv = dsm.GetService<ISTDataService>();
-            STContext stContext = stsrv.GetSTContext(stUid);
+            STContext stContext = stsrv.GetSTContext(stUid); // Можно сделать огрызок..
             List<AcsItem> AcsItems = new List<AcsItem>();
             List<AcsItemEventFreq> AcsItemEventFreqs = new List<AcsItemEventFreq>();
             AcsItems.AddRange(stContext.AcsItems);
