@@ -32,6 +32,18 @@ foreach (STCPTContext stcpttRow in rowsToAdd)
             return result;
         }
   
+        using Indusoft.LDS.Services.Contracts.ST;
+        private void Some(Guid stUid)
+        {
+            IDataServiceManager dsm = ServiceProvider.GetService<IDataServiceManager>();
+            ISTDataService stsrv = dsm.GetService<ISTDataService>();
+            STContext stContext = stsrv.GetSTContext(stUid);
+            List<AcsItem> AcsItems = new List<AcsItem>();
+            List<AcsItemEventFreq> AcsItemEventFreqs = new List<AcsItemEventFreq>();
+            AcsItems.AddRange(stContext.AcsItems);
+            AcsItemEventFreqs.AddRange(stContext.AcsItemEventFreqs);
+        }
+  
 
 Вопросы к димону по http://tfs2012:8080/tfs/Indusoft/BMU/_workitems?id=109063&_a=edit
 1) как генерируются задания? по расписанию или в ручную? какой кнопкой?
