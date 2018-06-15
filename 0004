@@ -54,3 +54,4 @@ foreach (STCPTContext stcpttRow in rowsToAdd)
 я бы постарался сделать так чтобы FindSTCPTT вовзращался признак и не нужно было делать запрос
 в тех реализации написано что за формирование отвечает метод FindAuxTests
 
+Default/OnlyGroupAux/GrouoAndOtherAux
