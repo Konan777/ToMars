@@ -1,96 +1,68 @@
-ALTER FUNCTION [dbo].[EqpOnSampleDate]
-(
-	--@SampleTechTestUid GuidList READONLY
-	@SampleTechTestUid uniqueidentifier
-)
+1. Для возможностей:
+-  "Серии контрольных процедур"
+-  "Формат отображения результатов"
+-  "Задания"
+-  "Ввод результатов"
+-  "Журналы Оперативного контроля "
 
-RETURNS TABLE AS RETURN
+2. Добавить настройку:
 
--- Берем представление v_Eqp за основу. Сохраняем порядок следования колонок. Ограничиваем выборку by SampleTechTestUid.
--- Меняем алгоритм получаения данных по проверкам оборудования. Берем проверку на дату получения образца.
-SELECT 
- v_Eqp.[EqpUid], [EqpName], v_Eqp.[EqpTypeUid], [EqpTypeName], [EqpKindId], [EqpStateId], [EqpStateName], [EqpStateActive]
- ,[Limits], [AccuracyClass], [Mnf], [MnfNum], [MnfDate], [InvNum], [Location], [Accuracy], [EngUnitId], [ScaleInterval]
- ,[Purpose], [TechnicalProps], [UserId], [StartUp], [LegalBasis], [Note], [InScopeAccreditation]
- ,[CheckLog].[NextDate]
- ,[EqpCheckType].[Name] AS [CheckTypeName]
- ,[CheckLog].[Doc]
- ,[CheckLog].[DocDate]
- ,[UseOperationControl], [InMetrologyScope], [RV], [EngUnits], [DocExists],[RoomUid]
- ,stte.[SampleTechTestEqpUid], stte.[SampleTechTestUid], stte.[Comment]
-from v_Eqp
+"Использовать алгоритмы НД:"
+  - РМГ 76
+  - ОСТ 95
 
--- В случае если не нужно оборудование без проверок заменить LEFT JOIN на INNER JOIN
-LEFT JOIN (
-	-- Найдем действующую на дату образца запись в журнале проверок оборудования
-	-- top 1 потому, что может быть несколько записей в ECL подходящих по дате
-	select top 1 ECL.* 
-	from [dbo].[SampleTechTestEqp] STT2
-	inner join [dbo].[EqpCheckLog] ECL on ECL.EqpUid=STT2.EqpUid
-	inner join (
-		-- Найдем дату образца
-		select distinct STTE.SampleTechTestUid, SM.ReceiveDate, SM.SampleId
-		from [dbo].[SampleTechTestEqp] STTE
-		inner join [dbo].[SampleTechTest] STT on STT.SampleTechTestId=STTE.SampleTechTestUid
-		inner join [dbo].[SampleTech] ST on ST.SampleTechId=STT.SampleTechId
-		inner join [dbo].[Sample] SM on SM.SampleId=ST.SampleId
-		--where STTE.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
-		where STTE.SampleTechTestUid = @sampleTechTestUid
-	) as SDT on SDT.SampleTechTestUid=STT2.SampleTechTestUid
-	--where STT2.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
-	where STT2.SampleTechTestUid = @sampleTechTestUid
-	and SDT.ReceiveDate>=ECL.DocDate
-	and SDT.ReceiveDate<=ECL.NextDate
-	order by ECL.Doc desc -- Чтобы подхватилась старшая по дате из нескольких
-) AS [CheckLog] ON [CheckLog].[EqpUid] = v_Eqp.EqpUid
-LEFT JOIN [dbo].[EqpCheck] ON [EqpCheck].[EqpCheckUid] = [CheckLog].[EqpCheckUid]
-LEFT JOIN [dbo].[EqpCheckType] ON [EqpCheckType].[EqpCheckTypeUid] = [EqpCheck].[EqpCheckTypeUid]
-inner join SampleTechTestEqp stte on stte.EqpUid= v_Eqp.EqpUid 
-	--and stte.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
-	and stte.SampleTechTestUid=@sampleTechTestUid
+3. Выбор должен выполняться выставлением флагов с условием:
+-отсутствие выбора не возможно
+-множественный выбор возможен
 
+4. Схемы, доступные в режиме работы "РМГ-76":
+Алгоритмы схем, доступные в режиме работы "РМГ-76":
 
+5. Схемы, доступные в режиме работы "ОСТ 95":
+Алгоритмы схем, доступные в режиме работы "ОСТ 95":
 
+6. Ограничения:
 
+    Список Серий КП
+    Список задач ВЛК при создании Серии КП
+    Список алгоритмов при создании Серии КП
+    Список алгоритмов при создании ОКПА
+    Ограничение на выбор формата отображения результатов
 
+Расположение в системе:
+ФБ Возможности -> Внутрилабораторный контроль-> Серии контрольных процедур
+ФБ Возможности -> Внутрилабораторный контроль-> Формат отображения результатов
+ФБ Возможности -> Внутрилабораторный контроль-> Журналы Оперативного контроля
+ФБ Возможности -> Задания ->ФБ Задания и Ввод результатов
 
+Техническая реализация:
+Добавить настройку доступных режимов соответственно функциональной постановке в следующих контролах:
+1. Indusoft.LDS.Client.IC\Features\UI\CheckProcSeriesDesignControl.cs - Cерии контрольных процедур
+2. Indusoft.LDS.Client.IC\Features\UI\CheckResultFormViewControl.cs - Формат отображения результатов
+3. Indusoft.LDS.Client.IC\Features\UI\OpControlLogDesignControl.cs - Журналы оперативного контроля
+4. Indusoft.LDS.Client.IC\Dialogs\InternalControlTaskExtensionSettingsDialog.cs - расширение заданий внутрилабораторного контроля
 
-select * from [dbo].[EqpOnSampleDate](cast('82D582F8-05C5-423A-99DB-02F9584E0BE5' as uniqueidentifier)) as z_Eqp
-order by z_Eqp.EqpUid
+Для формирования списка режимов и хранения выбранных режимов можно воспользоваться перечислением Indusoft.LDS.Client.Samples.Common\Model\IntControlType.cs
 
+В класс Indusoft.LDS.Client.IC.Common\Algs\AlgorithmBase.cs добавить виртуальное свойство get, возвращающее список режимов, в которых доступен данный алгоритм.
+В наследниках этого класса в проекте Indusoft.LDS.Client.IC.Algs реализовать это поле в соответствии с таблицей, прикреплённой к данной US.
+Каждый алгоритм содержит список подходящих схем КП и задач ВЛК. Если для конкретного режима доступен алгоритм, значит для этого режима доступны схемы КП и задачи ВЛК этого алгоритма. Поэтому в дальнейшем для каждого режима можно будет получить доступные алгоритмы, задачи ВЛК и схемы КП. Необходимую для этого логику можно реализовать в Indusoft.LDS.Client.IC\Metadata\IntCManager.cs
 
-
-	select top 1 ECL.*
-	from [dbo].[SampleTechTestEqp] STT2
-	inner join [dbo].[EqpCheckLog] ECL on ECL.EqpUid=STT2.EqpUid
-	inner join (
-		-- Найдем дату образца
-		select distinct STTE.SampleTechTestUid, SM.ReceiveDate, SM.SampleId
-		from [dbo].[SampleTechTestEqp] STTE
-		inner join [dbo].[SampleTechTest] STT on STT.SampleTechTestId=STTE.SampleTechTestUid
-		inner join [dbo].[SampleTech] ST on ST.SampleTechId=STT.SampleTechId
-		inner join [dbo].[Sample] SM on SM.SampleId=ST.SampleId
-		--where STTE.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
-		where STTE.SampleTechTestUid = cast('82D582F8-05C5-423A-99DB-02F9584E0BE5' as uniqueidentifier)
-	) as SDT on SDT.SampleTechTestUid=STT2.SampleTechTestUid
-	--where STT2.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
-	where STT2.SampleTechTestUid = cast('82D582F8-05C5-423A-99DB-02F9584E0BE5' as uniqueidentifier)
-	and SDT.ReceiveDate>=ECL.DocDate
-	and SDT.ReceiveDate<=ECL.NextDate
-	order by ECL.Doc desc
-
-
-
-/*
-LEFT JOIN (
-	SELECT [ca].* FROM (
-		SELECT EqpUid, MIN(NextDate) AS nextdate
-		FROM [dbo].[EqpCheckLog]
-		WHERE NextDate > GETDATE()
-		GROUP BY EqpUid
-	) AS [MaxDates] CROSS APPLY (
-		SELECT TOP 1 * FROM [dbo].[EqpCheckLog]
-		WHERE dbo.EqpCheckLog.EqpUid = [MaxDates].EqpUid
-		AND EqpCheckLog.NextDate = [MaxDates].nextdate) AS [ca]
-) AS [CheckLog] ON [CheckLog].[EqpUid] = [dbo].[Eqp].EqpUid
-*/
+Отфильтровать данные в соответствии с настроенными режимами. Желательно при реализации данной логики обеспечить простоту написания юниттестов, чтобы можно было контролировать правильность фильтрации элементов.
+1. Cерии контрольных процедур:
+- Indusoft.LDS.Client.IC\Features\UI\CheckResultFormTypeViewControl.cs - фильтровать список серий по их схеме и задаче ВЛК
+- Indusoft.LDS.Client.IC\Dialogs\CheckProcSeriesDialog.cs - фильтровать список доступных для выбора схем КП и задач ВЛК
+- Indusoft.LDS.Client.IC\Dialogs\CheckProcSeriesTaskDialog.cs - в режиме РМГ 76 выбор показателя качества должен быть недоступен
+- Indusoft.LDS.Client.IC\Model\CheckProcSeriesInfo.cs: ReadOnly() - в режиме РМГ 76 свойство "Усиленый контроль" должно быть недоступно
+- Indusoft.LDS.Client.IC\Model\CheckProcSeriesInfo.cs: FormsCollectionDesignActionPerformerю.Perform - фильтровать список доступных для выбора форматов по их алгоритмам
+2. Формат отображения результатов:
+- Indusoft.LDS.Client.IC\Features\UI\CheckResultFormViewControl.cs - фильтровать группы форматов по задаче ВЛК. Фильтровать форматы по их алгоритмам
+- Indusoft.LDS.Client.IC\Model\CheckResultFormInfo.cs: AlgsCollectionDesignActionPerformer.Perform - фильтровать список доступных для выбора алгоритмов
+3. Журналы оперативного контроля:
+- Indusoft.LDS.Client.IC\Features\UI\OpControlLogDesignControl.cs - фильтровать список доступных для выбора схем КП
+4. Задания и Ввод результатов:
+Indusoft.LDS.Client.IC\Dialogs\OperativeControlOnDemandDialog.cs - фильтровать список доступных схем КП. В режиме РМГ 76 выбор показателя качества и чекбокс "Усиленный контроль" должны быть недоступны.
+Данный диалог может быть вызван только из возможностей "Задания" и "Ввод результатов анализов". Поэтому настройка доступных режимов должна получаться из расширения заданий, как это сделано в методе InitPropertyEditor():
+    var ict = InternalControlTaskExtension.Instance;
+    var iSettingsSupport = ((ISettingsSupport)ict);
+    var settings = iSettingsSupport.Settings as InternalControlTaskExtensionSettings;
