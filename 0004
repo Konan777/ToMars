@@ -54,11 +54,16 @@ LEFT JOIN [dbo].[EqpCheckType] ON [EqpCheckType].[EqpCheckTypeUid] = [EqpCheck].
 
 	
 	
-SELECT * FROM [dbo].[EqpWithCheckOnSampleDate](
-	(select GuidList.uid from (
-		select cast('679b7999-d07a-e811-ac8a-d850e6575157' as [uniqueidentifier]) as uid
+
+declare @SampleTechTestUid as GuidList;
+
+insert into @SampleTechTestUid
+	select z.uid from (
+		select cast('0F425355-2D02-4007-B707-FF2DF81DFDBF' as [uniqueidentifier]) as uid
 		union all
-		select cast('679b7999-d07a-e811-ac8a-d850e6575157' as [uniqueidentifier]) as uid
-	) as GuidList)
-)
+		select cast('7D56B003-5AA9-4B3D-944C-50863495387B' as [uniqueidentifier]) as uid
+	) as z
+
+SELECT EqpTypeName, Doc, format(DocDate, 'dd.MM.yyyy hh:mm:ss') as DocDate, format(NextDate, 'dd.MM.yyyy hh:mm:ss') as NextDate FROM [dbo].[EqpWithCheckOnSampleDate](@SampleTechTestUid)
+
     
