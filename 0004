@@ -1,69 +1,9 @@
-USE [I-LDS_BMU]
-GO
-/****** Object:  UserDefinedFunction [dbo].[EqpWithCheckOnSampleDate]    Script Date: 28.06.2018 22:23:46 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
+Indusoft.LDS.Client.IC\Dialogs\CheckProcSeriesDialog.cs
+private void InitCheckTypes()
 
+Indusoft.LDS.Client.IC\Metadata\IntCManager.cs
+public ICheckType[] CheckTypes
 
-		
-ALTER FUNCTION [dbo].[EqpWithCheckOnSampleDate]
-(
-	@SampleTechTestUid GuidList READONLY
-)
-
-RETURNS TABLE AS RETURN
-
--- Берем представление v_Eqp за основу. Сохраняем порядок следования колонок. Ограничиваем выборку by SampleTechTestUid.
--- Меняем алгоритм получаения данных по проверкам оборудования. Берем проверку на дату получения образца.
-SELECT 
- v_Eqp.[EqpUid], [EqpName], v_Eqp.[EqpTypeUid], [EqpTypeName], [EqpKindId], [EqpStateId], [EqpStateName], [EqpStateActive]
- ,[Limits], [AccuracyClass], [Mnf], [MnfNum], [MnfDate], [InvNum], [Location], [Accuracy], [EngUnitId], [ScaleInterval]
- ,[Purpose], [TechnicalProps], [UserId], [StartUp], [LegalBasis], [Note], [InScopeAccreditation]
- ,[CheckLog].[NextDate]
- ,[EqpCheckType].[Name] AS [CheckTypeName]
- ,[CheckLog].[Doc]
- ,[CheckLog].[DocDate]
- ,[UseOperationControl], [InMetrologyScope], [RV], [EngUnits], [DocExists],[RoomUid]
- ,stte.[SampleTechTestEqpUid] as [SampleTechTestEqpUid], stte.[SampleTechTestUid] as [SampleTechTestUid], stte.[Comment] as [Comment]
-from v_Eqp
-INNER JOIN [dbo].[SampleTechTestEqp] stte on stte.EqpUid= v_Eqp.EqpUid 
-	and stte.SampleTechTestUid in (SELECT [uid] FROM  @sampleTechTestUid)
-LEFT JOIN (
-	-- Найдем старшую действующую на дату образца запись в журнале проверок оборудования
-	select ECLU.[EqpUid], ECLU.[NextDate], ECLU.[Doc], ECLU.[DocDate], ECLU.[EqpCheckUid]  from [dbo].[EqpCheckLog] ECLU
-	inner join (
-		-- Найдем Оборудование и старшую дату проверки 
-		select  ECL.EqpUid,  max(ECL.CheckDate) as CheckDate
-		from [dbo].[EqpCheckLog] ECL 
-		inner join (
-			-- Найдем дату образца и оборудование
-			select distinct STTE.EqpUid, TR.EntryDate
-			from [dbo].[SampleTechTestEqp] STTE
-			inner join [dbo].[SampleTechTest] STT on STT.SampleTechTestId=STTE.SampleTechTestUid
-			inner join [dbo].[TestResult] TR on TR.SampleTechTestId=STT.SampleTechTestId
-			inner join  @sampleTechTestUid STU on STU.uid=STTE.SampleTechTestUid
-		) as SDT on SDT.EqpUid=ECL.EqpUid
-		where  SDT.EntryDate>=ECL.DocDate and SDT.EntryDate<=ECL.NextDate
-		group by ECL.EqpUid
-	) as OUCL on ECLU.EqpUid=OUCL.EqpUid and ECLU.CheckDate=OUCL.CheckDate
-) AS [CheckLog] ON [CheckLog].[EqpUid] = v_Eqp.EqpUid
-LEFT JOIN [dbo].[EqpCheck] ON [EqpCheck].[EqpCheckUid] = [CheckLog].[EqpCheckUid]
-LEFT JOIN [dbo].[EqpCheckType] ON [EqpCheckType].[EqpCheckTypeUid] = [EqpCheck].[EqpCheckTypeUid]
-
-	
-	
-
-declare @SampleTechTestUid as GuidList;
-
-insert into @SampleTechTestUid
-	select z.uid from (
-		select cast('0F425355-2D02-4007-B707-FF2DF81DFDBF' as [uniqueidentifier]) as uid
-		union all
-		select cast('7D56B003-5AA9-4B3D-944C-50863495387B' as [uniqueidentifier]) as uid
-	) as z
-
-SELECT EqpTypeName, Doc, format(DocDate, 'dd.MM.yyyy hh:mm:ss') as DocDate, format(NextDate, 'dd.MM.yyyy hh:mm:ss') as NextDate FROM [dbo].[EqpWithCheckOnSampleDate](@SampleTechTestUid)
-
-    
+IntCManager.RegisterCheckType - Задача ВЛК
+IntCManager.RegisterAlgorithm - Алгоритм
+IntCManager.CheckProcSchemes  - Схема КП
