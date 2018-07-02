@@ -21,3 +21,55 @@ TestResultHistory.
 В библиотеке Indusoft.LDS.Client.AnalysisInputControl, внести изменения в класс SampleLabelDataSet.cs, добавив поле Comment в набор 
 данных SampleTests в методе CreateTables. Внести изменения в метод FillData, добавив поле Comment в массив fieldList при заполнении 
 набора SampleTests.
+
+Indusoft.LDS.Client.AnalysisInputControl\LabelType\SampleLabelDataSet.cs
+В данный момент технические требования учитывают только формирование отчетов в протоколах испытаний, и выполнены в полном объеме.
+Для того, чтобы корректно работала печать этикетки образца нужны технические требования для случаев когда источниками данных этикетки являются:
+1. Оборудование показателя-> Показатели образца : Tables.Add(NewTable("SampleTestEqp", null));
+  EqpNextDate=Оборудование - Дата следующей проверки
+2. Показатели Образца 				: Tables.Add(NewTable("SampleTests", null));
+  EqpNextDate=Оборудование - Дата следующей проверки
+3. Проверки оборудования -> показатели образца 	: Tables.Add(NewTable("SampleTestEqpCheck", null));
+  EqpNextDate = Проверки оборудования - Дата следующей проверки
+
+
+EqpNextDate  берется из 
+Indusoft.LDS.Client.AnalysisInputControl\LabelType\SampleLabelDataSet.cs
+Eqp[] allEqps = DataManager.Instance.LabelsDataService.GetEqpBySampleTechTest(sttids.ToArray());
+и из eqpCheckLogs = DataManager.Instance.EqpService.GetEqpCheckLogsWithCheckType(allEqpsUids.ToArray());
+
+GetEqpBySampleTechTest ведет в 
+Indusoft.LDS.Server.Services.Labels\LabelsDataService.cs
+  public Eqp[] GetEqpBySampleTechTest(Guid[] sampleTechTestUids)
+можем заменить на аналог
+Indusoft.LDS.Server.Services.SR\SRDataService.cs
+  public Eqp[] GetEqpBySampleTechTest(Guid[] sampleTechTestUids)
+
+GetEqpCheckLogsWithCheckType(allEqpsUids ведет в
+Indusoft.LDS.Server.Services.EQP\EqpDataService.cs
+  public abstract DataTable GetEqpCheckLogsAllWithCheckType([ParamTypeName("GuidList")]Guid[] eqpUid);
+
+
+новая версия:
+        public Eqp[] GetEqpBySampleTechTest(Guid[] sampleTechTestUids)
+        {
+            var result = new List<Eqp>();
+            if (sampleTechTestUids.Length == 0)
+                return result.ToArray();
+
+            BLToolkit.Data.DbManager dbm = DbManager;
+            
+            var param = new IDbDataParameter[] {
+                new SqlParameter()
+                {
+                    ParameterName = "@SampleTechTestUid"
+                    ,SqlDbType = SqlDbType.Structured
+                    ,TypeName = "GuidList"
+                    ,Value = sampleTechTestUids
+                }
+            };
+            result = dbm.SetCommand(@"SELECT * FROM [dbo].[EqpWithCheckOnSampleDate](@sampleTechTestUid)", param).ExecuteList<Eqp>();
+            
+
+            return result.ToArray();
+        }
