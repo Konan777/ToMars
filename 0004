@@ -7,3 +7,17 @@ public ICheckType[] CheckTypes
 IntCManager.RegisterCheckType - Задача ВЛК
 IntCManager.RegisterAlgorithm - Алгоритм
 IntCManager.CheckProcSchemes  - Схема КП
+
+Этикетки:
+В системе: Возможности->Лаборатория->Этикетки.
+
+Indusoft.LDS.Client.AnalysisInputControl\LabelType\SampleLabelDataSet.cs
+
+Поправить хранимую процедуру [dbo].[spc_SLSampleSearchWithTests] для выбора информации о введенном коментарии к показателю образца, 
+вернуть столбец [Сomment].
+В данное поле выбирается информация из таблицы TestResultHistoryComment. TestResultHistoryComment связана с таблицей TestResult 
+через таблицу TestResultHistory. В поле Comment этикетки следует брать последний комментарий отсортировав по полю ChangeDate из таблицы 
+TestResultHistory.
+В библиотеке Indusoft.LDS.Client.AnalysisInputControl, внести изменения в класс SampleLabelDataSet.cs, добавив поле Comment в набор 
+данных SampleTests в методе CreateTables. Внести изменения в метод FillData, добавив поле Comment в массив fieldList при заполнении 
+набора SampleTests.
