@@ -1,3 +1,14 @@
 C:\!Indus\Branches\Malahit_BMU\Source\Indusoft.LDS.Client.IC\Model\CheckResultFormInfo.cs
 C:\!Indus\Branches\Malahit_BMU\Source\Indusoft.LDS.Client.IC\Features\UI\CheckResultFormViewControl.cs
 C:\!Indus\Branches\Malahit_BMU\Source\Indusoft.LDS.Client.IC\Data\SA.cs
+нет, в SA ты будешь просто прокидывать данный enum или что там, и пихать его в конструктор CheckResultFormInfo, а в CheckResultFormTypeViewControl у тебя и так есть доступ
+
+У тебя в CheckResultFormTypeViewControl должен быть метод, который вызывается при смене возможности
+
+и там переназначается контент
+
+
+Голубев 21:48
+        public void SetFeatureNode(CheckResultFormFeature featureNode)
+
+
