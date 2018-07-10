@@ -1,5 +1,3 @@
-C:\!Indus\Branches\Malahit_BMU\Source\Indusoft.LDS.Client.IC\Features\OpControlLogFeatureProperties.cs
-C:\!Indus\Branches\Malahit_BMU\Source\Indusoft.LDS.Client.IC.Common\Model\ChkSModeSettingsEx.cs
-C:\!Indus\Branches\Malahit_BMU\Source\Indusoft.LDS.Client.IC.Common\Model\IChkSModeSettingsEx.cs
-C:\!Indus\Branches\Malahit_BMU\Source\Indusoft.LDS.Client.IC\Features\CheckProcSeriesFeatureProperties.cs
-C:\!Indus\Branches\Malahit_BMU\Source\Indusoft.LDS.Client.IC\Features\CheckProcSeriesFeatureContent.cs
+C:\!Indus\Branches\Malahit_BMU\Source\Indusoft.LDS.Client.IC\Model\CheckResultFormInfo.cs
+C:\!Indus\Branches\Malahit_BMU\Source\Indusoft.LDS.Client.IC\Features\UI\CheckResultFormViewControl.cs
+C:\!Indus\Branches\Malahit_BMU\Source\Indusoft.LDS.Client.IC\Data\SA.cs
