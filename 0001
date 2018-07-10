@@ -42,4 +42,9 @@ C:\!Indus\Branches\Malahit_BMU\Source\Indusoft.LDS.Client.IC\Data\SA.cs
 Голубев 21:48
         public void SetFeatureNode(CheckResultFormFeature featureNode)
 
+1) в public void SetFeatureNode(CheckResultFormFeature featureNode) пробрасываем настройку в SA регион CheckResultForm. 
+2) Смотрим есть ли вызов конструктора CheckResultFormInfo при выборе пункта меню
+3) Встраиваемся либо в конструктор CheckResultFormInfo либо в AlgsCollectionDesignActionPerformer подхватим настройку из SA.
+
+
 
