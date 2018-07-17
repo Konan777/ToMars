@@ -1,42 +1,102 @@
--- Проверяем что вернет v_Eqp для нашего случая, или берем все оборудование по которому есть образцы
-SELECT distinct v_Eqp.EqpUid, SampleTechTestEqp.SampleTechTestUid
-,v_Eqp.Doc, 
-CONVERT(varchar,v_Eqp.DocDate,104)+' '+CONVERT(varchar,v_Eqp.DocDate,108) as DocDate,
-CONVERT(varchar,v_Eqp.NextDate,104)+' '+CONVERT(varchar,v_Eqp.NextDate,108) as DocDate
-FROM v_Eqp
-inner join SampleTechTestEqp on v_Eqp.EqpUid=SampleTechTestEqp.EqpUid 
-	and NextDate is not null
-	and SampleTechTestEqpUid in (
-		--select s.SampleId, s.ReceiveDate, stte.EqpUid, stte.SampleTechTestEqpUid  
-		select stte.SampleTechTestEqpUid  
-		from sample s
-		inner join SampleTech st on st.SampleId=s.SampleId
-		inner join SampleTechTest stt on stt.SampleTechId=st.SampleTechId
-		inner join SampleTechTestEqp stte on stte.SampleTechTestUid=stt.SampleTechTestId
-	)
-where SampleTechTestEqp.SampleTechTestUid='82D582F8-05C5-423A-99DB-02F9584E0BE5'
 
-		select s.*
-		from sample s
-		inner join SampleTech st on st.SampleId=s.SampleId
-		inner join SampleTechTest stt on stt.SampleTechId=st.SampleTechId
-		inner join SampleTechTestEqp stte on stte.SampleTechTestUid=stt.SampleTechTestId -- RecieveDate='13.06.2017 14:57:00'
-		where stte.SampleTechTestUid='82D582F8-05C5-423A-99DB-02F9584E0BE5'
+CREATE TABLE [dbo].[ClbrGraphSeriesTest](
+	[ClbrGraphSeriesTestUid] [uniqueidentifier] NOT NULL,
+	[ClbrGraphSeriesUid] [uniqueidentifier] NOT NULL,
+	[TechTestUid] [uniqueidentifier] NOT NULL,
+	[Value] [float] NOT NULL,
+	[AbsErr] [float] NULL,
+ CONSTRAINT [PK_ClbGraphSeriesTest] PRIMARY KEY CLUSTERED 
+(
+	[ClbrGraphSeriesTestUid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
 
-		SELECT * FROM v_Eqp, SampleTechTestEqp where v_Eqp.EqpUid=SampleTechTestEqp.EqpUid and SampleTechTestEqp.SampleTechTestUid='82D582F8-05C5-423A-99DB-02F9584E0BE5'
-		order by v_Eqp.EqpUid
+GO
+
+ALTER TABLE [dbo].[ClbrGraphSeriesTest]  WITH CHECK ADD  CONSTRAINT [FK_ClbGraphSeriesTest_ClbrGraphSeries] FOREIGN KEY([ClbrGraphSeriesUid])
+REFERENCES [dbo].[ClbrGraphSeries] ([ClbrGraphSeriesUid])
+GO
+
+ALTER TABLE [dbo].[ClbrGraphSeriesTest] CHECK CONSTRAINT [FK_ClbGraphSeriesTest_ClbrGraphSeries]
+GO
+
+ALTER TABLE [dbo].[ClbrGraphSeriesTest]  WITH CHECK ADD  CONSTRAINT [FK_ClbGraphSeriesTest_TechTest] FOREIGN KEY([TechTestUid])
+REFERENCES [dbo].[TechTest] ([TechTestUid])
+GO
+
+ALTER TABLE [dbo].[ClbrGraphSeriesTest] CHECK CONSTRAINT [FK_ClbGraphSeriesTest_TechTest]
+GO
 
 
--- список журналов проверок оборудования, с тестированием образца
-select Eqp.EqpUid,  
-CONVERT(varchar,ecl.DocDate  ,104)+' '+CONVERT(varchar,ecl.DocDate  ,108) as DocDate,
-CONVERT(varchar,ecl.NextDate  ,104)+' '+CONVERT(varchar,ecl.NextDate  ,108) as CheckDate,
-ecl.Doc, ecl.EqpCheckLogUid, ecl.EqpCheckUid, ecl.Place
-from Eqp 
-inner join EqpCheckLog ecl on ecl.EqpUid=Eqp.EqpUid
-LEFT JOIN [EqpCheck] ec ON ec.[EqpCheckUid] = ecl.[EqpCheckUid]
-where exists(
-	select * from SampleTechTestEqp stt where stt.EqpUid=Eqp.EqpUid
-) and year(ecl.DocDate)<>year(ecl.NextDate)
-and Eqp.EqpUid='6F81E436-024D-4CFC-AE7B-50C55BB7F10E'
-order by ecl.EqpUid, ecl.DocDate desc
+----------------------------------------------------------------------
+
+
+
+
+CREATE TABLE [dbo].[ClbrTaskSeries](
+	[ClbrTaskSeriesUid] [uniqueidentifier] NOT NULL,
+	[ClbrGraphSeriesUid] [uniqueidentifier] NOT NULL,
+ CONSTRAINT [PK_ClbrTaskSeries] PRIMARY KEY CLUSTERED 
+(
+	[ClbrTaskSeriesUid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[ClbrTaskSeries]  WITH CHECK ADD  CONSTRAINT [FK_ClbrTaskSeries_ClbrGraphSeries] FOREIGN KEY([ClbrGraphSeriesUid])
+REFERENCES [dbo].[ClbrGraphSeries] ([ClbrGraphSeriesUid])
+GO
+
+
+----------------------------------------------------------------------
+
+
+CREATE TABLE [dbo].[ClbrTaskSeriesBatch](
+	[ClbrTaskSeriesBatchUid] [uniqueidentifier] NOT NULL,
+	[ClbrTaskSeriesUid] [uniqueidentifier] NOT NULL,
+	[AEBatchUid] [uniqueidentifier] NOT NULL,
+	[DimsId] [int] NOT NULL,
+ CONSTRAINT [PK_ClbrTaskSeriesBatch] PRIMARY KEY CLUSTERED 
+(
+	[ClbrTaskSeriesBatchUid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[ClbrTaskSeriesBatch]  WITH CHECK ADD  CONSTRAINT [FK_ClbrTaskSeriesBatch_ClbrTaskSeries] FOREIGN KEY([ClbrTaskSeriesUid])
+REFERENCES [dbo].[ClbrTaskSeries] ([ClbrTaskSeriesUid])
+GO
+
+ALTER TABLE [dbo].[ClbrTaskSeriesBatch]  WITH CHECK ADD  CONSTRAINT [FK_ClbrTaskSeriesBatch_AEBatch] FOREIGN KEY([AEBatchUid])
+REFERENCES [dbo].[AEBatch] ([AEBatchUid])
+GO
+
+
+----------------------------------------------------------------------
+
+
+
+
+CREATE TABLE [dbo].[ClbrTaskSeriesTest](
+	[ClbrTaskSeriesTestUid] [uniqueidentifier] NOT NULL,
+	[ClbrTaskSeriesUid] [uniqueidentifier] NOT NULL,
+	[ClbrGraphSeriesTestUid] [uniqueidentifier] NOT NULL,
+	[Value] [float] NOT NULL,
+	[AbsErr] [float]  NULL,
+ CONSTRAINT [PK_ClbrTaskSeriesTest] PRIMARY KEY CLUSTERED 
+(
+	[ClbrTaskSeriesTestUid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[ClbrTaskSeriesTest]  WITH CHECK ADD  CONSTRAINT [FK_ClbrTaskSeriesTest_ClbrTaskSeries] FOREIGN KEY([ClbrTaskSeriesUid])
+REFERENCES [dbo].[ClbrTaskSeries] ([ClbrTaskSeriesUid])
+GO
+
+ALTER TABLE [dbo].[ClbrTaskSeriesTest]  WITH CHECK ADD  CONSTRAINT [FK_ClbrTaskSeriesTest_ClbrGraphSeriesTest] FOREIGN KEY([ClbrGraphSeriesTestUid])
+REFERENCES [dbo].[ClbrGraphSeriesTest] ([ClbrGraphSeriesTestUid])
+GO
