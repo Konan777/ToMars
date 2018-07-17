@@ -1,1 +1,117 @@
 C:\!Indus\Branches\Malahit_Calibration\Source\Indusoft.LDS.Client.Calibration\Dialogs\ClbrGraphEditDialogForm.cs
+------------------------------------------------------
+
+CREATE TABLE [dbo].[ClbrGraphWS](
+	[ClbrGraphWSUid] [uniqueidentifier] NOT NULL,
+	[ClbrGraphUid] [uniqueidentifier] NOT NULL,
+	[AEUid] [uniqueidentifier] NOT NULL,
+	[StdDocUid] [uniqueidentifier] NULL,
+	[CompositionUid] [uniqueidentifier] NULL,
+	[Name] [nvarchar](150) NOT NULL,
+	[Flags] [int] NOT NULL,
+ CONSTRAINT [PK_ClbrGraphWS] PRIMARY KEY CLUSTERED 
+(
+	[ClbrGraphWSUid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[ClbrGraphWS]  WITH CHECK ADD  CONSTRAINT [FK_ClbrGraphWS_AE] FOREIGN KEY([AEUid])
+REFERENCES [dbo].[AE] ([AEUid])
+GO
+
+ALTER TABLE [dbo].[ClbrGraphWS] CHECK CONSTRAINT [FK_ClbrGraphWS_AE]
+GO
+
+ALTER TABLE [dbo].[ClbrGraphWS]  WITH CHECK ADD  CONSTRAINT [FK_ClbrGraphWS_ClbrGraph] FOREIGN KEY([ClbrGraphWSUid])
+REFERENCES [dbo].[ClbrGraph] ([ClbrGraphUid])
+GO
+
+ALTER TABLE [dbo].[ClbrGraphWS] CHECK CONSTRAINT [FK_ClbrGraphWS_ClbrGraph]
+GO
+
+ALTER TABLE [dbo].[ClbrGraphWS]  WITH CHECK ADD  CONSTRAINT [FK_ClbrGraphWS_Composition] FOREIGN KEY([CompositionUid])
+REFERENCES [dbo].[Composition] ([CompositionUid])
+GO
+
+ALTER TABLE [dbo].[ClbrGraphWS] CHECK CONSTRAINT [FK_ClbrGraphWS_Composition]
+GO
+
+ALTER TABLE [dbo].[ClbrGraphWS]  WITH CHECK ADD  CONSTRAINT [FK_ClbrGraphWS_StdDoc] FOREIGN KEY([StdDocUid])
+REFERENCES [dbo].[StdDoc] ([StdDocUid])
+GO
+
+ALTER TABLE [dbo].[ClbrGraphWS] CHECK CONSTRAINT [FK_ClbrGraphWS_StdDoc]
+GO
+
+
+----------------------------------------------------------------------
+
+CREATE TABLE [dbo].[ClbrGraphSeries](
+	[ClbrGraphSeriesUid] [uniqueidentifier] NOT NULL,
+	[ClbrGraphUid] [uniqueidentifier] NOT NULL,
+	[Name] [nvarchar](150) NOT NULL,
+	[SeriesType] [int] NOT NULL,
+	[ClbrGraphWSUid] [uniqueidentifier] NULL,
+ CONSTRAINT [PK_ClbrGraphSeries] PRIMARY KEY CLUSTERED 
+(
+	[ClbrGraphSeriesUid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[ClbrGraphSeries]  WITH CHECK ADD  CONSTRAINT [FK_ClbrGraphSeries_ClbrGraph] FOREIGN KEY([ClbrGraphUid])
+REFERENCES [dbo].[ClbrGraph] ([ClbrGraphUid])
+GO
+
+ALTER TABLE [dbo].[ClbrGraphSeries]  WITH CHECK ADD  CONSTRAINT [FK_ClbrGraphSeries_ClbrGraphWS] FOREIGN KEY([ClbrGraphWSUid])
+REFERENCES [dbo].[ClbrGraphWS] ([ClbrGraphWSUid])
+GO
+
+ALTER TABLE [dbo].[ClbrGraphSeries] CHECK CONSTRAINT [FK_ClbrGraphSeries_ClbrGraph]
+GO
+
+
+
+
+----------------------------------------------------------------------
+
+
+
+
+CREATE TABLE [dbo].[ClbrGraphWSCompBatch](
+	[ClbrGraphWSCompBatchUid] [uniqueidentifier] NOT NULL,
+	[ClbrGraphWSUid] [uniqueidentifier] NOT NULL,
+	[AEBatchUid] [uniqueidentifier] NOT NULL,
+	[DimsId] [int] NULL,
+ CONSTRAINT [PK_ClbrGraphWSCompBatch] PRIMARY KEY CLUSTERED 
+(
+	[ClbrGraphWSCompBatchUid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[ClbrGraphWSCompBatch]  WITH CHECK ADD  CONSTRAINT [FK_ClbrGraphWSCompBatch_AEBatch] FOREIGN KEY([AEBatchUid])
+REFERENCES [dbo].[AEBatch] ([AEBatchUid])
+GO
+
+ALTER TABLE [dbo].[ClbrGraphWSCompBatch] CHECK CONSTRAINT [FK_ClbrGraphWSCompBatch_AEBatch]
+GO
+
+ALTER TABLE [dbo].[ClbrGraphWSCompBatch]  WITH CHECK ADD  CONSTRAINT [FK_ClbrGraphWSCompBatch_ClbrGraphWS] FOREIGN KEY([ClbrGraphWSUid])
+REFERENCES [dbo].[ClbrGraphWS] ([ClbrGraphWSUid])
+GO
+
+ALTER TABLE [dbo].[ClbrGraphWSCompBatch] CHECK CONSTRAINT [FK_ClbrGraphWSCompBatch_ClbrGraphWS]
+GO
+
+ALTER TABLE [dbo].[ClbrGraphWSCompBatch]  WITH CHECK ADD  CONSTRAINT [FK_ClbrGraphWSCompBatch_Dims] FOREIGN KEY([DimsId])
+REFERENCES [dbo].[Dims] ([DimsId])
+GO
+
+ALTER TABLE [dbo].[ClbrGraphWSCompBatch] CHECK CONSTRAINT [FK_ClbrGraphWSCompBatch_Dims]
+GO
+
