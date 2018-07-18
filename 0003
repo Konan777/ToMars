@@ -4,3 +4,6 @@
 - Выяснить куда что пишется (пишется в graph)
 - Как реализовать тесты? (CalibrationDataServiceTests.cs)
 - SA как интерфейс. Уже содержит кучу интерфейсов на DataService. Вытаскивать все методы датасервисов в общую кучу?
+spc_CreateProcedure_InsertObject2
+spc_CreateProcedure_UpdateObject2
+spc_CreateProcedure_DeleteObject2
