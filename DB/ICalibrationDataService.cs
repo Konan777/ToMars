@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -13,17 +13,21 @@ namespace Indusoft.LDS.Services.Contracts.Calibration
     public interface ICalibrationDataService : IDataService
     {
         ClbrGraphSeries[] GetClbrGraphSeriesByGraph(Guid clbrGraphUid);
-        void ClbrGraphSeriesInsert(ref ClbrTask clbrTask);
-        void ClbrGraphSeriesUpdate(ref ClbrTask clbrTask);
-        void ClbrGraphSeriesDelete(ClbrTask clbrTask);
+        void ClbrGraphSeriesInsert(ref ClbrGraphSeries graphSeries);
+        void ClbrGraphSeriesUpdate(ref ClbrGraphSeries graphSeries);
+        void ClbrGraphSeriesDelete(ClbrGraphSeries graphSeries);
 
-        ClbGraphSeriesTest[] GetClbGraphSeriesTestByGraphSeries(Guid clbrGraphSeriesUid);
-		ClbGraphSeriesTest[] GetClbGraphSeriesTestByTechTest(Guid techTestUid);
-        void ClbrGraphSeriesInsert(ref ClbrTask clbrTask);
-        void ClbrGraphSeriesUpdate(ref ClbrTask clbrTask);
-        void ClbrGraphSeriesDelete(ClbrTask clbrTask);
+        ClbGraphSeriesTest[] GetClbGraphSeriesTestBySeries(Guid clbrGraphSeriesUid);
+        void ClbrGraphSeriesInsert(ref ClbGraphSeriesTest graphSeriesTest);
+        void ClbrGraphSeriesUpdate(ref ClbGraphSeriesTest graphSeriesTest);
+        void ClbrGraphSeriesDelete(ClbGraphSeriesTest graphSeriesTest);
 
-        ClbrTaskSeries[] GetClbrTaskSeries ByGraphSeries(Guid clbrGraphSeriesUid);
+
+
+
+
+
+        ClbrTaskSeries[] GetClbrTaskSeriesByGraphSeries(Guid clbrGraphSeriesUid);
         void ClbrTaskSeriesInsert(ref ClbrTask clbrTask);
         void ClbrTaskSeriesUpdate(ref ClbrTask clbrTask);
         void ClbrTaskSeriesDelete(ClbrTask clbrTask);

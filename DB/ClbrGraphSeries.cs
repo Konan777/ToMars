@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using BLToolkit.DataAccess;
@@ -17,10 +17,15 @@ namespace Indusoft.LDS.Services.Contracts.Calibration.Entity
         
         public Guid ClbrGraphUid { get; set; }
 
-        public Guid ClbrGraphWSUid { get; set; }
+		[Nullable]
+        public Guid? ClbrGraphWSUid { get; set; }
 
+		[Required, MaxLength(150)]
 		public srting Name { get; set; }
         
+		[Required]
         public int SeriesType { get; set; }
+
+		public EditableList<ClbGraphSeriesTest> GraphSeriesTests { get; set; }
     }
 }

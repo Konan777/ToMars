@@ -9,20 +9,12 @@ using Indusoft.LDS.Common.Services;
 namespace Indusoft.LDS.Services.Contracts.Calibration.Entity
 {
     [Serializable]
-    [TableName(Name = "ClbGraphSeriesTest")]
-    public class ClbGraphSeriesTest: EditableDataEntity<ClbGraphSeriesTest>
+    [TableName(Name = "ClbrTaskSeries")]
+    public class ClbrTaskSeries: EditableDataEntity<ClbrTaskSeries>
     {
         [PrimaryKey(1)]
-        public Guid ClbrGraphSeriesTestUid { get; set; }
+        public Guid ClbrTaskSeriesUid { get; set; }
         
         public Guid ClbrGraphSeriesUid { get; set; }
-
-        public Guid TechTestUid { get; set; }
-
-		[Required]
-		public float Value { get; set; }
-
-		[Nullable]        
-        public float? AbsErr { get; set; }
     }
 }
