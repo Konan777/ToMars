@@ -13,3 +13,9 @@ spc_CreateProcedure_DeleteObject2
 Для алгоритмов расчета "Метод одноточечной градуировки", "Метод двухточечной градуировки" - доступен только тип "Построение ГХ"
 
 Для алгоритмов расчета "Метод трех и более точечной градуировки" и "Классический метод Гаусса" - доступны оба типа серии."
+
+exec dev.spc_CreateTable 'ClbrGraphSeries'
+exec dev.spc_CreateTable_ExtendedProperties 'ClbrGraphSeries'
+exec dev.spc_CreateTable_FKIndexes 'ClbrGraphSeries'
+exec dev.[spc_CreateProcedures_AnyObjectAction2] 'ClbrGraphSeries'
+exec dev.[spc_CreateProcedures_AnyObjectAction3] 'ClbrGraphSeries'
