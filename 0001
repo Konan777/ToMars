@@ -1,53 +1,35 @@
 
-\Dialogs\ClbrTaskEditDialog.cs
+        private SimpleButton simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
+        public Form1()
+        {
+            InitializeComponent();
+            List<Columns> DS = new List<Columns>();
+            gridLookUpEdit1.Properties.PopupView.OptionsBehavior.AutoPopulateColumns = true;
+            gridLookUpEdit1.Properties.ValueMember = "Col001";
+            gridLookUpEdit1.Properties.DisplayMember = "Col001";
 
-1) UI
---------------------------------------------------------------------------------------------------------------
-private ClbrGraphEditController _TestController;
-public ClbrGraphEditController TestController => _TestController;
+            for (int i = 0; i < 10; i++)
+            {
+                DS.Add(
+                    new Columns() { Col001 = i.ToString(), Col002 = "123", Col003 = "qwe" }
+                );
+            }
 
-private void InitControls()
-	_TestController = new ClbrGraphEditController(_dm, _clbrGraph);
-    var result = TestController.ClbrGraphSeries.Select(t => t.Name).ToList();
-	^^^ сменить в гриде 1 биндинг с SeriesName на Name
-private void _gleChkS_EditSeriesValueChanged(object sender, EventArgs e)
-	var selected = (ClbrGraphSeries)_gleChkS.GetSelectedDataRow();
-	^^^ ClbrTaskSeriesTestModel надо менять на ClbrGraphSeries
-	_tlSTST.DataSource = TestController.GetSeriesTestWraps(selected.ClbrGraphSeriesUid);
-    ^^^ сменить в гриде 2 биндинг с ClbrTaskSeriesTestModel на ClbrGraphSeriesTestWrap
+            gridLookUpEdit1.Properties.DataSource = DS;
+            simpleButton1.Text = "Filter it!";
+            gridLookUpEdit1.Popup += GridLookUpEdit1_Popup;
+        }
 
-2) SAVE
---------------------------------------------------------------------------------------------------------------
-Feature\UI\CalibrationGraphView.cs
-private void SaveClbrTask(ClbrTask clbrTask, ClbrGraph clbrGraph)
-^^^ сохранение
-private void _bTaskAddClick(object sender, EventArgs e)
-^^^ вызывается на нажатию (+) ???
+        private void SimpleButton1_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException("click fired");
+        }
 
-сделать testCtrlr пабликом
-в CalibrationGraphView подхвативать его на private void SaveClbrTask(ClbrTask clbrTask, ClbrGraph clbrGraph) 
-как dlg.TestController
-в ClbrGraphEditController сделать метод для сохранения шаблона как теста
-SaveGraphAsTest
-                    foreach (var sr in _testCtrlr.ClbrGraphSeries)
-                    {
-                        var taskSeries = new ClbrTaskSeries()
-                        {
-                            ClbrGraphSeriesUid = sr.ClbrGraphSeriesUid,
-                            ClbrTaskSeriesUid = Guid.NewGuid()
-                        };
-                        _dm.CalibrationDataService.ClbrTaskSeriesInsert(ref taskSeries);
-                        foreach (var tst in sr.GraphSeriesTests)
-                        {
-                            var seriesTest = new ClbrTaskSeriesTest()
-                            {
-                                AbsErr = tst.AbsErr ?? 0,
-                                ClbrGraphSeriesTestUid = tst.ClbrGraphSeriesTestUid,
-                                ClbrTaskSeriesTestUid = Guid.NewGuid(),
-                                ClbrTaskSeriesUid = taskSeries.ClbrTaskSeriesUid,
-                                Value = tst.Value
-                            };
-                            _dm.CalibrationDataService.ClbrTaskSeriesTestInsert(ref seriesTest);
-                        }
-                    }
-	
+        private void GridLookUpEdit1_Popup(object sender, EventArgs e)
+        {
+            Control popupWindow = ((IPopupControl)sender).PopupWindow;
+            popupWindow.Controls.Add(simpleButton1);
+            simpleButton1.Anchor = AnchorStyles.Bottom;
+            simpleButton1.Height = 15;
+            simpleButton1.Location = new Point(popupWindow.Width - simpleButton1.Width*2, popupWindow.Height - simpleButton1.Height - 3);
+        }
