@@ -33,3 +33,46 @@
             simpleButton1.Height = 15;
             simpleButton1.Location = new Point(popupWindow.Width - simpleButton1.Width*2, popupWindow.Height - simpleButton1.Height - 3);
         }
+
+Добавляeм 3 поля AEUid, AETestUid, DimsItem. 
+Расписано заполнение только для AETestUid и DimsItem.
+Зачем поле AEUid?
+
+Нужно построить 2 таблицы. Объекты учета и их тип, Характеристика объекта учета и единицы измерения
+Постановка аналитика:
+Список характеристик выводит характеристики объекта учета, которые соответствуют по классу единиц измерения классу настраиваемого показателя.
+Техническая реализация:
+Связь ОУ с применимыми методиками содержится в таблице AEStdDoc. AEUid - идентификатор ОУ. StdDocVerId - идентификатор версии методики.
+
+
+select distinct 
+	AE.AEUid, 
+	AE.Name as AEName, 
+	ET.Name as TypeName, 
+	AETST.AETestUid, 
+	TST.Code as TestCode, 
+	TST.Name as TestName, 
+	TT.TechTestUid, 
+	EU.EngUnitId, 
+	EU.Name, 
+	EU.Abbreviation
+from dbo.[AE] AE
+-- Объект учета и его тип
+inner join dbo.[AEType] AET on AET.AEUid=AE.AEUid
+inner join dbo.[EntityType] ET on ET.EntityTypeUid=AET.EntityTypeUid
+-- характеристика объекта учета
+left join dbo.[AETest] AETST on AETST.AEUid=AE.AEUid
+left join dbo.[Test] TST on TST.TestId=AETST.TestId
+-- применимость объекта учета к показателю
+left join dbo.[TechTest] TT on TT.TestId=TST.TestId
+-- Единицы измерения характеристики
+left join dbo.[EngUnit] EU on EU.EngUnitId=AETST.EngUnitId
+-- применимость объекта учета по версионности
+-- left join dbo.[TechVer] TV on TV.TechUid=TT.TechUid
+-- left join dbo.[AEStdDoc] AESD on AESD.StdDocVerId=TV.TechVerId
+
+Связь AEStdDoc.StdDocVerId->TechVer.TechVerId
+TechVer.TechUid=Tech.TechUid
+TechVer.TechVerId=TechTestVer.TechVerId
+
+AEStdDoc.StdDocVerId->TechVer.TechVerId
