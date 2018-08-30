@@ -77,6 +77,5 @@ TechVer.TechVerId=TechTestVer.TechVerId
 
 AEStdDoc.StdDocVerId->TechVer.TechVerId
 
-Найти где используются TechTestVer_Insert и TechTestVer_Update
-если нигде нет, то пробросить в IAEDataService. 
-IGenericServiceProvider
+данные получать из Indusoft.LDS.Client.Techs.Provider .TechsDataProvider 
+
