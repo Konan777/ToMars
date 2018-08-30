@@ -76,3 +76,7 @@ TechVer.TechUid=Tech.TechUid
 TechVer.TechVerId=TechTestVer.TechVerId
 
 AEStdDoc.StdDocVerId->TechVer.TechVerId
+
+Найти где используются TechTestVer_Insert и TechTestVer_Update
+если нигде нет, то пробросить в IAEDataService. 
+
