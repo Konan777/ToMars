@@ -1,102 +1,22 @@
 
-CREATE TABLE [dbo].[ClbrGraphSeriesTest](
-	[ClbrGraphSeriesTestUid] [uniqueidentifier] NOT NULL,
-	[ClbrGraphSeriesUid] [uniqueidentifier] NOT NULL,
-	[TechTestUid] [uniqueidentifier] NOT NULL,
-	[Value] [float] NOT NULL,
-	[AbsErr] [float] NULL,
- CONSTRAINT [PK_ClbGraphSeriesTest] PRIMARY KEY CLUSTERED 
-(
-	[ClbrGraphSeriesTestUid] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+ITechService
+Indusoft.LDS.Services.Contracts.Clfs.DataServices
+TechTestVer TechTestVer_Select(Guid techTestUid, DateTime cDate);
+        TechTestVer TechTestVerById(int techTestId);
+        TechTestVer TechTestVerByUid(Guid techTestUid);
+        List<TechTestVer> TechTestVersByUid(Guid techTestUid);
+        string TechTestVer_Insert(ref TechTestVer techTestVer);
+        string TechTestVer_Update(TechTestVer techTestVer);
+        string TechTestVer_Delete(TechTestVer techTestVer);
 
-GO
-
-ALTER TABLE [dbo].[ClbrGraphSeriesTest]  WITH CHECK ADD  CONSTRAINT [FK_ClbGraphSeriesTest_ClbrGraphSeries] FOREIGN KEY([ClbrGraphSeriesUid])
-REFERENCES [dbo].[ClbrGraphSeries] ([ClbrGraphSeriesUid])
-GO
-
-ALTER TABLE [dbo].[ClbrGraphSeriesTest] CHECK CONSTRAINT [FK_ClbGraphSeriesTest_ClbrGraphSeries]
-GO
-
-ALTER TABLE [dbo].[ClbrGraphSeriesTest]  WITH CHECK ADD  CONSTRAINT [FK_ClbGraphSeriesTest_TechTest] FOREIGN KEY([TechTestUid])
-REFERENCES [dbo].[TechTest] ([TechTestUid])
-GO
-
-ALTER TABLE [dbo].[ClbrGraphSeriesTest] CHECK CONSTRAINT [FK_ClbGraphSeriesTest_TechTest]
-GO
+Indusoft.LDS.Services.Contracts.Clfs
+    public interface IClfManager : IDataService, IOrgUnitService, IProductService, IEngUnitService, 
+        ISubdivisionService, 
+		!!! ITechService, ISpecService, IStdDocService, ISTCPVersService
 
 
-----------------------------------------------------------------------
-
-
-
-
-CREATE TABLE [dbo].[ClbrTaskSeries](
-	[ClbrTaskSeriesUid] [uniqueidentifier] NOT NULL,
-	[ClbrGraphSeriesUid] [uniqueidentifier] NOT NULL,
- CONSTRAINT [PK_ClbrTaskSeries] PRIMARY KEY CLUSTERED 
-(
-	[ClbrTaskSeriesUid] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-ALTER TABLE [dbo].[ClbrTaskSeries]  WITH CHECK ADD  CONSTRAINT [FK_ClbrTaskSeries_ClbrGraphSeries] FOREIGN KEY([ClbrGraphSeriesUid])
-REFERENCES [dbo].[ClbrGraphSeries] ([ClbrGraphSeriesUid])
-GO
-
-
-----------------------------------------------------------------------
-
-
-CREATE TABLE [dbo].[ClbrTaskSeriesBatch](
-	[ClbrTaskSeriesBatchUid] [uniqueidentifier] NOT NULL,
-	[ClbrTaskSeriesUid] [uniqueidentifier] NOT NULL,
-	[AEBatchUid] [uniqueidentifier] NOT NULL,
-	[DimsId] [int] NOT NULL,
- CONSTRAINT [PK_ClbrTaskSeriesBatch] PRIMARY KEY CLUSTERED 
-(
-	[ClbrTaskSeriesBatchUid] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-ALTER TABLE [dbo].[ClbrTaskSeriesBatch]  WITH CHECK ADD  CONSTRAINT [FK_ClbrTaskSeriesBatch_ClbrTaskSeries] FOREIGN KEY([ClbrTaskSeriesUid])
-REFERENCES [dbo].[ClbrTaskSeries] ([ClbrTaskSeriesUid])
-GO
-
-ALTER TABLE [dbo].[ClbrTaskSeriesBatch]  WITH CHECK ADD  CONSTRAINT [FK_ClbrTaskSeriesBatch_AEBatch] FOREIGN KEY([AEBatchUid])
-REFERENCES [dbo].[AEBatch] ([AEBatchUid])
-GO
-
-
-----------------------------------------------------------------------
-
-
-
-
-CREATE TABLE [dbo].[ClbrTaskSeriesTest](
-	[ClbrTaskSeriesTestUid] [uniqueidentifier] NOT NULL,
-	[ClbrTaskSeriesUid] [uniqueidentifier] NOT NULL,
-	[ClbrGraphSeriesTestUid] [uniqueidentifier] NOT NULL,
-	[Value] [float] NOT NULL,
-	[AbsErr] [float]  NULL,
- CONSTRAINT [PK_ClbrTaskSeriesTest] PRIMARY KEY CLUSTERED 
-(
-	[ClbrTaskSeriesTestUid] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-
-GO
-
-ALTER TABLE [dbo].[ClbrTaskSeriesTest]  WITH CHECK ADD  CONSTRAINT [FK_ClbrTaskSeriesTest_ClbrTaskSeries] FOREIGN KEY([ClbrTaskSeriesUid])
-REFERENCES [dbo].[ClbrTaskSeries] ([ClbrTaskSeriesUid])
-GO
-
-ALTER TABLE [dbo].[ClbrTaskSeriesTest]  WITH CHECK ADD  CONSTRAINT [FK_ClbrTaskSeriesTest_ClbrGraphSeriesTest] FOREIGN KEY([ClbrGraphSeriesTestUid])
-REFERENCES [dbo].[ClbrGraphSeriesTest] ([ClbrGraphSeriesTestUid])
-GO
+Indusoft.LDS.Client.Techs.Provider
+        public IClfManager Data
+        {
+            get { return DataManager.GetService<IClfManager>(); }
+        }
