@@ -20,3 +20,7 @@ Indusoft.LDS.Client.Techs.Provider
         {
             get { return DataManager.GetService<IClfManager>(); }
         }
+
+List<EngUnit> retEngFindAll = _RetEng.FindAll(fEng => fEng.ClassId == (int)_leEngUnitClass.EditValue);
+                _leEngUnit.Properties.DataSource = retEngFindAll;
+		
