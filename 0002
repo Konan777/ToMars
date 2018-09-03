@@ -21,6 +21,7 @@ Indusoft.LDS.Client.Techs.Provider
             get { return DataManager.GetService<IClfManager>(); }
         }
 
+D:\Work\!!Malo\Source\Indusoft.LDS.Client.Clfs.Common\Controls\TestDataControl.cs
 List<EngUnit> retEngFindAll = _RetEng.FindAll(fEng => fEng.ClassId == (int)_leEngUnitClass.EditValue);
                 _leEngUnit.Properties.DataSource = retEngFindAll;
 		
