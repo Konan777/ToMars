@@ -1,81 +1,10 @@
-
-        private SimpleButton simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
-        public Form1()
-        {
-            InitializeComponent();
-            List<Columns> DS = new List<Columns>();
-            gridLookUpEdit1.Properties.PopupView.OptionsBehavior.AutoPopulateColumns = true;
-            gridLookUpEdit1.Properties.ValueMember = "Col001";
-            gridLookUpEdit1.Properties.DisplayMember = "Col001";
-
-            for (int i = 0; i < 10; i++)
-            {
-                DS.Add(
-                    new Columns() { Col001 = i.ToString(), Col002 = "123", Col003 = "qwe" }
-                );
-            }
-
-            gridLookUpEdit1.Properties.DataSource = DS;
-            simpleButton1.Text = "Filter it!";
-            gridLookUpEdit1.Popup += GridLookUpEdit1_Popup;
-        }
-
-        private void SimpleButton1_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException("click fired");
-        }
-
-        private void GridLookUpEdit1_Popup(object sender, EventArgs e)
-        {
-            Control popupWindow = ((IPopupControl)sender).PopupWindow;
-            popupWindow.Controls.Add(simpleButton1);
-            simpleButton1.Anchor = AnchorStyles.Bottom;
-            simpleButton1.Height = 15;
-            simpleButton1.Location = new Point(popupWindow.Width - simpleButton1.Width*2, popupWindow.Height - simpleButton1.Height - 3);
-        }
-
-Добавляeм 3 поля AEUid, AETestUid, DimsItem. 
-Расписано заполнение только для AETestUid и DimsItem.
-Зачем поле AEUid?
-
-Нужно построить 2 таблицы. Объекты учета и их тип, Характеристика объекта учета и единицы измерения
-Постановка аналитика:
-Список характеристик выводит характеристики объекта учета, которые соответствуют по классу единиц измерения классу настраиваемого показателя.
-Техническая реализация:
-Связь ОУ с применимыми методиками содержится в таблице AEStdDoc. AEUid - идентификатор ОУ. StdDocVerId - идентификатор версии методики.
-
-
-select distinct 
-	AE.AEUid, 
-	AE.Name as AEName, 
-	ET.Name as TypeName, 
-	AETST.AETestUid, 
-	TST.Code as TestCode, 
-	TST.Name as TestName, 
-	TT.TechTestUid, 
-	EU.EngUnitId, 
-	EU.Name, 
-	EU.Abbreviation
-from dbo.[AE] AE
--- Объект учета и его тип
-inner join dbo.[AEType] AET on AET.AEUid=AE.AEUid
-inner join dbo.[EntityType] ET on ET.EntityTypeUid=AET.EntityTypeUid
--- характеристика объекта учета
-left join dbo.[AETest] AETST on AETST.AEUid=AE.AEUid
-left join dbo.[Test] TST on TST.TestId=AETST.TestId
--- применимость объекта учета к показателю
-left join dbo.[TechTest] TT on TT.TestId=TST.TestId
--- Единицы измерения характеристики
-left join dbo.[EngUnit] EU on EU.EngUnitId=AETST.EngUnitId
--- применимость объекта учета по версионности
--- left join dbo.[TechVer] TV on TV.TechUid=TT.TechUid
--- left join dbo.[AEStdDoc] AESD on AESD.StdDocVerId=TV.TechVerId
-
-Связь AEStdDoc.StdDocVerId->TechVer.TechVerId
-TechVer.TechUid=Tech.TechUid
-TechVer.TechVerId=TechTestVer.TechVerId
-
-AEStdDoc.StdDocVerId->TechVer.TechVerId
-
-данные получать из Indusoft.LDS.Client.Techs.Provider .TechsDataProvider 
-
+vs_enterprise.exe --layout .\offline --lang en-US --includeRecommended --includeOptional 
+--add Microsoft.VisualStudio.Workload.ManagedDesktop 
+--add Microsoft.VisualStudio.Workload.NetCoreTools 
+--add Microsoft.VisualStudio.Workload.NetWeb 
+--add Microsoft.VisualStudio.Workload.Node
+--add Component.GitHub.VisualStudio 
+--add Microsoft.VisualStudio.Component.LinqToSql
+--add Microsoft.VisualStudio.Component.TypeScript.2.9
+--add Microsoft.VisualStudio.Component.Runtime.Node.x86.7.4.0
+--add Microsoft.VisualStudio.Component.TestTools.CodedUITest 
