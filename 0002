@@ -1,27 +1,76 @@
 
-ITechService
-Indusoft.LDS.Services.Contracts.Clfs.DataServices
-TechTestVer TechTestVer_Select(Guid techTestUid, DateTime cDate);
-        TechTestVer TechTestVerById(int techTestId);
-        TechTestVer TechTestVerByUid(Guid techTestUid);
-        List<TechTestVer> TechTestVersByUid(Guid techTestUid);
-        string TechTestVer_Insert(ref TechTestVer techTestVer);
-        string TechTestVer_Update(TechTestVer techTestVer);
-        string TechTestVer_Delete(TechTestVer techTestVer);
+                    int checkProcSchemeSampleId = 0;
+                    // С двумя контрольными измерениями каждого образца в условиях полной воспроизводимости
+                    if (CheckProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemeFullReproducibilityUid)
+                        checkProcSchemeSampleId = 7;
+                    // С двумя контрольными измерениями каждого образца в условиях частичной воспроизводимости
+                    if (CheckProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemePartReproducibilityUid)
+                        checkProcSchemeSampleId = 7;
+                    // С двумя контрольными измерениями каждого образца в условиях чистой воспроизводимости
+                    if (CheckProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemePureReproducibilityUid)
+                        checkProcSchemeSampleId = 7;
+                    // С применением контрольной методики
+                    if (CheckProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemeCheckTechUid)
+                        checkProcSchemeSampleId = 5;
+                    // С применением метода варьирования навески
+                    if (CheckProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemeVaryingMassUid)
+                        checkProcSchemeSampleId = 6;
+                    // С применением метода добавки
+                    if (CheckProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemeAdditionUid)
+                        checkProcSchemeSampleId = 4;
+                    // С применением метода добавки совместно с методом разбавления
+                    if (CheckProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemeDilutionAdditionUid)
+                        checkProcSchemeSampleId = 2; // May be 3?
+                    // С применением метода разбавления
+                    if (CheckProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemeDilutionUid)
+                        checkProcSchemeSampleId = 2;
 
-Indusoft.LDS.Services.Contracts.Clfs
-    public interface IClfManager : IDataService, IOrgUnitService, IProductService, IEngUnitService, 
-        ISubdivisionService, 
-		!!! ITechService, ISpecService, IStdDocService, ISTCPVersService
+                    DataManager.Instance.RepositoryDataService.GetStatus(null, "CheckProcWorking");
+
+                    var ncheckProc = CheckProc.CreateInstance();
+                    ncheckProc.Insert();
+                    ncheckProc.CheckProcUid = Guid.NewGuid();
+                    ncheckProc.CheckProcInfoUid = CheckProcInfo.CheckProcInfoUid;
+                    ncheckProc.StatusId = DataManager.Instance.RepositoryDataService.GetStatus(null, "CheckProcWorking").StatusId; // ???
+                    ncheckProc.CreationDate = task.StartDate; // ???
+                    DataManager.Instance.IntControlService.CheckProcInsert(ref ncheckProc);
+
+                    var _fkSample = CheckProcSample.CreateInstance();
+                    _fkSample.Insert();
+                    _fkSample.CheckProcSampleUid = Guid.NewGuid();
+                    _fkSample.CheckProcUid = ncheckProc.CheckProcUid;
+                    _fkSample.SampleUid = propDlg.SampleUid;
+                    _fkSample.CheckProcSchemeSampleId = 0;
+                    DataManager.Instance.IntControlService.CheckProcSampleInsert(ref _fkSample);
+
+                    var _cpSample = CheckProcSample.CreateInstance();
+                    _cpSample.Insert();
+                    _cpSample.CheckProcSampleUid = Guid.NewGuid();
+                    _cpSample.CheckProcUid = ncheckProc.CheckProcUid;
+                    _cpSample.TaskUid = task.TaskUid;
+                    _cpSample.CheckProcSchemeSampleId = checkProcSchemeSampleId;
+                    DataManager.Instance.IntControlService.CheckProcSampleInsert(ref _cpSample);
+
+                    LabAnalysisTaskManager.Instance.RefreshTask(taskUid, false);
+
+                    propDlg.Init(taskContentSecurity, CheckProcTask, ncheckProc, _cpSample, mode, chksModeSettingEx);
+
+                    if (propDlg.ShowDialog() != DialogResult.OK)
+                        return false;
 
 
-Indusoft.LDS.Client.Techs.Provider
-        public IClfManager Data
-        {
-            get { return DataManager.GetService<IClfManager>(); }
-        }
+                    /*DataManager.Instance.TaskService.SetTaskResultKey(task.TaskUid, propDlg.SampleUid);
+                    task.ResultKey = propDlg.SampleUid;
 
-D:\Work\!!Malo\Source\Indusoft.LDS.Client.Clfs.Common\Controls\TestDataControl.cs
-List<EngUnit> retEngFindAll = _RetEng.FindAll(fEng => fEng.ClassId == (int)_leEngUnitClass.EditValue);
-                _leEngUnit.Properties.DataSource = retEngFindAll;
-		
+                    var checkProcInfo = DataManager.Instance.GetCheckProcInfoByUid(CheckProcTask.CheckProcInfoUid);
+                    var CheckProcWorkingStatus = DataManager.Instance.RepositoryDataService.GetStatus(null, "CheckProcWorking");
+
+                    _cpSample.SampleUid = propDlg.SampleUid;
+
+                    DataManager.Instance.IntControlService.CheckProcInsert(ref _checkProc); 
+                    DataManager.Instance.IntControlService.CheckProcSampleInsert(ref _cpSample);
+
+                    LabAnalysisTaskManager.Instance.RefreshTask(taskUid, false);*/
+
+                    return true;
+
