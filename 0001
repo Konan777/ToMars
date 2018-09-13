@@ -1,10 +1,4 @@
-vs_enterprise.exe --layout .\offline --lang en-US --includeRecommended --includeOptional 
---add Microsoft.VisualStudio.Workload.ManagedDesktop 
---add Microsoft.VisualStudio.Workload.NetCoreTools 
---add Microsoft.VisualStudio.Workload.NetWeb 
---add Microsoft.VisualStudio.Workload.Node
---add Component.GitHub.VisualStudio 
---add Microsoft.VisualStudio.Component.LinqToSql
---add Microsoft.VisualStudio.Component.TypeScript.2.9
---add Microsoft.VisualStudio.Component.Runtime.Node.x86.7.4.0
---add Microsoft.VisualStudio.Component.TestTools.CodedUITest 
+public abstract List<Tech> GetTechsByTechUidsAndDate([ParamTypeName("GuidList")] Guid[] techUids, DateTime cDate);
+SELECT [uid] FROM @techUids   
+Indusoft.LDS.Client.AE SampleSearchControl
+
