@@ -1,0 +1,87 @@
+declare
+	@StartDate datetime = NULL
+	,@StopDate datetime = NULL
+	,@SubdivisionUid uniqueidentifier	-- Лаборатория
+	,@TechUid uniqueidentifier			-- Методика
+	,@TechTestUid uniqueidentifier		-- Показатель
+	,@ProductGroupId int				-- Группа продуктов
+	,@ProductUid uniqueidentifier		-- Продукт
+	,@CPUid uniqueidentifier			-- Точка контроля
+	,@STUid	uniqueidentifier			-- Шаблон образца
+
+SELECT [Sample].[SampleId]
+	,[STCPTT].STCPTTUid
+	,[SampleTechTest].STCPTTUid
+	,[SampleTech].SampleTechId		--    Методика образца
+	,[Subdivision].SubdivisionUID	-- Лаборатория
+	,[ProductGroup].ProductGroupId	-- Группа продуктов
+	,[Sample].ProductUid			-- Продукт
+	,[Sample].CPUid					-- Точка контроля
+	,[Sample].STUid					-- Шаблон образца
+	,[SampleTech].TechUid			-- Методика
+	,[TechTest].TechTestUid			-- Показатель
+FROM [dbo].[Sample]
+	INNER JOIN [dbo].[SampleType] ON [Sample].[SampleTypeId] = [SampleType].[SampleTypeId]
+	LEFT OUTER JOIN [dbo].[SampleProp] ON [Sample].[SampleId] = [SampleProp].[SampleId]
+	LEFT JOIN [dbo].[SampleTech] on [SampleTech].SampleId=[Sample].[SampleId]								-- Методика образца
+	LEFT JOIN [dbo].[Subdivision] on [Subdivision].SubdivisionId=[SampleTech].SubdivisionId					-- Лаборатория
+	LEFT JOIN [dbo].[SampleTechTest] on [SampleTechTest].SampleTechId=[SampleTech].SampleTechId				-- Показатель образца
+	LEFT JOIN [dbo].[STCPTT] on [STCPTT].STCPTTUid=[SampleTechTest].STCPTTUid								-- Показатель методики шаблона образца
+	LEFT JOIN [dbo].[TechTest] on [TechTest].TechTestUid=[STCPTT].TechTestUid								-- Показатель методики
+	LEFT JOIN [dbo].[ProductGroupContent] on [ProductGroupContent].ProductUid=[Sample].ProductUid
+	LEFT JOIN [dbo].[ProductGroup] on [ProductGroup].ProductGroupId=[ProductGroupContent].ProductGroupId
+WHERE [Sample].[CreationDate] BETWEEN ISNULL(@StartDate, '1753-01-01') AND ISNULL(@StopDate, '9999-12-31')
+	and [Sample].[StatusId] = 17         -- Образец авторизован
+	and ((@SubdivisionUid is null) or ([Subdivision].SubdivisionUID=@SubdivisionUid))
+	and ((@TechUid is null) or ([SampleTech].TechUid=@TechUid))
+	and ((@TechTestUid is null) or ([TechTest].TechTestUid=@TechTestUid))
+	and ((@ProductGroupId is null) or ([ProductGroup].ProductGroupId=@ProductGroupId))
+	and ((@ProductUid is null) or ([Sample].ProductUid=@ProductUid))
+	and ((@CPUid is null) or ([Sample].CPUid=@CPUid))
+	and ((@STUid is null) or ([Sample].STUid=@STUid))
+			
+
+		SELECT [Sample].[SampleId]
+			, [Sample].[Code]
+			, [Sample].[CreationDate]
+			, [Sample].[RegistrationDate]
+			, [Sample].[ReceiveDate]
+			, [Sample].[Product]
+			, [Sample].[CP]
+			, [Sample].[ST]
+			, [Sample].[User]
+			, [Sample].[SampleLogId]
+			, [Sample].[StatusId]
+			, [Sample].[SampleTypeId]
+			, [SampleType].[Name] AS [SampleType]
+			, [Sample].[ArbitrationDate]
+			, [Sample].[Scheduled]
+			, [Sample].[Num]
+			, [Sample].[ANum]
+			, [Sample].[STUid]
+			, [Sample].[ProductUid]
+			, [Sample].[CPUid]
+			, [Sample].[OrgUnitUid]
+			, [Sample].[ArbitrationId]
+			, [Sample].[Flags]
+			, [Sample].[ViolationNormExists]
+			, [Sample].[InspectionLot]
+			, [Sample].[FilingNum]
+			, [Sample].[DeliverDate]
+			, [Sample].[DeliveredBy]
+			, [SampleProp].[StoreDate]
+			, [SampleProp].[ExtractionPoint]
+			, [SampleProp].[Comment]
+			, [SampleProp].[ChkSTaskUid]
+			, [SampleProp].[NormType]
+			, [Sample].[IsOutOfTerms]
+		FROM [Sample]
+			INNER JOIN [SampleType] ON [Sample].[SampleTypeId] = [SampleType].[SampleTypeId]
+			LEFT OUTER JOIN [SampleProp] ON [Sample].[SampleId] = [SampleProp].[SampleId]
+		WHERE ([Sample].[CreationDate] BETWEEN ISNULL(@StartDate, '1753-01-01') AND ISNULL(@StopDate, '9999-12-31'))
+			AND ((@SampleId IS NULL) OR ([Sample].[SampleId] = @SampleId))
+			and [StatusId] = 17         -- Образец авторизован
+			AND ([SampleLogId] IN (SELECT [SampleLogId] FROM [dbo].[spc_GetActiveUserSampleLog]()))
+				AND ([STUid] = @STUid)
+				AND ([CPUid] = @CPUid)
+
