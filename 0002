@@ -1,76 +1,73 @@
 
-                    int checkProcSchemeSampleId = 0;
-                    // С двумя контрольными измерениями каждого образца в условиях полной воспроизводимости
-                    if (CheckProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemeFullReproducibilityUid)
-                        checkProcSchemeSampleId = 7;
-                    // С двумя контрольными измерениями каждого образца в условиях частичной воспроизводимости
-                    if (CheckProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemePartReproducibilityUid)
-                        checkProcSchemeSampleId = 7;
-                    // С двумя контрольными измерениями каждого образца в условиях чистой воспроизводимости
-                    if (CheckProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemePureReproducibilityUid)
-                        checkProcSchemeSampleId = 7;
-                    // С применением контрольной методики
-                    if (CheckProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemeCheckTechUid)
-                        checkProcSchemeSampleId = 5;
-                    // С применением метода варьирования навески
-                    if (CheckProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemeVaryingMassUid)
-                        checkProcSchemeSampleId = 6;
-                    // С применением метода добавки
-                    if (CheckProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemeAdditionUid)
-                        checkProcSchemeSampleId = 4;
-                    // С применением метода добавки совместно с методом разбавления
-                    if (CheckProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemeDilutionAdditionUid)
-                        checkProcSchemeSampleId = 2; // May be 3?
-                    // С применением метода разбавления
-                    if (CheckProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemeDilutionUid)
-                        checkProcSchemeSampleId = 2;
+                    Лаборатория. Subdivisions.
 
-                    DataManager.Instance.RepositoryDataService.GetStatus(null, "CheckProcWorking");
+Список продуктов выбираем на: Лабораторию и группу продуктов 
 
-                    var ncheckProc = CheckProc.CreateInstance();
-                    ncheckProc.Insert();
-                    ncheckProc.CheckProcUid = Guid.NewGuid();
-                    ncheckProc.CheckProcInfoUid = CheckProcInfo.CheckProcInfoUid;
-                    ncheckProc.StatusId = DataManager.Instance.RepositoryDataService.GetStatus(null, "CheckProcWorking").StatusId; // ???
-                    ncheckProc.CreationDate = task.StartDate; // ???
-                    DataManager.Instance.IntControlService.CheckProcInsert(ref ncheckProc);
+Поиск точки контроля:
 
-                    var _fkSample = CheckProcSample.CreateInstance();
-                    _fkSample.Insert();
-                    _fkSample.CheckProcSampleUid = Guid.NewGuid();
-                    _fkSample.CheckProcUid = ncheckProc.CheckProcUid;
-                    _fkSample.SampleUid = propDlg.SampleUid;
-                    _fkSample.CheckProcSchemeSampleId = 0;
-                    DataManager.Instance.IntControlService.CheckProcSampleInsert(ref _fkSample);
+declare
+	@SubdivisionUid uniqueidentifier
+	,@ProductGroupId int
+	,@ProductUid uniqueidentifier
 
-                    var _cpSample = CheckProcSample.CreateInstance();
-                    _cpSample.Insert();
-                    _cpSample.CheckProcSampleUid = Guid.NewGuid();
-                    _cpSample.CheckProcUid = ncheckProc.CheckProcUid;
-                    _cpSample.TaskUid = task.TaskUid;
-                    _cpSample.CheckProcSchemeSampleId = checkProcSchemeSampleId;
-                    DataManager.Instance.IntControlService.CheckProcSampleInsert(ref _cpSample);
+set @ProductUid=cast('0A19EC21-EE6B-4509-93DB-9231CCE6A05F' as uniqueidentifier);
+set @ProductGroupId=266;
 
-                    LabAnalysisTaskManager.Instance.RefreshTask(taskUid, false);
-
-                    propDlg.Init(taskContentSecurity, CheckProcTask, ncheckProc, _cpSample, mode, chksModeSettingEx);
-
-                    if (propDlg.ShowDialog() != DialogResult.OK)
-                        return false;
+select
+	[CP].CPUid 
+	,[CP].Name
+	,[CP].Code
+	,[Product].ProductUid
+	,[ProductGroup].ProductGroupId
+	,[Subdivision].SubdivisionUid
+from [dbo].[CP]
+INNER JOIN [dbo].[CPProduct] on [CPProduct].CPUid=[CP].CPUid
+INNER JOIN [dbo].[Product] on [Product].ProductUid=[CPProduct].ProductUid
+LEFT JOIN [dbo].[ProductGroupContent] on [ProductGroupContent].ProductUid=[Product].ProductUid
+LEFT JOIN [dbo].[ProductGroup] on [ProductGroup].ProductGroupId=[ProductGroupContent].ProductGroupId
+LEFT JOIN [dbo].[SubdivisionProduct] on [SubdivisionProduct].ProductUid=[Product].ProductUid
+LEFT JOIN [dbo].[Subdivision] on [Subdivision].SubdivisionId=[SubdivisionProduct].SubdivisionId
+where (@SubdivisionUid is null or (@SubdivisionUid is not null and [Subdivision].SubdivisionUid=@SubdivisionUid))
+	and (@ProductGroupId is null or (@ProductGroupId is not null and [ProductGroup].ProductGroupId=@ProductGroupId))
+	and (@ProductUid is null or (@ProductUid is not null and [Product].ProductUid=@ProductUid))
 
 
-                    /*DataManager.Instance.TaskService.SetTaskResultKey(task.TaskUid, propDlg.SampleUid);
-                    task.ResultKey = propDlg.SampleUid;
 
-                    var checkProcInfo = DataManager.Instance.GetCheckProcInfoByUid(CheckProcTask.CheckProcInfoUid);
-                    var CheckProcWorkingStatus = DataManager.Instance.RepositoryDataService.GetStatus(null, "CheckProcWorking");
 
-                    _cpSample.SampleUid = propDlg.SampleUid;
+        private void InitProductGroups()
+        {
+            var pGroups = _glSubdivision.EditValue is int
+                ? SA.Instance.GetProductGroupsBySubdivision((int)_glSubdivision.EditValue).ToArray()
+                : new ProductGroup[0];
 
-                    DataManager.Instance.IntControlService.CheckProcInsert(ref _checkProc); 
-                    DataManager.Instance.IntControlService.CheckProcSampleInsert(ref _cpSample);
+            _glProductGroup.Properties.DataSource = pGroups;
+            _glProductGroup.Enabled = pGroups.Any();
+            if (_glProductGroup.EditValue != null && pGroups.All(a => (int)_glProductGroup.EditValue != a.ProductGroupId))
+                _glProductGroup.EditValue = null;
 
-                    LabAnalysisTaskManager.Instance.RefreshTask(taskUid, false);*/
+            InitProducts();
+        }
 
-                    return true;
 
+        private void InitProducts()
+        {
+            var products = _glSubdivision.EditValue is int
+                ? SA.Instance.GetProductsBySubdivision((int)_glSubdivision.EditValue).Where(a => a.IsActive).ToArray()
+                : new Product[0];
+
+            if (_glProductGroup.EditValue is int)
+            {
+                var pGroup = SA.Instance.GetProductGroup((int)_glProductGroup.EditValue);
+                if (pGroup != null)
+                {
+                    products = products.Where(a => pGroup.ProductGroupContents.Any(b => b.ProductUid == a.ProductUid)).ToArray();
+                }
+            }
+
+            _glProduct.Properties.DataSource = products;
+            _glProduct.Enabled = products.Any();
+            if (_glProduct.EditValue != null && products.All(a => (Guid)_glProduct.EditValue != a.ProductUid))
+                _glProduct.EditValue = null;
+
+            InitTechs();
+        }
