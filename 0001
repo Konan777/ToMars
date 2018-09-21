@@ -1,4 +1,3 @@
-public abstract List<Tech> GetTechsByTechUidsAndDate([ParamTypeName("GuidList")] Guid[] techUids, DateTime cDate);
-SELECT [uid] FROM @techUids   
-Indusoft.LDS.Client.AE SampleSearchControl
+Диалоговое окно "Выбор рабочей пробы". Какие фильтры являются обязятельными?
+Ранее был обязятелен к выбору "Шаблон образца". Это так и остается?
 
