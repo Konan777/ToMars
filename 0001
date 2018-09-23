@@ -23,3 +23,43 @@ left join CheckProcInfo on CheckProcInfo.TechTestUid=TechTest.TechTestUid
 left join EngUnit on EngUnit.EngUnitId=CheckProcInfo.EngUnitId
 left join dims on dims.WeightEngUnitId=EngUnit.EngUnitId
 where dims.DimsId!=null
+
+Для получения списка ОУ, отфильтрованного по применимости, нужно добавить новый серверный метод по аналогии с методом IAEDataService.AE_Get(int[] subIds). Связь ОУ с применимыми методиками содержится в таблице AEStdDoc. AEUid - идентификатор ОУ. StdDocVerId - идентификатор версии методики.
+
+В качестве альтернативного варианта можно запросить с сервера записи AEStdDoc для текущей версии документа и фильтровать список ОУ уже на клиенте.
+
+
+Список характеристик ОУ можно получить с сервера методом IAEDataService.AETest_GetByAE(Guid aeUid)
+
+// Объект учета и его тип
+                from AE in AETable
+                join AEType in AEETTable on AE.AEUid equals AEType.AEUid
+                join EntityType in ETTable on AEType.EntityTypeUid equals EntityType.EntityTypeUid
+                // характеристика объекта учета
+                join AETest in AETestTable on AE.AEUid equals AETest.AEUid
+                    //into qAETest from AETest in qAETest.DefaultIfEmpty()    // left join
+                join Test in TestTable on AETest.TestId equals Test.TestId
+                    into qTest from Test in qTest.DefaultIfEmpty()
+                // применимость объекта учета к показателю
+                join TechTest in ttTable on Test.TestId equals TechTest.TestId
+                    into qTTest from TechTest in qTTest.DefaultIfEmpty()
+                // Единицы измерения характеристики
+                join EngUnit in EngUnitTable on AETest.EngUnitId equals EngUnit.EngUnitId
+                    into qEngUnit from EngUnit in qEngUnit.DefaultIfEmpty()
+                /* // Если понадобится выбрать методики по версионности
+                join TechVer in TechVerTable on TechTest.TechUid equals TechVer.TechUid
+                    into qTechVer from TechVer in qTechVer.DefaultIfEmpty() 
+                join StdDocTable in AEStdDocTable on TechVer.TechVerId equals StdDocTable.StdDocVerId
+                    into qStdDocTable from StdDocTable in qStdDocTable.DefaultIfEmpty() */
+                select new LDS.Services.Contracts.AE.Model.AE.AEDataModel()
+                {
+                    AEUid = AE.AEUid,
+                    AEName = AE.Name,
+                    TypeName = EntityType.Name,
+                    AETestUid = AETest.AETestUid,
+                    TestName = Test.Name,
+                    TechTestUid = TechTest.TechTestUid,
+                    EngUnitId = EngUnit.EngUnitId,
+                    UnitName = EngUnit.Name,
+                    UnitAbbreviation = EngUnit.Abbreviation
+                };
