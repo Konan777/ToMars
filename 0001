@@ -1,13 +1,25 @@
-1)
-Диалоговое окно "Выбор рабочей пробы". Какие фильтры являются обязятельными?
-Ранее был обязятелен к выбору "Шаблон образца". Это так и остается?
+-- скрипт для двух таблиц с характеристрикой
 
-2)
-От чего зависит список шаблонов образца в окне "Выбор рабочей пробы"?
-В текущей реализцаии в зависимости от методики и показателя с формы "Оперативный контроль по требованию"
-формируем список для выбора шаблонов образца. Это так и остается?
+select ae.Name, EntityType.Name, aetest.AETestUid, EngUnit.EngUnitId,  EngUnit.Name, EngUnit.Abbreviation, CheckProcInfo.CheckProcInfoUid, TechTest.TechTestUid,
+Dims.WeightEngUnitId
+from ae
+inner join aetype on aetype.AEUid=ae.AEUid
+inner join EntityType on EntityType.EntityTypeUid=AEType.EntityTypeUid
+left join AETest on AETest.AEUid=ae.AEUid
+left join EngUnit on EngUnit.EngUnitId=AETest.EngUnitId
+left join CheckProcInfo on CheckProcInfo.EngUnitId=EngUnit.EngUnitId
+left join TechTest on TechTest.TechTestUid=CheckProcInfo.TechTestUid
+left join Dims on Dims.WeightEngUnitId=EngUnit.EngUnitId
 
-3) Если на форме "Выбор рабочей пробы" шаблон образца зависит от методики и показателя, а продукт и точка контроля
-зависят от лаборатории и группы продуктов, то пользователь может выбрать продукт и точку контроля для которых
-будет отсутствовать шаблон образца. Будет ли в таком случае осуществляться поиск? Если будет то каким образом?
+-- список dims.WeightEngUnitId совпадающий с EngUnit.EngUnitId
+select distinct WeightEngUnitId from dims where dims.WeightEngUnitId in (
+	select EngUnitId from EngUnit
+)
 
+-- список EngUnit.EngUnitId 
+select TechTest.TechTestUid, CheckProcInfo.CheckProcInfoUid, EngUnit.EngUnitId, CheckProcInfo.CheckProcInfoUid, dims.DimsId
+from TechTest
+left join CheckProcInfo on CheckProcInfo.TechTestUid=TechTest.TechTestUid
+left join EngUnit on EngUnit.EngUnitId=CheckProcInfo.EngUnitId
+left join dims on dims.WeightEngUnitId=EngUnit.EngUnitId
+where dims.DimsId!=null
