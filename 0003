@@ -1,7 +1,7 @@
 select 
 	StdDocVer.StdDocUid as TechUid													-- Методика
 	,ae.AEUid, ae.Name as AEName, EntityType.Name as AEType,						-- Объект учета
-	Test.Name as TName, Test.Code as TCode, AETest.IsAttested 						-- Характеристики объекта учета
+	AETest.AETestUid, Test.Name as TName, Test.Code as TCode, AETest.IsAttested 	-- Характеристики объекта учета
 	--,EngUnit.EngUnitId,  EngUnit.Name, EngUnit.Abbreviation, Dims.WeightEngUnitId	-- Единицы измерения
 from ae
 inner join aetype on aetype.AEUid=ae.AEUid
@@ -15,3 +15,4 @@ left join Test on Test.TestId=AeTest.TestId
 left join AEStdDoc on AEStdDoc.AEUid=AE.AEUid
 left join StdDocVer on StdDocVer.StdDocVerId=AEStdDoc.StdDocVerId
 order by aeuid
+
