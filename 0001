@@ -63,3 +63,8 @@ where dims.DimsId!=null
                     UnitName = EngUnit.Name,
                     UnitAbbreviation = EngUnit.Abbreviation
                 };
+		
+		
+https://docs.microsoft.com/ru-ru/dotnet/framework/winforms/controls/bindingsource-component-overview
+
+
