@@ -1,70 +1,18 @@
--- скрипт для двух таблиц с характеристрикой
-
-select ae.Name, EntityType.Name, aetest.AETestUid, EngUnit.EngUnitId,  EngUnit.Name, EngUnit.Abbreviation, CheckProcInfo.CheckProcInfoUid, TechTest.TechTestUid,
-Dims.WeightEngUnitId
-from ae
-inner join aetype on aetype.AEUid=ae.AEUid
-inner join EntityType on EntityType.EntityTypeUid=AEType.EntityTypeUid
-left join AETest on AETest.AEUid=ae.AEUid
-left join EngUnit on EngUnit.EngUnitId=AETest.EngUnitId
-left join CheckProcInfo on CheckProcInfo.EngUnitId=EngUnit.EngUnitId
-left join TechTest on TechTest.TechTestUid=CheckProcInfo.TechTestUid
-left join Dims on Dims.WeightEngUnitId=EngUnit.EngUnitId
-
--- список dims.WeightEngUnitId совпадающий с EngUnit.EngUnitId
-select distinct WeightEngUnitId from dims where dims.WeightEngUnitId in (
-	select EngUnitId from EngUnit
-)
-
--- список EngUnit.EngUnitId 
-select TechTest.TechTestUid, CheckProcInfo.CheckProcInfoUid, EngUnit.EngUnitId, CheckProcInfo.CheckProcInfoUid, dims.DimsId
-from TechTest
-left join CheckProcInfo on CheckProcInfo.TechTestUid=TechTest.TechTestUid
-left join EngUnit on EngUnit.EngUnitId=CheckProcInfo.EngUnitId
-left join dims on dims.WeightEngUnitId=EngUnit.EngUnitId
-where dims.DimsId!=null
-
-Для получения списка ОУ, отфильтрованного по применимости, нужно добавить новый серверный метод по аналогии с методом IAEDataService.AE_Get(int[] subIds). Связь ОУ с применимыми методиками содержится в таблице AEStdDoc. AEUid - идентификатор ОУ. StdDocVerId - идентификатор версии методики.
-
-В качестве альтернативного варианта можно запросить с сервера записи AEStdDoc для текущей версии документа и фильтровать список ОУ уже на клиенте.
+Добрый день!
 
 
-Список характеристик ОУ можно получить с сервера методом IAEDataService.AETest_GetByAE(Guid aeUid)
+Затея с BindingSource на первый взгляд - отличное решение. В плане использования Current/Position.
+Но с DevExpress GridLookUpEdit Current/Position не работают, я кидал пруфы в скайп.
+	То есть в моем случае уже не стоит их использовать.
 
-// Объект учета и его тип
-                from AE in AETable
-                join AEType in AEETTable on AE.AEUid equals AEType.AEUid
-                join EntityType in ETTable on AEType.EntityTypeUid equals EntityType.EntityTypeUid
-                // характеристика объекта учета
-                join AETest in AETestTable on AE.AEUid equals AETest.AEUid
-                    //into qAETest from AETest in qAETest.DefaultIfEmpty()    // left join
-                join Test in TestTable on AETest.TestId equals Test.TestId
-                    into qTest from Test in qTest.DefaultIfEmpty()
-                // применимость объекта учета к показателю
-                join TechTest in ttTable on Test.TestId equals TechTest.TestId
-                    into qTTest from TechTest in qTTest.DefaultIfEmpty()
-                // Единицы измерения характеристики
-                join EngUnit in EngUnitTable on AETest.EngUnitId equals EngUnit.EngUnitId
-                    into qEngUnit from EngUnit in qEngUnit.DefaultIfEmpty()
-                /* // Если понадобится выбрать методики по версионности
-                join TechVer in TechVerTable on TechTest.TechUid equals TechVer.TechUid
-                    into qTechVer from TechVer in qTechVer.DefaultIfEmpty() 
-                join StdDocTable in AEStdDocTable on TechVer.TechVerId equals StdDocTable.StdDocVerId
-                    into qStdDocTable from StdDocTable in qStdDocTable.DefaultIfEmpty() */
-                select new LDS.Services.Contracts.AE.Model.AE.AEDataModel()
-                {
-                    AEUid = AE.AEUid,
-                    AEName = AE.Name,
-                    TypeName = EntityType.Name,
-                    AETestUid = AETest.AETestUid,
-                    TestName = Test.Name,
-                    TechTestUid = TechTest.TechTestUid,
-                    EngUnitId = EngUnit.EngUnitId,
-                    UnitName = EngUnit.Name,
-                    UnitAbbreviation = EngUnit.Abbreviation
-                };
-		
-		
-https://docs.microsoft.com/ru-ru/dotnet/framework/winforms/controls/bindingsource-component-overview
+Что касается master/detail примера из MSDN. Взял его за основу. Сделал приложение. (во вложении)
+Положил на форму 2 GridLookUpEdit и 2 combobox.
+В случае с combobox detail нормально переключается. 
+В случае GridLookUpEdit переключения detail не происходит.
+	В обоих случаях все сделано одинаково.
+Так-же, в данном примере, некорректно работают Current/Position и для GridLookUpEdit и для combobox.
+В причинах разбираться некогда..
 
+Еще один недостаток master/detail - работает только для DataSet/DataRelation.
+Если мы работаем с массивами или списками то master/detail - досвидания..
 
