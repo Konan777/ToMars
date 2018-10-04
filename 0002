@@ -1,1 +1,28 @@
-группировка при просмотре всех объектов учета
+AEBatchTest[] _batchTests = dm.AEBatchTest_Get(batch.AEBatchUid);
+	foreach (var aeBatchTest in _batchTests)
+			{
+				varContext[aeBatchTest.ReportName] = GetBaseEngUnitValue(
+					aeBatchTest.AnalogTest.Value ?? 0,
+					aeBatchTest.AnalogTest.EngUnitId,
+					aeBatchTest.EngUnitClassId.Value);
+			}
+public double GetBaseEngUnitValue(double value, int engUnitId, int classId)
+		{
+			if (value == 0)
+				return 0;
+			var baseBatchEngUnitId = _dm.GetEngUnitClass(classId).CanonicalId;
+			double convertedBatchDimsValue = 0;
+			EngUnitConverter.EngUnitConverter.Instance.Convert(value, engUnitId, baseBatchEngUnitId, out convertedBatchDimsValue);
+			return convertedBatchDimsValue;
+
+		}
+		public double GetBaseEngUnitValue(double value, int engUnitId)
+		{
+			int classId = _dm.GetEngUnit(engUnitId).ClassId ?? 0;
+			return GetBaseEngUnitValue(value, engUnitId, classId);
+		}
+
+
+
+19:59
+спасибо
