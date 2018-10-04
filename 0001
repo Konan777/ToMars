@@ -1,1 +1,7 @@
 - уточнить что идет в комбо грида проверки
+- заполнять DS из БД
+- привязать события IEventsHub
+- перевод величин есть в Indusoft.LDS.Services.Contracts.PckgType\Utils\DimsItem.cs
+- добить SQL часть
+- доделать AEComplexEntity и SpendingPurposes (то что приводило к ошибке)
+- утащить DS в контроллер ??
