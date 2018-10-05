@@ -5,3 +5,16 @@
 - добить SQL часть
 - доделать AEComplexEntity и SpendingPurposes (то что приводило к ошибке)
 - утащить DS в контроллер ??
+
+-- ОУ с характеристикой
+select ae.AEUid, ae.Name, AETest.AETestUid, AEtest.EngUnitId, Test.Name
+from AE
+inner join AETest on AETest.AEUid=AE.AEUid
+inner join Test on Test.TestId=AETest.TestId
+order by ae.AEUid
+
+-- Единицы измерения с классом
+select EngUnitClass.Name, EngUnit.EngUnitId, EngUnit.Name, EngUnit.LAbbreviation 
+from EngUnit
+inner join EngUnitClass on EngUnitClass.EngUnitClassId=EngUnit.ClassId
+order by EngUnitClass.Name
