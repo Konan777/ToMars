@@ -1,10 +1,7 @@
-- уточнить что идет в комбо грида проверки
-- заполнять DS из БД
 - привязать события IEventsHub
+- не забыть про AEDimsView.Designer.cs
 - перевод величин есть в Indusoft.LDS.Services.Contracts.PckgType\Utils\DimsItem.cs
-- добить SQL часть
 - доделать AEComplexEntity и SpendingPurposes (то что приводило к ошибке)
-- утащить DS в контроллер ??
 
 -- ОУ с характеристикой
 select ae.AEUid, ae.Name, AETest.AETestUid, AEtest.EngUnitId, Test.Name
