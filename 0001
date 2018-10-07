@@ -1,4 +1,5 @@
 - привязать события IEventsHub
+- Валидация данных в гриде
 - не забыть про AEDimsView.Designer.cs
 - перевод величин есть в Indusoft.LDS.Services.Contracts.PckgType\Utils\DimsItem.cs
 - доделать AEComplexEntity и SpendingPurposes (то что приводило к ошибке)
