@@ -1,8 +1,12 @@
-- привязать события IEventsHub
+- Проверить: добавление, удаление, изменение в первом гриде, именование первой колонки
+- Проверить: заполнение второго грида
+- Проверить disable всех контролов
+- Проверить сохранение
+- Проверить все события хаба
 - Валидация данных в гриде
-- не забыть про AEDimsView.Designer.cs
-- перевод величин есть в Indusoft.LDS.Services.Contracts.PckgType\Utils\DimsItem.cs
+
 - доделать AEComplexEntity и SpendingPurposes (то что приводило к ошибке)
+
 
 -- ОУ с характеристикой
 select ae.AEUid, ae.Name, AETest.AETestUid, AEtest.EngUnitId, Test.Name
