@@ -1,8 +1,13 @@
-1) Редактор формул. наличие единиц измерения в формуле все усложняет.
-   если оставляем ед.изм то откуда их берем, с габарита/характеристики или из области проверки
-2) Два списка габаритов. Это именно габариты, или как в другой ПИ единицы измерения из 
-ФБ возможности -> классификаторы -> Единицы измерения
-3) Если габариты это перечисление, а у нас требование добавить в список "количество мест" то мы добавляем его в enum?
-4) Единици измерения габаритов тоже должны выпадать списком в гриде проверки? 
-   Тогда как сопоставить габариту список единиц измерения?
-DimsItem.Weight.GetDescription()
+        private void GridView1_InvalidRowException(object sender, DevExpress.XtraGrid.Views.Base.InvalidRowExceptionEventArgs e)
+        {
+            e.ExceptionMode = ExceptionMode.NoAction;
+        }
+
+        private void GridView1_ValidateRow(object sender, DevExpress.XtraGrid.Views.Base.ValidateRowEventArgs e)
+        {
+            if (((FIO)e.Row).FirstName.Length==0)
+            {
+                gridView1.SetColumnError(gridView1.Columns[0], "The value must be less than EndTime");
+                e.Valid = false;
+            }
+        }
