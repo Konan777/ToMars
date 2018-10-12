@@ -1,5 +1,17 @@
-Сплиттеры
-приведение значений к базовым величинам
+			private readonly IEngUnitStorage _engUnitStorage;
+            var converter = new EngUnitConverters.Common.EngUnitConverter(_engUnitStorage);
+
+public EngUnitConvertResult Convert(double value, int inEngUnitId, int outEngUnitId, out double outValue)
+
+            double convertedValue;
+
+            result.ConverterResult = converter.Convert(targetLAbreviation, sourceLAbreviation, targetValue.GetValueOrDefault(), out convertedValue);
+            result.IsConverterted = result.ConverterResult.Error == EUConverterError.None && targetLAbreviation != sourceLAbreviation;
+
+            result.ConverterValue = convertedValue;
+
+Если в формуле есть выходной габарит, и меняется входной габарит - проверять на совпадение, выводить ошибку.
+
 любое изменение формулы обновляет нижний грид
 габариты, указанные как выходные нельзя использовать в настройке тела формулы
 
