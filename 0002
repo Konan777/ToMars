@@ -1,4 +1,4 @@
-    public partial class Form1 : Form
+        public partial class Form1 : Form
     {
         List<FIO> _fios = new List<FIO>();
         public Form1()
@@ -22,18 +22,15 @@
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var node = treeList1.FindNodeByFieldValue("FirstName", "411");
-            treeList1.FocusedNode = node;
-            treeList1.Focus();
+            selectedFio = _fios[3];
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            _fios.Add(new FIO() { FirstName = "qqq", LastName = "222" });
+            var newFio = new FIO() { FirstName = "qqq", LastName = "222" };
+            _fios.Add(newFio);
             treeList1.RefreshDataSource();
-            var node = treeList1.FindNodeByFieldValue("FirstName", "qqq");
-            treeList1.FocusedNode = node;
-            treeList1.Focus();
+            selectedFio = newFio;
         }
 
         private void treeList1_FocusedNodeChanged(object sender, DevExpress.XtraTreeList.FocusedNodeChangedEventArgs e)
@@ -44,6 +41,19 @@
 
         private FIO selectedFio {
             get { return (treeList1.GetDataRecordByNode(treeList1.FocusedNode) as FIO); }
+            set {
+                var node = treeList1.FindNode(n =>
+                {
+                    if (treeList1.GetDataRecordByNode(n) is FIO)
+                    {
+                        var fio = (treeList1.GetDataRecordByNode(n) as FIO);
+                        return fio != null && fio.FirstName == value.FirstName;
+                    }
+                    return false;
+                });
+                treeList1.FocusedNode = node;
+                treeList1.Focus();
+            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -57,5 +67,3 @@
         public string FirstName { get; set; }
         public string LastName { get; set; }
     }
-
-}
