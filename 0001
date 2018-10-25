@@ -1,6 +1,5 @@
-Скобки () в формуле после сэйва
-Стирание значений во втором гриде
-Сменить сообщение на первом гриде
-Позиционирование курсора в 1м гриде при добавлении
-Проверить сэйв-лоад удаленных записей
-
+var treeNode = treeList1.FindNodeByID((int)e.Node.Tag);
+    treeList1.Focus();
+    treeList1.Selection.Clear();
+    treeNode.Selected = true;
+    treeList1.SetFocusedNode(treeNode);
