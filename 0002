@@ -1,28 +1,61 @@
-AEBatchTest[] _batchTests = dm.AEBatchTest_Get(batch.AEBatchUid);
-	foreach (var aeBatchTest in _batchTests)
-			{
-				varContext[aeBatchTest.ReportName] = GetBaseEngUnitValue(
-					aeBatchTest.AnalogTest.Value ?? 0,
-					aeBatchTest.AnalogTest.EngUnitId,
-					aeBatchTest.EngUnitClassId.Value);
-			}
-public double GetBaseEngUnitValue(double value, int engUnitId, int classId)
-		{
-			if (value == 0)
-				return 0;
-			var baseBatchEngUnitId = _dm.GetEngUnitClass(classId).CanonicalId;
-			double convertedBatchDimsValue = 0;
-			EngUnitConverter.EngUnitConverter.Instance.Convert(value, engUnitId, baseBatchEngUnitId, out convertedBatchDimsValue);
-			return convertedBatchDimsValue;
+    public partial class Form1 : Form
+    {
+        List<FIO> _fios = new List<FIO>();
+        public Form1()
+        {
+            InitializeComponent();
+            _fios.Add(new FIO() { FirstName = "111", LastName = "222" });
+            _fios.Add(new FIO() { FirstName = "211", LastName = "222" });
+            _fios.Add(new FIO() { FirstName = "311", LastName = "222" });
+            _fios.Add(new FIO() { FirstName = "411", LastName = "222" });
 
-		}
-		public double GetBaseEngUnitValue(double value, int engUnitId)
-		{
-			int classId = _dm.GetEngUnit(engUnitId).ClassId ?? 0;
-			return GetBaseEngUnitValue(value, engUnitId, classId);
-		}
+            TreeListColumn col1 = new TreeListColumn();
+            col1.Caption = "FirstName";
+            col1.FieldName = "FirstName";
+            col1.VisibleIndex = 0;
+            treeList1.OptionsBehavior.Editable = false;
+            treeList1.Columns.Add(col1);
+            treeList1.DataSource = _fios;
 
+            treeList1.OptionsSelection.EnableAppearanceFocusedCell = false;
+        }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var node = treeList1.FindNodeByFieldValue("FirstName", "411");
+            treeList1.FocusedNode = node;
+            treeList1.Focus();
+        }
 
-19:59
-спасибо
+        private void button2_Click(object sender, EventArgs e)
+        {
+            _fios.Add(new FIO() { FirstName = "qqq", LastName = "222" });
+            treeList1.RefreshDataSource();
+            var node = treeList1.FindNodeByFieldValue("FirstName", "qqq");
+            treeList1.FocusedNode = node;
+            treeList1.Focus();
+        }
+
+        private void treeList1_FocusedNodeChanged(object sender, DevExpress.XtraTreeList.FocusedNodeChangedEventArgs e)
+        {
+            var q = (treeList1.GetDataRecordByNode(treeList1.FocusedNode) as FIO);
+            textBox1.Text = q.FirstName;
+        }
+
+        private FIO selectedFio {
+            get { return (treeList1.GetDataRecordByNode(treeList1.FocusedNode) as FIO); }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            selectedFio.FirstName = textBox1.Text;
+            treeList1.RefreshDataSource();
+        }
+    }
+    public class FIO
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+    }
+
+}
