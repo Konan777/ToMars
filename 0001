@@ -1,5 +1,0 @@
-var treeNode = treeList1.FindNodeByID((int)e.Node.Tag);
-    treeList1.Focus();
-    treeList1.Selection.Clear();
-    treeNode.Selected = true;
-    treeList1.SetFocusedNode(treeNode);
