@@ -1,0 +1,4 @@
+Indusoft.LDS.Client.RE
+
+REDocViewControl - главная форма
+FormViewControl  - форма документа
