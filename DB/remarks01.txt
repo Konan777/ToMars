@@ -2,3 +2,7 @@ Indusoft.LDS.Client.RE
 
 REDocViewControl - главная форма
 FormViewControl  - форма документа
+
+C:\!Indus\Branches\Malahit_Techs_2\Source\Indusoft.LDS.Client.FP\Controls\BatchEditControl.cs
+^^^ RecreateViewControl - делать по аналогии..
+
