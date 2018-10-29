@@ -7,3 +7,7 @@ C:\!Indus\Branches\Malahit_Techs_2\Source\Indusoft.LDS.Client.FP\Controls\BatchE
 ^^^ RecreateViewControl - делать по аналогии..
 
 [dbo].[FPOpGroupREDoc_Get]
+
+AEBatchViewControl->Операции
+AEBatchRequestOpController
+AEBatchRequestOpView
