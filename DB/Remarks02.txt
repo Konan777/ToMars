@@ -1,0 +1,17 @@
+Ма находимся в ФБ "Партия объектов учета" - AEBatch
+
+AEBatchRequestOpController - Операция заявки на партию объекта учтеа
+Ходим по партиям (AEBatch) в гриде. FocusedChanged меняет партию.
+Состояние смотрим на _batchDE.BatchRequest.StatusId
+
+
+Добиться того чтобы REDocViewControl был не пустым
+--------------------------------------------------
+1) Настраиваем документы и смотрим таблицы документов REDoc ИТД.
+2) _viewCtl_BeforeLoad добавляет документы e.AddDocUid(fpor.REDocUid);
+3) Дебажить AEBatchRequestOpController ButtonsState-> BatchRequest, CurrentOp
+   ^^^ на предмет видимости кнопок.
+
+Разобраться какое событие REDocViewControl когда вызывается
+-----------------------------------------------------------
+1) Завести пустые привязки и поставить точки останова
