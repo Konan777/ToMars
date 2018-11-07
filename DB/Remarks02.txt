@@ -29,3 +29,4 @@ AEBatchRequestOpController - Операция заявки на партию о�
 
 https://ichip.ru/kak-ostatsya-vernym-windows-7-sozdaem-idealnyjj-ustanovochnyjj-obraz-sistemy.html
 WindowsImageTool
+https://www.reddit.com/r/buildapc/comments/8z5sws/how_to_install_windows_7_on_samsung_970_evo_nvme/
