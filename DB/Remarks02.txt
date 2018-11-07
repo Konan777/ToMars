@@ -32,3 +32,4 @@ WindowsImageTool
 https://www.reddit.com/r/buildapc/comments/8z5sws/how_to_install_windows_7_on_samsung_970_evo_nvme/
 http://allssd.ru/kak-ustanovit-windows-7-na-nvme-ssd/
 https://www.samsung.com/semiconductor/minisite/ssd/download/tools/
+https://weblance.com.ua/312-ustanovka-windows-7-s-usb-na-sistemy-s-naborom-sistemnoy-logiki-intel-100-y-i-200-y-serii.html
