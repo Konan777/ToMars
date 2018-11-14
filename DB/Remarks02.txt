@@ -36,3 +36,5 @@ https://weblance.com.ua/312-ustanovka-windows-7-s-usb-na-sistemy-s-naborom-siste
 http://alexbirukov.ru/all/ustanovka-windows-7-na-gigabyte-h370-aorus-gaming-3-wifi/
 
 REDocViewControl->BuildTree смотреть что с формами ReportForm
+
+BatchEditControl "Заполнение набора данных"
