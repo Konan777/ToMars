@@ -38,3 +38,4 @@ http://alexbirukov.ru/all/ustanovka-windows-7-na-gigabyte-h370-aorus-gaming-3-wi
 REDocViewControl->BuildTree смотреть что с формами ReportForm
 
 BatchEditControl "Заполнение набора данных"
+MsgBox.ShowWarning(Resources.BatchEditControl_OperationIsChangedWarning);
