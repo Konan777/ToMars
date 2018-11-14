@@ -27,15 +27,11 @@ AEBatchRequestOpController - Операция заявки на партию о�
 Если в системе настроены пакеты документов с типом данных Товарная продукция, список этих пакетов и документов, входящих в них, попадает на закладку Документы, 
 заполняется данными и становится доступен для печати
 
-https://ichip.ru/kak-ostatsya-vernym-windows-7-sozdaem-idealnyjj-ustanovochnyjj-obraz-sistemy.html
-WindowsImageTool
-https://www.reddit.com/r/buildapc/comments/8z5sws/how_to_install_windows_7_on_samsung_970_evo_nvme/
-http://allssd.ru/kak-ustanovit-windows-7-na-nvme-ssd/
-https://www.samsung.com/semiconductor/minisite/ssd/download/tools/
-https://weblance.com.ua/312-ustanovka-windows-7-s-usb-na-sistemy-s-naborom-sistemnoy-logiki-intel-100-y-i-200-y-serii.html
-http://alexbirukov.ru/all/ustanovka-windows-7-na-gigabyte-h370-aorus-gaming-3-wifi/
-
 REDocViewControl->BuildTree смотреть что с формами ReportForm
+fpdatasource
+
+Набор колонок таблицы включает в себя свойства объекта учета, заявки на партию объекта учета, партии объекта учета, информацию о дате печати протокола, пользователя, отправившего на печать протокол.
+Перечень колонок настраивается на уровне экземпляра функциональной возможности.
 
 BatchEditControl "Заполнение набора данных"
-MsgBox.ShowWarning(Resources.BatchEditControl_OperationIsChangedWarning);
+
