@@ -1,4 +1,5 @@
 1) Сохранение в архив только после печати документа
+2) при изменении свойств партии и нажатии кнопки Обновить документы утвержденный документ не обновляется. 
 
 -- Настройки документов для операции
 insert into AEOpDocument (AEOpDocumentUid, AEUid, OpInfoUid, AEControlType, REDocPackUid, REDocUid, LCID)
