@@ -1,1 +1,30 @@
 
+-- Настройки документов для операции
+insert into AEOpDocument (AEOpDocumentUid, AEUid, OpInfoUid, AEControlType, REDocPackUid, REDocUid, LCID)
+VALUES (
+	cast('' as uniqueidentifier)	-- AEOpDocumentUid = NEW GUID 
+	,cast('' as uniqueidentifier)	-- AEUid
+	,cast('' as uniqueidentifier)	-- OpInfoUid
+	,1								-- AEControlType
+	,cast('' as uniqueidentifier)	-- REDocPackUid
+	,cast('' as uniqueidentifier)	-- REDocUid
+	,1								-- LCID
+)
+
+select * from REDocType -- Все типы документов
+select * from REDocPack --where REDocTypeUid=''
+select * from REDoc --where REDocPackUid=''
+select * from AE
+select Op.OpUid from AEBatchOp
+inner join OP on OP.OpUid=AEBatchOp.OpUid
+where AEBatchOp.AEBatchOpUid='FAE85389-3400-446E-B7C2-01CC1FC66D6C'
+
+-- Поиск Guid документов
+select AEOpDocument.ReDocUid 
+from dbo.[AEBatchOp] 
+inner join dbo.[Op] on dbo.[Op].OpUid=dbo.[AEBatchOp].OpUid
+inner join dbo.[AEOpDocument] on dbo.[AEOpDocument].OpInfoUid=dbo.[Op].OpInfoUid
+where dbo.[AEBatchOp].AEBatchOpUid=''
+
+-- Настройки документов для фичи
+select * from AEControl
