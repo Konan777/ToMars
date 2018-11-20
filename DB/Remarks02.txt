@@ -34,4 +34,17 @@ inner join dbo.[AEOpDocument] on dbo.[AEOpDocument].OpInfoUid=dbo.[Op].OpInfoUid
 where dbo.[AEBatchOp].AEBatchOpUid=''
 
 -- Настройки документов для фичи
-select * from AEControl
+insert into dbo.[AEDocPack] (AEDocPackUid, ControlType)
+VALUES (cast('' as uniqueidentifier), 1)
+
+insert into dbo.[AEDoc] (AEDocUid, AEDocPackUid, REDocUid)
+VALUES (
+	cast('' as uniqueidentifier)
+	,cast('' as uniqueidentifier)
+	,cast('' as uniqueidentifier)
+)
+
+
+select dbo.[AEDoc].ReDocUid 
+from dbo.[AEDoc]
+inner join dbo.[AEDocPack] on dbo.[AEDocPack].AEDocPackUid=dbo.[AEDoc].AEDocPackUid
