@@ -1,3 +1,4 @@
+1) Сохранение в архив только после печати документа
 
 -- Настройки документов для операции
 insert into AEOpDocument (AEOpDocumentUid, AEUid, OpInfoUid, AEControlType, REDocPackUid, REDocUid, LCID)
