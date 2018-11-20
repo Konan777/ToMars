@@ -1,0 +1,53 @@
+CREATE PROCEDURE [dbo].[spc_GetAEBatchOpDocs]
+	@AEBatchOpUid uniqueidentifier
+AS
+BEGIN
+	DECLARE @tblGuids AS TABLE (rguid uniqueidentifier)
+
+	INSERT INTO @tblGuids
+		select AEOpDocument.ReDocUid 
+		from dbo.[AEBatchOp] 
+		inner join dbo.[Op] on dbo.[Op].OpUid=dbo.[AEBatchOp].OpUid
+		inner join dbo.[AEOpDocument] on dbo.[AEOpDocument].OpInfoUid=dbo.[Op].OpInfoUid
+		where dbo.[AEBatchOp].AEBatchOpUid=@AEBatchOpUid
+
+	if (select count(*) from @tblGuids)=0 
+	BEGIN
+		INSERT INTO @tblGuids
+			select dbo.[AEDoc].ReDocUid 
+			from dbo.[AEDoc]
+			inner join dbo.[AEDocPack] on dbo.[AEDocPack].AEDocPackUid=dbo.[AEDoc].AEDocPackUid		
+	END
+
+	select rguid from @tblGuids
+
+END;
+
+
+Indusoft.LDS.Client.AE\Data\Impl\AEDataManager
+        public Guid[] GetAEBatchOpDocs(Guid aeBatchOpUid)
+        {
+            var ds = AEDataService;
+            var result = ds.GetAEBatchOpDocs(aeBatchOpUid);
+            return result;
+        }
+
+Indusoft.LDS.Client.AE\Data\Model\IAEDataManager
+		Guid[] GetAEBatchOpDocs(Guid aeBatchOpUid);
+
+Indusoft.LDS.Server.Services.AE\AEDataService->AEDataAccessor
+    	[SqlQuery(@"SELECT * FROM [dbo].[spc_GetAEBatchOpDocs] WHERE [AEDocPackUid] = @AEBatchOpUid ")]
+	    public abstract List<Guid> GetAEBatchOpDocs(Guid aeBatchOpUid);
+
+
+Indusoft.LDS.Server.Services.AE\AEDataService->AEDataService
+        public Guid[] GetAEBatchOpDocs(Guid aeBatchOpUid)
+        {
+            var result = Accessor.GetAEBatchOpDocs(aeBatchOpUid);
+            return result.ToArray();
+        }
+
+Indusoft.LDS.Client.AE\Features\AEBatch\Controllers\AEBatchOpControlViewController->viewCtl_BeforeLoad
+            foreach (var guid in _dm.GetAEBatchOpDocs(_view.SelectedOp.AEBatchOpUid))
+                e.AddDocUid(guid);
+_
