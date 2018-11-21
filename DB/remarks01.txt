@@ -2,22 +2,24 @@ Indusoft.LDS.Client.RE
 
 REDocViewControl - главная форма
 FormViewControl  - форма документа
+_bbiRefreshDocs_ItemClick
+-------------------------
+1) если в списке есть утвержденные документы выводим сообщение
+	Поиск статуса документа: REDocReportLog->REDocReportLogDoc->Status
+InitDocs();
+	_viewCtl.Init, _viewCtl.InitDocTypeRights
+LoadDocsData();
+	_viewCtl.LoadData(GetFilterString(batch.FPBatchUid));
+FilterDocs();
+Возможно _viewCtl.RefreshReports();	
+_viewCtl.ShowDocs();
+RefreshREExtensions()
+	_viewCtl.RefreshExtensions();
 
-1)
-REDocViewControl->InitExtControls. Падаем на строке  page.Controls.Add(ctl);
-т.к. Ctl при закрытии формы хозяина удаляется.
-REDocViewerExtManager.Add добавляет контролы в FPManager.
-Возможные решения:
-1) не диспозить форму
-2) перед закрытием формы удалять с нее контролы
-3) после закрытия формы удалять с нее контролы и добавлять новый при ее открытии
+_viewCtl_DocsSaving
+-------------------
+RefreshREExtensions
+может быть _viewCtl.RefreshReports();
 
-2) Заполнять в Save список _reports для того, чтобы отчет сразу был виден
-
-3) Засасывать переменные в REDocViewControl а не в контроллере
-
-
-1) Заполняем нужные таблицы данными  для документов
-2) Ищем или пишем методы для загрузки GUID документов
-3) для печатей и штампов прописываем данные в таблицы
-4) ищем или пишем методы для загрузки печатей и штампов в AEDataSource
+viewCtl_BeforePrint
+-------------------
