@@ -2,6 +2,8 @@ Noctua NF-P14R
 Scythe GlideStream 140 M
 be quiet! SILENT WINGS 3 [BL071]
 
+Печати и подписи. Посмотреть на предмет работы вкладок и FPDataProvider'a
+
 Indusoft.LDS.Client.RE
 
 REDocViewControl - главная форма
