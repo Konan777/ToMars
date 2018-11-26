@@ -33,4 +33,4 @@ select AEBatchOpUid, dbo.[AEBatchOpDocs].REDocReportUid, dbo.[REDocReportLogDoc]
 from dbo.[AEBatchOpDocs]
 inner join dbo.[REDocReportLog] on dbo.[REDocReportLog].REDocReportUid=dbo.[AEBatchOpDocs].REDocReportUid
 inner join dbo.[REDocReportLogDoc] on dbo.[REDocReportLogDoc].REDocReportLogUid=dbo.[REDocReportLog].REDocReportLogUid
-where dbo.[REDocReportLogDoc].State=1 -- Indusoft.LDS.Client.FP\NotifyOfDefect\ConfirmNodControl -> confirmed
+--where dbo.[REDocReportLogDoc].State=1 -- Indusoft.LDS.Client.FP\NotifyOfDefect\ConfirmNodControl -> confirmed
