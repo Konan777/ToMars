@@ -14,3 +14,23 @@ TODO:
   Если нет подтвержденных документов - удаляем старые, создаем и сохраняем новые
   В Датасете генерим рандомные значения
 - Как будут работать кнопки OK/Cancel?
+
+Новая колонка в таблице операций:
+---------------------------------
+Indusoft.LDS.Client.AE\Features\AEBatch\Controllers\AEBatchOpControlViewController.cs
+	^^^Таблицу операций заполняем InitByBatch
+
+AEBatchOp - добавить поле
+
+Indusoft.LDS.Server.Services.AE\AEDataService
+	добавить метод для получения списка доукментов операции с состоянием каждого
+
+Indusoft.LDS.Server.Services.AE\AEDataService -> FillAEBatchOp
+	дернуть метод для всех документов операции
+	по каждой операции выставить статус
+
+select AEBatchOpUid, dbo.[AEBatchOpDocs].REDocReportUid, dbo.[REDocReportLogDoc].[State]
+from dbo.[AEBatchOpDocs]
+inner join dbo.[REDocReportLog] on dbo.[REDocReportLog].REDocReportUid=dbo.[AEBatchOpDocs].REDocReportUid
+inner join dbo.[REDocReportLogDoc] on dbo.[REDocReportLogDoc].REDocReportLogUid=dbo.[REDocReportLog].REDocReportLogUid
+where dbo.[REDocReportLogDoc].State=1 -- Indusoft.LDS.Client.FP\NotifyOfDefect\ConfirmNodControl -> confirmed
