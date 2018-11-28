@@ -7,48 +7,17 @@ be quiet! SILENT WINGS 3 [BL071]
 Indusoft.LDS.Client.RE
 
 REDocViewControl - главная форма
+Indusoft.LDS.Client.AE\Dialogs\DocSelectDialog
+LoadDocs
 
-TODO:
-- Как будем именно обновлять документ?
-  Если документов нет - создаем, если документы есть - проверяем наличие подтвержденных
-  Если нет подтвержденных документов - удаляем старые, создаем и сохраняем новые
-  В Датасете генерим рандомные значения
-- Как будут работать кнопки OK/Cancel?
-
-Новая колонка в таблице операций:
----------------------------------
-Indusoft.LDS.Client.AE\Features\AEBatch\Controllers\AEBatchOpControlViewController.cs
-	^^^Таблицу операций заполняем InitByBatch
-
-AEBatchOp - добавить поле
-AEBatchOpDocs - добавить поле состояния
-
-Indusoft.LDS.Server.Services.AE\AEDataService
-	добавить метод для получения списка доукментов операции с состоянием каждого
-
-Indusoft.LDS.Server.Services.AE\AEDataService -> FillAEBatchOp
-	дернуть метод для всех документов операции
-	по каждой операции выставить статус
+REDocPack[] packs = _dm.GetREDocPackForAE();
+[dbo].[REDocPack_Get]
 
 
---CREATE FUNCTION [dbo].[SampleArchiveOperation_Get2]
-CREATE FUNCTION [dbo].[GetAEBatchOpDocsState]
-(
-	@AEBatchOpGuids GuidList READONLY
-)
-RETURNS TABLE
-AS
-	RETURN
+cnode.Checked = Array.Exists(_eDocs, d => d.REDocUid == doc.REDocUid && d.LCID == lcid);
 
-	select AEBatchOpUid, dbo.[AEBatchOpDocs].REDocReportUid, dbo.[REDocReportLogDoc].[State]
-	from dbo.[AEBatchOpDocs]
-	inner join dbo.[REDocReportLog] on dbo.[REDocReportLog].REDocReportUid=dbo.[AEBatchOpDocs].REDocReportUid
-	inner join dbo.[REDocReportLogDoc] on dbo.[REDocReportLogDoc].REDocReportLogUid=dbo.[REDocReportLog].REDocReportLogUid
-	where dbo.[AEBatchOpDocs].AEBatchOpDocsUid in (SELECT [uid] FROM @AEBatchOpGuids)
-	--where dbo.[REDocReportLogDoc].State=1 -- Indusoft.LDS.Client.FP\NotifyOfDefect\ConfirmNodControl -> confirmed
+_eDocs = _dm.GetAEDocs(aeDocPackUid); ->> SELECT * FROM [dbo].[AEDoc]	
 
-        [SqlQuery(@"SELECT * FROM [dbo].[SampleArchiveOperation_Get2] (@groups)")]
-        public abstract List<SampleArchiveOperation> GetSAOpsForGroups([ParamTypeName("GuidList")]Guid[] groups);
-
-        [SqlQuery(@"SELECT AEBatchOpUid, REDocReportUid, [State] FROM [dbo].[GetAEBatchOpDocsState] (@AEBatchOpGuids)")]
-        public abstract List<AEBatchOpDocs> GetAEBatchOpDocsState([ParamTypeName("GuidList")]Guid[] AEBatchOpGuids);
+knowledge:
+----------
+int?[] cultures = _dm.GetAvailableFormCultures(doc.REDocUid);
