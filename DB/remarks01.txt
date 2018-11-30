@@ -1,3 +1,5 @@
+usb keyboard and mouse not working, unless unplug and plug it back
+
 https://support.microsoft.com/en-us/help/4090913/march5-2018kb4090913osbuild16299-251
 https://www.drivereasy.com/knowledge/fix-issue-after-upgrade-system-to-windows-10-usb-ports-dont-work/
 https://merabheja.com/solved-usb-ports-not-working-in-windows-10-fix/
