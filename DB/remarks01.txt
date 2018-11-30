@@ -1,3 +1,4 @@
 https://support.microsoft.com/en-us/help/4090913/march5-2018kb4090913osbuild16299-251
 https://www.drivereasy.com/knowledge/fix-issue-after-upgrade-system-to-windows-10-usb-ports-dont-work/
 https://merabheja.com/solved-usb-ports-not-working-in-windows-10-fix/
+https://answers.microsoft.com/en-us/windows/forum/windows_10-hardware/usb-mouse-not-working-after-boot-up-until/11e2c635-a7c2-4545-826f-ef42f12a00d7
