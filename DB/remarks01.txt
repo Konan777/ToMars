@@ -1,1 +1,2 @@
 https://support.microsoft.com/en-us/help/4090913/march5-2018kb4090913osbuild16299-251
+https://www.drivereasy.com/knowledge/fix-issue-after-upgrade-system-to-windows-10-usb-ports-dont-work/
