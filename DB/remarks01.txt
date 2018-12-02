@@ -7,3 +7,241 @@ https://answers.microsoft.com/en-us/windows/forum/windows_10-hardware/usb-mouse-
 The only solution is disable xHCI from the BIOS.
 
 38-47
+
+
+
+
+
+                if ((dlg.SelectedSample != null) && (checkProcTask.Items.Count > 1))
+                {
+                    _checkProc = CheckProc.CreateInstance();
+                    _checkProc.Insert();
+                    _checkProc.CheckProcUid = Guid.NewGuid();
+                    _checkProc.CheckProcInfoUid = checkProcInfo.CheckProcInfoUid;
+                    _checkProc.StatusId = SA.Instance.CheckProcWorkingStatus.StatusId;
+                    _checkProc.CreationDate = creationDate;
+                    SA.Instance.CreateCheckProc(ref _checkProc);
+
+                    var _fkSample = CheckProcSample.CreateInstance();
+                    _fkSample.Insert();
+                    _fkSample.CheckProcSampleUid = Guid.NewGuid();
+                    _fkSample.CheckProcUid = _checkProc.CheckProcUid;
+                    _fkSample.SampleUid = dlg.SelectedSample.SampleId;
+                    _fkSample.CheckProcSchemeSampleId = 0;
+                    SA.Instance.IntCDataService.CheckProcSampleInsert(ref _fkSample);
+                }
+
+                foreach (var taskItem in checkProcTask.Items)
+                {
+                    Services.Contracts.Tasks.Task task = null;
+                    if (_checkProc != null)
+                    {
+                        if (prepared < checkProcTask.Items.Count - 1)
+                        {
+                            task = SA.Instance.CreateTask(checkProcInfo, taskItem.CheckProcTaskItemUid, creationDate);
+
+                            int checkProcSchemeSampleId = GetCheckProcSchemeSampleId(dlg.CheckProcSchemeUid, prevCheckProcSchemeSampleId);
+                            prevCheckProcSchemeSampleId = checkProcSchemeSampleId;
+
+                            var _cpSample = CheckProcSample.CreateInstance();
+                            _cpSample.Insert();
+                            _cpSample.CheckProcSampleUid = Guid.NewGuid();
+                            _cpSample.CheckProcUid = _checkProc.CheckProcUid;
+                            _cpSample.TaskUid = task.TaskUid;
+                            _cpSample.CheckProcSchemeSampleId = checkProcSchemeSampleId;
+                            SA.Instance.IntCDataService.CheckProcSampleInsert(ref _cpSample);
+
+                            prepared++;
+                        }
+                    }
+                    else
+                    {
+                        task = SA.Instance.CreateTask(checkProcInfo, taskItem.CheckProcTaskItemUid, creationDate);
+                    }
+
+                    
+
+                    if (task != null)
+                    {
+                        context.AfterExecute(task.TaskUid, task.ExtensionUid);
+                    }
+                }
+            }
+
+
+
+C:\Users\User\AppData\Local\Temp\TFSTemp\vctmp4672_625794.cs
+
+public CheckProcSeriesTask CreateTask(CheckProcSeries series)
+        {
+            _series = series;
+
+            var checkProcTask = CheckProcTask.CreateInstance();
+            checkProcTask.Insert();
+            checkProcTask.CheckProcTaskUid = Guid.NewGuid();
+            checkProcTask.CheckProcInfoUid = _series.CheckProcInfoUid;
+            checkProcTask.ForbidPropChange = true;
+            checkProcTask.Props = new List<CheckProcTaskProp>();
+            checkProcTask.Items = new List<CheckProcTaskItem>();
+
+            _seriesTask = CheckProcSeriesTask.CreateInstance();
+            _seriesTask.Insert();
+            _seriesTask.CheckProcSeriesTaskUid = Guid.NewGuid();
+            _seriesTask.CheckProcSeriesUid = _series.CheckProcSeriesUid;
+            _seriesTask.CheckProcTaskUid = checkProcTask.CheckProcTaskUid;
+            _seriesTask.CheckProcTask = checkProcTask;
+            _seriesTask.EventFreqs = new List<CheckProcSeriesTaskEventFreq>();
+
+            InitControls();
+
+            if ((series.ProcInfo.CheckProcSchemeUid==RS.CheckProcSchemes.CheckProcSchemeCheckSampleUid)
+                || (series.ProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemeWorkSampleUid))
+            {
+                _cbProbe.Enabled = false;
+            }
+
+            var scheme = IntCManager.Instance.GetCheckProcScheme(series.ProcInfo.CheckProcSchemeUid);
+            int itemsCount = scheme.Samples.Length;
+            if (itemsCount == 1)
+                _cbProbe.Enabled = false;
+
+            if (ShowDialog() != DialogResult.OK)
+            {
+                return null;
+            }
+
+            var mask = SaveCreatedMask(_cbCodeMask);
+            if (mask != null) _seriesTask.CheckProcTask.SampleCodeMaskId = mask.MaskId;
+
+            mask = SaveCreatedMask(_cbNumMask);
+            if (mask != null) _seriesTask.CheckProcTask.SampleNumMaskId = mask.MaskId;
+            
+            if (_cbProbe.Checked)
+                itemsCount = itemsCount - 1;
+            for (var i = 0; i < itemsCount; i++)
+            {
+                var taskItem = CheckProcTaskItem.CreateInstance();
+                taskItem.Insert();
+                taskItem.CheckProcTaskItemUid = Guid.NewGuid();
+                taskItem.CheckProcTaskUid = checkProcTask.CheckProcTaskUid;
+                _seriesTask.CheckProcTask.Items.Add(taskItem);
+            }
+
+            SA.Instance.SaveCheckProcSeriesTask(_seriesTask);
+            _series.Tasks.Add(_seriesTask);
+
+            return _seriesTask;
+        }
+
+
+        public CheckProcSeriesTask ModifyTask(CheckProcSeries series, CheckProcSeriesTask seriesTask)
+        {
+            _series = series;
+            _seriesTask = seriesTask;
+
+            InitControls();
+
+            if ((series.ProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemeCheckSampleUid)
+                || (series.ProcInfo.CheckProcSchemeUid == RS.CheckProcSchemes.CheckProcSchemeWorkSampleUid))
+            {
+                _cbProbe.Enabled = false;
+            }
+            var scheme = IntCManager.Instance.GetCheckProcScheme(series.ProcInfo.CheckProcSchemeUid);
+            if (scheme.Samples.Length == 1)
+                _cbProbe.Enabled = false;
+
+
+            if (ShowDialog() != DialogResult.OK)
+            {
+                _seriesTask.RejectChanges();
+                _seriesTask.CheckProcTask.RejectChanges();
+                return null;
+            }
+
+            Guid? procTaskItemUid = null;
+            // Выбор РП. Контрольного образца не будет. Пометим одно задание как удаленное.
+            if ((_cbProbe.Checked) && (_seriesTask.CheckProcTask.Items.Count == scheme.Samples.Length))
+            {
+                procTaskItemUid = _seriesTask.CheckProcTask.Items[scheme.Samples.Length - 1].CheckProcTaskItemUid;
+                _seriesTask.CheckProcTask.Items[scheme.Samples.Length - 1].Delete();
+            }
+            // Не совпадает кол-во. Добавим задание.
+            if ((!_cbProbe.Checked) && (_seriesTask.CheckProcTask.Items.Count < scheme.Samples.Length))
+            {
+                var taskItem = CheckProcTaskItem.CreateInstance();
+                taskItem.Insert();
+                taskItem.CheckProcTaskItemUid = Guid.NewGuid();
+                taskItem.CheckProcTaskUid = _seriesTask.CheckProcTask.CheckProcTaskUid;
+                _seriesTask.CheckProcTask.Items.Add(taskItem);
+            }
+
+            var mask = SaveCreatedMask(_cbCodeMask);
+            if (mask != null) _seriesTask.CheckProcTask.SampleCodeMaskId = mask.MaskId;
+
+            mask = SaveCreatedMask(_cbNumMask);
+            if (mask != null) _seriesTask.CheckProcTask.SampleNumMaskId = mask.MaskId;
+
+            SA.Instance.SaveCheckProcSeriesTask(_seriesTask);
+
+            if (procTaskItemUid != null)
+                _seriesTask.CheckProcTask.Items = _seriesTask.CheckProcTask.Items.Where(w => w.CheckProcTaskItemUid != procTaskItemUid).ToList();
+
+            return seriesTask;
+        }
+
+
+C:\Users\User\AppData\Local\Temp\TFSTemp\vctmp3708_732026.cs
+
+void ISampleCommand.Execute(SampleCommandAfterExecute afterExecute)
+        {
+            using (var dlg = new OperativeControlOnDemandDialog())
+            {
+                CheckProcInfo checkProcInfo;
+                CheckProcTask checkProcTask;
+
+                if (!dlg.CreateOperativeControl(out checkProcInfo, out checkProcTask)) return;
+
+                var creationDate = dlg.RunningDate;
+
+                SA.Instance.IntCDataService.CheckProcInfoInsert(ref checkProcInfo);
+                SA.Instance.SaveCheckProcTask(ref checkProcTask);
+                bool sampleBinded = false;
+                foreach (var taskItem in checkProcTask.Items)
+                {
+                    var task = SA.Instance.CreateTask(checkProcInfo, taskItem.CheckProcTaskItemUid, creationDate);
+
+                    if ((!sampleBinded) && (dlg.SelectedSample != null))
+                    {
+                        SA.Instance.TaskService.SetTaskResultKey(task.TaskUid, dlg.SelectedSample.SampleId);
+                        task.ResultKey = dlg.SelectedSample.SampleId;
+
+                        // Для того, чтобы второй таск знал о контрольном образце нужна связка образцов через CheckProcInfo
+                        // Подхватывается в SampleInfo в ShowInternalControlSampleDialog -> GetCheckProcByTaskUid -> GetCheckProcByTaskUidUsingCheckProcInfo
+
+                        CheckProc _checkProc = CheckProc.CreateInstance();
+                        _checkProc.Insert();
+                        _checkProc.CheckProcUid = Guid.NewGuid();
+                        _checkProc.CheckProcInfoUid = checkProcInfo.CheckProcInfoUid;
+                        _checkProc.StatusId = SA.Instance.CheckProcWorkingStatus.StatusId;
+                        _checkProc.CreationDate = creationDate;
+                        _checkProc.ProcInfo = checkProcInfo;
+                        SA.Instance.CreateCheckProc(ref _checkProc);
+
+                        var _cpSample = CheckProcSample.CreateInstance();
+                        _cpSample.Insert();
+                        _cpSample.CheckProcSampleUid = Guid.NewGuid();
+                        _cpSample.CheckProcUid = _checkProc.CheckProcUid;
+                        _cpSample.TaskUid = task.TaskUid;
+                        
+                        SA.Instance.IntCDataService.CheckProcSampleInsert(ref _cpSample);
+
+                        sampleBinded = true;
+                    }
+
+                    if (task != null)
+                    {
+                        afterExecute(task.TaskUid, task.ExtensionUid);
+                    }
+                }
+            }
+        }
