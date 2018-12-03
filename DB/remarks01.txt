@@ -7,6 +7,8 @@ https://answers.microsoft.com/en-us/windows/forum/windows_10-hardware/usb-mouse-
 The only solution is disable xHCI from the BIOS.
 
 CheckProcSeriesTaskDialog
+Indusoft.LDS.Client.IC\Controls\SeriesTaskControl.cs
+_bbiEventFreqCreate_ItemClick
 
 38-47
 
