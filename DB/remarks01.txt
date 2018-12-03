@@ -32,6 +32,13 @@ inner join CheckProcSample as CPZ on CPZ.CheckProcUid=CP.CheckProcUid
 inner join Task TSK on TSK.TaskUid=CPZ.TaskUid
 where TSK.TaskUid='B8E94FF1-0E89-4526-A9B0-447AF6189A0C'
 
+CheckProcSeriesTaskDialog->CreateTask
+SeriesTaskControl->_bbiEventFreqCreate_ItemClick
+
+OperativeControlOnDemandCommand->void ISampleCommand.Execute(SampleCommandAfterExecute afterExecute)
+OperativeControlOnDemandDialog->CreateOperativeControl
+
+
 
 -- С "Информация о контрольной процедуре" на "Показатель методики"
 select CheckProcInfoUid, TechTest.TechTestUid 
