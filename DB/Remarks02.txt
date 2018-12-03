@@ -1,50 +1,21 @@
-- пример для документов операции
-- пример для документов фичи
-- вытащить печати и штампы
-- код для кнопки печать
-- код для кнопки обновить
-- в списке проверок Партии ОУ необходимо добавить колонку «Статус документа»
+Нужно:
+- методика обслуживания и показатели
+- по графику и шаблонам заданий генерировать задания для исполнения в ЛИМС. 
+- создавать задания по требованию
 
+Задания генерируются:
+- по графику, настроенному в типе оборудования 
+- создаются по требованию с формы ввода 
+- или от единицы оборудования.
 
--- Настройки документов для операции
-insert into AEOpDocument (AEOpDocumentUid, AEUid, OpInfoUid, AEControlType, REDocPackUid, REDocUid, LCID)
-VALUES (
-	cast('' as uniqueidentifier)	-- AEOpDocumentUid = NEW GUID 
-	,cast('' as uniqueidentifier)	-- AEUid
-	,cast('' as uniqueidentifier)	-- OpInfoUid
-	,1								-- AEControlType
-	,cast('' as uniqueidentifier)	-- REDocPackUid
-	,cast('' as uniqueidentifier)	-- REDocUid
-	,1								-- LCID
-)
+Поле Task.GroupKey заданий должно содержать ссылку на шаблон обслуживания оборудования.
 
-select * from REDocType -- Все типы документов
-select * from REDocPack --where REDocTypeUid=''
-select * from REDoc --where REDocPackUid=''
-select * from AE
-select Op.OpUid from AEBatchOp
-inner join OP on OP.OpUid=AEBatchOp.OpUid
-where AEBatchOp.AEBatchOpUid='FAE85389-3400-446E-B7C2-01CC1FC66D6C'
+Настроенный шаблон обслуживания (Рисунок 2.1.5) будет применяться для создания заданий на выполнение обслуживания оборудования.
 
--- Поиск Guid документов
-select AEOpDocument.ReDocUid 
-from dbo.[AEBatchOp] 
-inner join dbo.[Op] on dbo.[Op].OpUid=dbo.[AEBatchOp].OpUid
-inner join dbo.[AEOpDocument] on dbo.[AEOpDocument].OpInfoUid=dbo.[Op].OpInfoUid
-where dbo.[AEBatchOp].AEBatchOpUid=''
+? Рисунок 2.1.5 - что за таблиц(а/ы) в БД
 
--- Настройки документов для фичи
-insert into dbo.[AEDocPack] (AEDocPackUid, ControlType)
-VALUES (cast('' as uniqueidentifier), 1)
-
-insert into dbo.[AEDoc] (AEDocUid, AEDocPackUid, REDocUid)
-VALUES (
-	cast('' as uniqueidentifier)
-	,cast('' as uniqueidentifier)
-	,cast('' as uniqueidentifier)
-)
-
-
-select dbo.[AEDoc].ReDocUid 
-from dbo.[AEDoc]
-inner join dbo.[AEDocPack] on dbo.[AEDocPack].AEDocPackUid=dbo.[AEDoc].AEDocPackUid
+CheckProcInfo	- информация о контрольной процедуре
+CheckProc		- контрольная процедура
+CheckProcTask 	- шаблон задания ВЛК
+TechTest		- показатель методики
+Sample			- образец
