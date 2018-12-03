@@ -6,6 +6,8 @@ https://merabheja.com/solved-usb-ports-not-working-in-windows-10-fix/
 https://answers.microsoft.com/en-us/windows/forum/windows_10-hardware/usb-mouse-not-working-after-boot-up-until/11e2c635-a7c2-4545-826f-ef42f12a00d7
 The only solution is disable xHCI from the BIOS.
 
+CheckProcSeriesTaskDialog
+
 38-47
 
 
