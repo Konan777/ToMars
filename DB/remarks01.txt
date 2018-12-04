@@ -11,3 +11,16 @@ The only solution is disable xHCI from the BIOS.
 Indusoft.LDS.Services.Contracts.AE\RS.cs -> AETaskExtensionUid
 Indusoft.LDS.Server.DPM.AE\Tasks\AEBatchOPSvrTaskExtension.cs
 Indusoft.LDS.Server.DPM.AE\Tasks\AEPreparationSvrTaskExtension.cs
+
+ задача очень похожа на генерацию задач в Учёте помещений. Поэтому проще всего ориентироваться на неё. Можешь посмотреть на настройку расписания в возможности "Классификаторы > Учёт помещений".
+
+Пример расширения заданий "Параметры окружающей среды помещения" на клиенте можно посмотреть в Client2\Classifiers\Indusoft.LDS.Client.Rooms\Tasks. Регистрация расширения происходит в файле Indusoft.LDS.Client.Rooms\RoomsExtention.cs. Так же идентификатор расширения заданий указывается в атрибуте:
+[TaskExtension(CapabilityAvailability.All, Services.Contracts.Rooms.RS.Strings.RoomsTaskExtensionUid)]
+
+В Indusoft.LDS.Services.Contracts.Repository\SampleType.cs хранится перечень типов образцов. Нужно добавить новый тип. И в таблицу БД [dbo].[SampleType] тоже.
+
+Регистрация образца по заданию происходит в классе Indusoft.LDS.Client.AnalysisInputControl\Controls\Model\SampleInfo.cs.
+Она вызывается из AnalysisTableInputControl.PrepareControlValues(Guid groupKey, DateTime date, bool showDialog) и из SampleMeasuresDataTable.RegisterSample(DataRow row).
+
+Генерация заданий по расписанию для Помещений описывается в Server\Indusoft.LDS.Server.DPM.Rooms. Тебе нужно создать аналогичный проект.
+В Services\Indusoft.LDS.Server.Services.Tasks\Configuration\TaskExtensionsConfig.xml описываются все расширения заданий и хранимки, с помощью которых задания получаются с сервера. Нужно добавить туда твоё расширение и создать в БД две соответствующие хранимки.
