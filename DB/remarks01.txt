@@ -6,42 +6,8 @@ https://merabheja.com/solved-usb-ports-not-working-in-windows-10-fix/
 https://answers.microsoft.com/en-us/windows/forum/windows_10-hardware/usb-mouse-not-working-after-boot-up-until/11e2c635-a7c2-4545-826f-ef42f12a00d7
 The only solution is disable xHCI from the BIOS.
 
-CheckProcSeriesTaskDialog
-Indusoft.LDS.Client.IC\Controls\SeriesTaskControl.cs
-_bbiEventFreqCreate_ItemClick
+Идентификатор разширения заданий
 
-38-47
-
-
-select 
-	ef.EventFreqUid	as [Частоты контроля]
-	,CPSTEF.CheckProcSeriesTaskEventFreqUid as [Частота генерации заданий ВЛК]
-	,CPST.CheckProcSeriesTaskUid as [Шаблон задания серии КП]
-	,CPS.CheckProcSeriesUid as [Серия контрольных процедур]
-	,CPI.CheckProcInfoUid as [Информация о контрольной процедуре]
-	,CP.CheckProcUid as [Контрольная процедура]
-	,CPZ.CheckProcSampleUid as [Образец контрольной процедуры]
-	,TSK.TaskUid as [Задание]
-from EventFreq EF
-inner join CheckProcSeriesTaskEventFreq CPSTEF on CPSTEF.EventFreqUid=EF.EventFreqUid
-inner join CheckProcSeriesTask CPST on CPST.CheckProcSeriesTaskUid=CPSTEF.CheckProcSeriesTaskUid
-inner join CheckProcSeries CPS on CPS.CheckProcSeriesUid=CPST.CheckProcSeriesUid
-inner join CheckProcInfo CPI on CPI.CheckProcInfoUid=CPS.CheckProcInfoUid
-inner join CheckProc CP on CP.CheckProcInfoUid=CPI.CheckProcInfoUid
-inner join CheckProcSample as CPZ on CPZ.CheckProcUid=CP.CheckProcUid
-inner join Task TSK on TSK.TaskUid=CPZ.TaskUid
-where TSK.TaskUid='B8E94FF1-0E89-4526-A9B0-447AF6189A0C'
-
-CheckProcSeriesTaskDialog->CreateTask
-SeriesTaskControl->_bbiEventFreqCreate_ItemClick
-
-OperativeControlOnDemandCommand->void ISampleCommand.Execute(SampleCommandAfterExecute afterExecute)
-OperativeControlOnDemandDialog->CreateOperativeControl
-
-
-
--- С "Информация о контрольной процедуре" на "Показатель методики"
-select CheckProcInfoUid, TechTest.TechTestUid 
-from CheckProcInfo 
-inner join TechTest on TechTest.TechTestUid=CheckProcInfo.TechTestUid
-where CheckProcInfoUid='16AE4050-AB97-4633-AC30-3534AA8DC97F'
+Indusoft.LDS.Services.Contracts.AE\RS.cs -> AETaskExtensionUid
+Indusoft.LDS.Server.DPM.AE\Tasks\AEBatchOPSvrTaskExtension.cs
+Indusoft.LDS.Server.DPM.AE\Tasks\AEPreparationSvrTaskExtension.cs
