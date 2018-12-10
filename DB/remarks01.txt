@@ -32,4 +32,6 @@ EqpType->EqpTypeMtcSchd->EqpTypeMtcSchdTechTest->TechTest
 EqpMtcTaskTemplate->EqpTypeMtcSchd->EqpTypeMtcSchdTechTest->TechTest
 
 RoomTermsTest==EqpTypeMtcSchdTechTest
+Indusoft.LDS.Client.Rooms->
+public Task CreateTask(Room room, RoomTermsTest[] tests, DateTime creationDate)
 
