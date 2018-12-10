@@ -24,3 +24,9 @@ Indusoft.LDS.Server.DPM.AE\Tasks\AEPreparationSvrTaskExtension.cs
 
 Генерация заданий по расписанию для Помещений описывается в Server\Indusoft.LDS.Server.DPM.Rooms. Тебе нужно создать аналогичный проект.
 В Services\Indusoft.LDS.Server.Services.Tasks\Configuration\TaskExtensionsConfig.xml описываются все расширения заданий и хранимки, с помощью которых задания получаются с сервера. Нужно добавить туда твоё расширение и создать в БД две соответствующие хранимки.
+
+C:\!Indus\Branches\Malahit_AzotUk\Source\Indusoft.LDS.Client.EQP\Features\UI\EqpLogFeatureViewControl.cs
+_btnCreateMaintenanceTask_ItemClick
+
+EqpType->EqpTypeMtcSchd->EqpTypeMtcSchdTechTest->TechTest
+EqpMtcTaskTemplate->EqpTypeMtcSchd->EqpTypeMtcSchdTechTest->TechTest
