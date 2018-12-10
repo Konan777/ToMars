@@ -30,3 +30,6 @@ _btnCreateMaintenanceTask_ItemClick
 
 EqpType->EqpTypeMtcSchd->EqpTypeMtcSchdTechTest->TechTest
 EqpMtcTaskTemplate->EqpTypeMtcSchd->EqpTypeMtcSchdTechTest->TechTest
+
+RoomTermsTest==EqpTypeMtcSchdTechTest
+
