@@ -31,13 +31,13 @@ Indusoft.LDS.Client.EQP\Manager\EqpManager.cs
             }
         }
 
-        public Task CreateTask(Services.Contracts.EQP.Eqp eqp, EqpTypeMtcSchdTechTest[] tests, DateTime creationDate)
+        public Task CreateTask(Guid eqpUid, List<EqpTypeMtcSchdTechTest> tests, DateTime creationDate)
         {
             Status status = MetadataManager.GetStatus(Services.Contracts.Tasks.RS.Strings.TaskNew);
-            if (eqp == null || !tests.Any())
+            if (eqpUid == null || !tests.Any())
                 return null;
 
-            Guid groupKey = eqp.EqpUid;
+            Guid groupKey = eqpUid;
             var task = new Task();
             var taskContents = new List<TaskContent>();
             task.TaskUid = Guid.NewGuid();
@@ -62,6 +62,17 @@ Indusoft.LDS.Client.EQP\Manager\EqpManager.cs
             }
 
             return null;
+        }
+
+
+D:\Work\!RBO\!BMU\Source\Indusoft.LDS.Client.EQP\Features\UI\EqpLogFeatureViewControl.cs
+        private void _btnCreateMaintenanceTask_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (FocusedEqpMtcTaskTemplate != null)
+            {
+                var tests = SA.Instance.GetEqpTypeMtcSchdTechTests(FocusedEqpMtcTaskTemplate.EqpTypeMtcSchdUid);
+                EqpManager.Instance.CreateTask(FocusedEqp.EqpUid, tests, DateTime.Now);
+            }
         }
 
 
