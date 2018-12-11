@@ -1,44 +1,74 @@
+1)
+из постановки: 
+	Поле Task.GroupKey заданий должно содержать ссылку на шаблон обслуживания оборудования.
+при этом если смотреть Indusoft.LDS.Client.Rooms\Data\Impl\RoomsDataManager
+CreateTask то Guid groupKey = room.RoomUid;
+и в хранимке Task_Rooms_GetTasks_Secured_ByPeriod выборка идет по
+INNER JOIN [Room] WITH(NOLOCK) ON [T].[GroupKey] = [Room].[RoomUid]
 
-C:\!Indus\Branches\Reporting\Source\Indusoft.LDS.Client.FP\Controls\ConfirmDocumentControl.cs
-
-общее для обоих вариантов:
---------------------------
-
-Делаем аналог класса ConfirmDocumentViewer (AEConfirmDocumentViewer)
-Нужно отвязать класс от FPManager 
-все методы получения данных перенести в AE
-- Добавляем колонку с номером документа.
-- переопределяем поведение кнопки утвердить. 
-она доступна только после того как документ получит номер
-а номер он получит только после печати
-- кнопка аннулировать доступна только если последнее состояние документа "утвержден"
+2) хранимка Task_Rooms_GetTasks_Secured_ByPeriod
+идет связка INNER JOIN [AOD] WITH(NOLOCK) ON [T].[GroupKey] = [AOD].[AODUid]
+AOD - Анализ по требованию. Нам такое тоже нужно делать?
 
 
-Делаем аналог класса обертки ConfirmDocumentViewer (AEConfirmDocumentViewer)
 
 
-Вариант рас:
-------------
+Indusoft.LDS.Client.EQP\Manager\EqpManager.cs
 
-Наследуемся от REDocViewControl (AEDocViewControl).
-Делаем ряд методов и свойств в REDocViewControl protected
-а REDocViewControl.InitExtControls виртуальным
-переопределяем данный метод на использование аналога ConfirmDocumentViewer
-выкидываем ненужную вкладку с почтовыми рассылками
+        public ITaskManager TaskManager
+        {
+            get { return ServiceProvider.GetService<ITaskManager>(); }
+        }
+        public IRepositoryDataService MetadataManager
+        {
+            get
+            {
+                var res = DataServiceManager.GetService<IRepositoryDataService>();
+                if (res == null)
+                    throw new ApplicationException(string.Format("Не удалось получить интерфейс {0}", typeof(IRepositoryDataService)));
 
-Используем в АЕ наследника REDocViewControl
+                return res;
+            }
+        }
 
-Вариант два (кривоват..):
--------------------------
+        public Task CreateTask(Services.Contracts.EQP.Eqp eqp, EqpTypeMtcSchdTechTest[] tests, DateTime creationDate)
+        {
+            Status status = MetadataManager.GetStatus(Services.Contracts.Tasks.RS.Strings.TaskNew);
+            if (eqp == null || !tests.Any())
+                return null;
 
-Изменить интерфейс IREDocViewerExtManager
-добавив возможность удалять расширения
+            Guid groupKey = eqp.EqpUid;
+            var task = new Task();
+            var taskContents = new List<TaskContent>();
+            task.TaskUid = Guid.NewGuid();
+            task.PriorityId = 3;
+            task.GroupKey = groupKey;
+            task.StatusId = status.StatusId;
+            task.StartDate = creationDate;
+            task.ExtensionUid = Services.Contracts.Rooms.RS.Guids.RoomsTaskExtensionUid;
 
-при открытии формы печати в AE
-отправлять все расширения сделанные для FP в буфер
-заменять все расширения FP на расширения для AE
-после закрытия окна печати возвращать расширения FP назад
+            foreach (var test in tests)
+            {
+                var tc = new TaskContent();
+                tc.TaskContentUid = Guid.NewGuid();
+                tc.TaskUid = task.TaskUid;
+                tc.ContentUid = test.TechTestUid;
+                taskContents.Add(tc);
+            }
 
-по трудозатратам оба варианта примерно равны.
+            if (TaskManager.CreateTask(task, taskContents.ToArray()))
+            {
+                return task;
+            }
 
-по моим прикидкам работы тут от 8 до 20 часов..
+            return null;
+        }
+
+
+Indusoft.LDS.Client.EQP\EqpTaskExtension.cs
+удалить класс Tasker
+
+
+Indusoft.LDS.Client.AnalysisInputControl\Controls\AnalysisTableInputControl.cs
+public void PrepareControlValues(Guid groupKey, DateTime date, bool showDialog)
+#region Создание образца для контроля параметров окружающей среды помещения
