@@ -1,39 +1,7 @@
-usb keyboard and mouse not working, unless unplug and plug it back
+Лакмусовая бумажка архитектурного решения
 
-https://support.microsoft.com/en-us/help/4090913/march5-2018kb4090913osbuild16299-251
-https://www.drivereasy.com/knowledge/fix-issue-after-upgrade-system-to-windows-10-usb-ports-dont-work/
-https://merabheja.com/solved-usb-ports-not-working-in-windows-10-fix/
-https://answers.microsoft.com/en-us/windows/forum/windows_10-hardware/usb-mouse-not-working-after-boot-up-until/11e2c635-a7c2-4545-826f-ef42f12a00d7
-The only solution is disable xHCI from the BIOS.
+Я неоднократно писал о лакмусовой бумажке хорошего дизайна. Когда я рассматриваю дизайн класса или модуля, то стараюсь понять насколько он является цельным и слабосвязным (все те же low coupling и high cohesion) с помощью юнит-тестов. Если их написать невозможно или они будут невменяемыми, то это говорит мне, что с дизайном что-то не то.
 
-Идентификатор разширения заданий
+А как определить качество архитектурного решения? Чтобы понять, как далеко некоторое решение проникло (или проникнет) в разные части системы, я задаю себе такой вопрос: «А что если я ошибся и мне придется изменить это решение в будущем? Какие будут последствия?». Если некоторое решение размазано ровным слоем по всему приложению, то стоимость его изменения будет огромной, а значит это решение является архитектурным.
 
-Indusoft.LDS.Services.Contracts.AE\RS.cs -> AETaskExtensionUid
-Indusoft.LDS.Server.DPM.AE\Tasks\AEBatchOPSvrTaskExtension.cs
-Indusoft.LDS.Server.DPM.AE\Tasks\AEPreparationSvrTaskExtension.cs
-
- задача очень похожа на генерацию задач в Учёте помещений. Поэтому проще всего ориентироваться на неё. Можешь посмотреть на настройку расписания в возможности "Классификаторы > Учёт помещений".
-
-Пример расширения заданий "Параметры окружающей среды помещения" на клиенте можно посмотреть в Client2\Classifiers\Indusoft.LDS.Client.Rooms\Tasks. Регистрация расширения происходит в файле Indusoft.LDS.Client.Rooms\RoomsExtention.cs. Так же идентификатор расширения заданий указывается в атрибуте:
-[TaskExtension(CapabilityAvailability.All, Services.Contracts.Rooms.RS.Strings.RoomsTaskExtensionUid)]
-
-В Indusoft.LDS.Services.Contracts.Repository\SampleType.cs хранится перечень типов образцов. Нужно добавить новый тип. И в таблицу БД [dbo].[SampleType] тоже.
-
-Регистрация образца по заданию происходит в классе Indusoft.LDS.Client.AnalysisInputControl\Controls\Model\SampleInfo.cs.
-Она вызывается из AnalysisTableInputControl.PrepareControlValues(Guid groupKey, DateTime date, bool showDialog) и из SampleMeasuresDataTable.RegisterSample(DataRow row).
-
-Генерация заданий по расписанию для Помещений описывается в Server\Indusoft.LDS.Server.DPM.Rooms. Тебе нужно создать аналогичный проект.
-В Services\Indusoft.LDS.Server.Services.Tasks\Configuration\TaskExtensionsConfig.xml описываются все расширения заданий и хранимки, с помощью которых задания получаются с сервера. Нужно добавить туда твоё расширение и создать в БД две соответствующие хранимки.
-
-C:\!Indus\Branches\Malahit_AzotUk\Source\Indusoft.LDS.Client.EQP\Features\UI\EqpLogFeatureViewControl.cs
-_btnCreateMaintenanceTask_ItemClick
-
-EqpType->EqpTypeMtcSchd->EqpTypeMtcSchdTechTest->TechTest
-EqpMtcTaskTemplate->EqpTypeMtcSchd->EqpTypeMtcSchdTechTest->TechTest
-
-RoomTermsTest==EqpTypeMtcSchdTechTest
-Indusoft.LDS.Client.Rooms->
-public Task CreateTask(Room room, RoomTermsTest[] tests, DateTime creationDate)
-==public class Tasker
-==CreateTask
-
+В хорошо спроектированной системе мы должны стараться изолировать свои ошибки минимальным количеством модулей. Хороший дизайн позволяет отложить многие «важные архитектурные решения» на более позднюю стадию проекта, когда вероятность их верного принятия существенно выше. Другими словами, чем меньше архитектурных решений принято на проекте, тем лучше его архитектура.
