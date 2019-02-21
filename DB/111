@@ -1,0 +1,9 @@
+CREATE TABLE [dbo].[AAA_100](
+	[DT01] [date] NOT NULL,
+	[TXT01] [varchar](50) NOT NULL,
+	[TXT02] [varchar](50) NOT NULL,
+	[TXT03] [varchar](50) NOT NULL,
+	[TIME01] [varchar](50) NOT NULL,
+	[TIME02] [varchar](50) NULL,
+	[COST] [float] NULL
+) ON [PRIMARY]
