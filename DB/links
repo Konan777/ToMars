@@ -1,4 +1,13 @@
+0) ITA.Eleanor.Import\Importers\XMLBuildercs -> BuildXMLString флаг mapOnly хардкодим его (и проверяем наличие полей в таблице?)?
+1) Нельзя использовать атрибуты типа [NotMapped] в автогенеренных моделях. Выпиливать эту ветку кода?
+2) В какую папку положить EntityToXml? ITA.Eleanor.Core\Infrastructure?
+3) В ITA.Eleanor.Core нужно соединение с БД. Найти как!
+
+
+
 http://proyectoshm.com/style/infiltration-ultraconservative-management-of-hypomineralization
+
+
 https://www.reddit.com/r/skyrimmods/comments/8ay0ha/racemenu_64_importexport_option/
 OBIS and Skyrim Immersive Creatures is what I use but Sands of Time
 Dynmaic dungeon loot Unique loot Immersive currency Rebalanced level lists
