@@ -9,3 +9,5 @@ http://proyectoshm.com/style/infiltration-ultraconservative-management-of-hypomi
 
 
 PluginCollection, PluginManager, PluginManagerWindow, EleanorAppManager, RunPluginCommand, UiPluginWindow
+
+public static String BuildXMLString(List<GetMissingCampaigns_Result> items)
