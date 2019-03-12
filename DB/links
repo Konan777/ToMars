@@ -11,3 +11,9 @@ http://proyectoshm.com/style/infiltration-ultraconservative-management-of-hypomi
 PluginCollection, PluginManager, PluginManagerWindow, EleanorAppManager, RunPluginCommand, UiPluginWindow
 
 public static String BuildXMLString(List<GetMissingCampaigns_Result> items)
+
+ITA.Eleanor.Import\Importers\AdWordsImporter.cs 	-> LogMissingCampaigns
+ITA.Eleanor.Import\Importers\VkImporter.cs			  -> LogMissingCampaigns
+ITA.Eleanor.Import\Importers\MyTargetImporter.cs	-> LogMissingCampaigns
+ITA.Eleanor.Import\Importers\FacebookImporter.cs	-> LogMissingCampaigns
+ITA.Eleanor.Import\Importers\FacebookImporter.cs	-> LogMissingCampaigns
