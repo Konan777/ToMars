@@ -17,3 +17,20 @@ ITA.Eleanor.Import\Importers\VkImporter.cs			  -> LogMissingCampaigns
 ITA.Eleanor.Import\Importers\MyTargetImporter.cs	-> LogMissingCampaigns
 ITA.Eleanor.Import\Importers\FacebookImporter.cs	-> LogMissingCampaigns
 ITA.Eleanor.Import\Importers\FacebookImporter.cs	-> LogMissingCampaigns
+
+                                <DataGridComboBoxColumn Width="310" Header="Наименование ВСП"
+                                    SelectedValueBinding="{Binding DEPART}"
+                                    SelectedValuePath="ADD_OPEXCODE"
+                                    DisplayMemberPath="BRANCHNAME">
+                                    <DataGridComboBoxColumn.ElementStyle>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="ItemsSource" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}},Path=DataContext.Branches}"/>
+                                        </Style>
+                                    </DataGridComboBoxColumn.ElementStyle>
+                                    <DataGridComboBoxColumn.EditingElementStyle>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="ItemsSource" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.Branches}"/>
+                                        </Style>
+                                    </DataGridComboBoxColumn.EditingElementStyle>
+                                </DataGridComboBoxColumn>
+
