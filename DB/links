@@ -1,3 +1,5 @@
+https://github.com/JonghoL/EventBindingMarkup
+
 0) ITA.Eleanor.Import\Importers\XMLBuildercs -> BuildXMLString флаг mapOnly хардкодим его (и проверяем наличие полей в таблице?)?
 1) Нельзя использовать атрибуты типа [NotMapped] в автогенеренных моделях. Выпиливать эту ветку кода?
 2) В какую папку положить EntityToXml? ITA.Eleanor.Core\Infrastructure?
