@@ -5,3 +5,7 @@ https://www.healthline.com/nutrition/leaky-gut-diet#sample-menu
 
 3027: Не указано сопоставление для следующего набора EntitySet или AssociationSet - YandexDisplayDataRaw
 Error		Error 11007: Entity type 'YandexDisplayDataRawItem' is not mapped.	
+
+Я.Недвижимость=YandexRealtyDataRaw поле NazvanieZhK=объект
+Циан=[CianDataRaw] поле Название ЖК=NazvanieZhK
+Авито=[AvitoDataRaw] поле Адрес=Adres
