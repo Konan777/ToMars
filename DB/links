@@ -11,4 +11,4 @@ Error		Error 11007: Entity type 'YandexDisplayDataRawItem' is not mapped.
 Циан=[CianDataRaw] поле Название ЖК=NazvanieZhK
 Авито=[AvitoDataRaw] поле Адрес=Adres
 
-BindingRulesComagic
+BindingRulesComagic, YandexRealtyDataRaw, CianDataRaw, AvitoDataRaw, ComagicApplications
