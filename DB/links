@@ -19,3 +19,6 @@ from [EISG].[dbo].[Anketa]
 SELECT FIO, Birthday, Email,
 FIRST_VALUE(birthday) OVER (PARTITION BY email ORDER BY birthday DESC)  AS first_date
 from [EISG].[dbo].[Anketa]
+
+https://vpuzo.com/recepty-izdeliy-iz-testa/lepeshki/45154-risovye-lepeshki.html
+https://eda.ru/recepty/napitki/oranzhevyy-smuzi-s-bananami-31563
