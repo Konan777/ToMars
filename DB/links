@@ -1,0 +1,21 @@
+
+select AtomId, [Version], MONTH(CreatedOn) 
+from [crm].[OpportunitiesDataRaw]
+where [StatusValue] <> N'Не состоялся' 
+	AND [StatusValue] <> N'Подписание' 
+	AND [LgrArticleTypeCodeAliasValue]<>N'Машиноместо' 
+	AND [EstimatedValue]>'100000'
+
+group by AtomId, [Version], MONTH(CreatedOn) 
+
+
+-- Нумерует записи с одинаковым email сортируя по birthday в порядке возрастания
+SELECT FIO, Birthday, Email,
+row_number() OVER (PARTITION BY email ORDER BY birthday DESC)  AS rating_in_section
+from [EISG].[dbo].[Anketa]
+
+
+-- Выберет в качестве значения first_date старший в группе birthday
+SELECT FIO, Birthday, Email,
+FIRST_VALUE(birthday) OVER (PARTITION BY email ORDER BY birthday DESC)  AS first_date
+from [EISG].[dbo].[Anketa]
