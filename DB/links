@@ -20,5 +20,28 @@ SELECT FIO, Birthday, Email,
 FIRST_VALUE(birthday) OVER (PARTITION BY email ORDER BY birthday DESC)  AS first_date
 from [EISG].[dbo].[Anketa]
 
-https://vpuzo.com/recepty-izdeliy-iz-testa/lepeshki/45154-risovye-lepeshki.html
-https://eda.ru/recepty/napitki/oranzhevyy-smuzi-s-bananami-31563
+Поля вьюхи
+
+атом
+
+версия
+
+дата сделки
+
+OpportunitiesDataRaw → поле Createdon.
+
+дата показа
+
+AppointmentsDataRaw → поле Createdon. 
+
+В сделке есть номера телефонов (MobilePhone, Telephone1, Telephone2). 
+По ним ищем встречу в таблице AppointmentsDataRaw в поле PhoneNumber, формат телефонов одинаковый. 
+Если встреч несколько берём дату в Createdon самой первой встречи.
+
+дата первого обращения
+
+OpportunitiesDataRaw → поле SourceDate.
+
+Кол-во сделок
+
+Кол-во строк в таблице OpportunitiesDataRaw
