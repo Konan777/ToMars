@@ -37,3 +37,5 @@ FROM (
 		AND OPP.[EstimatedValue]>'100000'
 ) AS UNI
 GROUP BY [Атом], [Версия], [Дата сделки], [Дата показа], [Дата первого обращения]
+
+GaProfiles, AnalyticsSessionsImporter, AnalyticsDataRawImporter, 
