@@ -2,24 +2,7 @@
 
 https://docs.microsoft.com/ru-ru/azure/sql-database/sql-database-copy
 
-Типичный способ увеличения таймаута:
-
-using (var entities = new StonehedgeruEntities())
-{
-    const int timeout = int.MaxValue;
-    var priorTimeout = ((IObjectContextAdapter)entities).ObjectContext.CommandTimeout ?? timeout;
-    ((IObjectContextAdapter)entities).ObjectContext.CommandTimeout = timeout;
-    try
-    {
-        entities.MapAtomsYandexRealty(_startDate, _endDate);
-        this.LogFormat(LogLevel.Info, "Успешно.");
-    }
-    finally
-    {
-        ((IObjectContextAdapter)entities).ObjectContext.CommandTimeout = priorTimeout;
-    }
-}
-
-Дело в том, что по завершению блока using экземпляр StonehedgeruEntities удаляется (Dispose)
-и необходимости возвращать таймаут назад нет, т.к. в следующий раз мы будем работать с новым
-экземпляром объекта.
+https://github.com/Azure/azure-sdk-for-net
+https://docs.microsoft.com/ru-ru/dotnet/azure/
+https://docs.microsoft.com/en-us/azure/data-factory/connector-azure-sql-database
+https://stackoverflow.com/questions/45935433/how-to-copy-a-database-using-azure-arm-apis
