@@ -1,15 +1,12 @@
 Посмотреть:
 
 https://docs.microsoft.com/ru-ru/azure/sql-database/sql-database-copy
-https://blogs.msdn.microsoft.com/mast/2013/03/03/different-ways-to-backup-your-windows-azure-sql-database/
-
-https://github.com/Azure/azure-sdk-for-net
-https://docs.microsoft.com/ru-ru/dotnet/azure/
-https://docs.microsoft.com/en-us/azure/data-factory/connector-azure-sql-database
-https://stackoverflow.com/questions/45935433/how-to-copy-a-database-using-azure-arm-apis
-плагин BackupPlugin (в Ita.Eleanor.Core)
+^^^ Средствами T-SQL
 
 https://github.com/Azure/azure-sdk-for-net/issues/3511
+^^^ рабочий пример
+https://docs.microsoft.com/ru-ru/dotnet/azure/dotnet-sdk-azure-authenticate?view=azure-dotnet
+^^^ Авторизация для примера
 
 using Microsoft.Azure.Management.Sql.Fluent.Models;
 
@@ -27,7 +24,3 @@ var azure = Microsoft.Azure.Management.Fluent.Azure
                 .WithSourceDatabase(templatedb)
                 .WithMode(CreateMode.Copy)
                 .Create();
-
-https://docs.microsoft.com/en-us/sql/relational-databases/tutorial-use-azure-blob-storage-service-with-sql-server-2016?view=sql-server-2017
-
-https://docs.microsoft.com/ru-ru/dotnet/azure/dotnet-sdk-azure-authenticate?view=azure-dotnet
