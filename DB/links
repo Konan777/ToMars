@@ -24,3 +24,8 @@ var azure = Microsoft.Azure.Management.Fluent.Azure
                 .WithSourceDatabase(templatedb)
                 .WithMode(CreateMode.Copy)
                 .Create();
+
+public static final String storageConnectionString =
+            "DefaultEndpointsProtocol=http;" +
+            "AccountName=test2rdrhgf62;" +
+            "AccountKey=1gy3lpE7Du1j5ljKiupjhgjghjcbfgTGhbntjnRfr9Yi6GUQqVMQqGxd7/YThisv/OVVLfIOv9kQ==";
