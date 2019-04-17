@@ -38,3 +38,6 @@ public static final String storageConnectionString =
             "DefaultEndpointsProtocol=http;" +
             "AccountName=test2rdrhgf62;" +
             "AccountKey=1gy3lpE7Du1j5ljKiupjhgjghjcbfgTGhbntjnRfr9Yi6GUQqVMQqGxd7/YThisv/OVVLfIOv9kQ==";
+
+https://www.sqlshack.com/how-to-connect-and-perform-a-sql-server-database-restore-from-azure-blob-storage/
+^^^ восстановление БД по URL
