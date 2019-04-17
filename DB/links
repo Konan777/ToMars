@@ -7,6 +7,15 @@ https://github.com/Azure/azure-sdk-for-net/issues/3511
 ^^^ рабочий пример
 https://docs.microsoft.com/ru-ru/dotnet/azure/dotnet-sdk-azure-authenticate?view=azure-dotnet
 ^^^ Авторизация для примера
+var credentials = SdkContext.AzureCredentialsFactory.FromServicePrincipal(ClientId, ClientSecret, AzureTenantId, AzureEnvironment.AzureGlobalCloud);
+
+        var azure = Microsoft.Azure.Management.Fluent.Azure
+            .Configure()
+            .Authenticate(credentials)
+            .WithSubscription(subscriptionid);
+            
+https://docs.microsoft.com/ru-ru/azure/active-directory/develop/howto-create-service-principal-portal#get-application-id-and-authentication-key
+https://docs.microsoft.com/ru-ru/azure/active-directory/develop/howto-create-service-principal-portal#get-tenant-id
 
 using Microsoft.Azure.Management.Sql.Fluent.Models;
 
