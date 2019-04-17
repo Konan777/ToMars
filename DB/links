@@ -29,3 +29,5 @@ var azure = Microsoft.Azure.Management.Fluent.Azure
                 .Create();
 
 https://docs.microsoft.com/en-us/sql/relational-databases/tutorial-use-azure-blob-storage-service-with-sql-server-2016?view=sql-server-2017
+
+https://docs.microsoft.com/ru-ru/dotnet/azure/dotnet-sdk-azure-authenticate?view=azure-dotnet
