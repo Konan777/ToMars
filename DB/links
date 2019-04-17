@@ -7,3 +7,22 @@ https://docs.microsoft.com/ru-ru/dotnet/azure/
 https://docs.microsoft.com/en-us/azure/data-factory/connector-azure-sql-database
 https://stackoverflow.com/questions/45935433/how-to-copy-a-database-using-azure-arm-apis
 плагин BackupPlugin (в Ita.Eleanor.Core)
+
+https://github.com/Azure/azure-sdk-for-net/issues/3511
+
+using Microsoft.Azure.Management.Sql.Fluent.Models;
+
+var azure = Microsoft.Azure.Management.Fluent.Azure
+                .Authenticate("authfile").WithDefaultSubscription();
+
+            //This retrieves the SQL server from the resourcegroup where the database needs to be created in
+            var sqlServer = azure.SqlServers.GetByResourceGroup("resourcegroup", "servername");
+
+            //This database is the template database that is used for creating a new database
+            var templatedb = sqlServer.Databases.Get("mytemplatedatabase");
+
+            //Create a new database based on the template database and define your name of your new database
+            var database = sqlServer.Databases.Define("mydatabasename")
+                .WithSourceDatabase(templatedb)
+                .WithMode(CreateMode.Copy)
+                .Create();
