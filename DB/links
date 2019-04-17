@@ -40,4 +40,5 @@ public static final String storageConnectionString =
             "AccountKey=1gy3lpE7Du1j5ljKiupjhgjghjcbfgTGhbntjnRfr9Yi6GUQqVMQqGxd7/YThisv/OVVLfIOv9kQ==";
 
 https://www.sqlshack.com/how-to-connect-and-perform-a-sql-server-database-restore-from-azure-blob-storage/
+https://docs.microsoft.com/en-us/azure/sql-database/sql-database-managed-instance-get-started-restore
 ^^^ восстановление БД по URL
