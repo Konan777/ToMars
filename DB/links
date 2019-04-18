@@ -52,4 +52,8 @@ ALTER TABLE [core].[DirectProfiles]
 ALTER TABLE [core].[YandexDisplayProfiles]
 ALTER TABLE [core].[YmProfiles]
 
-
+В первую очередь нужно Direct, AdWords, Facebook, Ok. 
+три однотипных изменения, одно в коде плюс две хранимки. 
+Тоже самое должно быть и во вконтакте, там такая же процедура CheckCampaigns и две хранимки. 
+Сейчас это не сделано, поэтому из Done в InProc
+Во вторую очередь YandexDisplay и YandexMetrika.
