@@ -42,3 +42,14 @@ public static final String storageConnectionString =
 https://www.sqlshack.com/how-to-connect-and-perform-a-sql-server-database-restore-from-azure-blob-storage/
 https://docs.microsoft.com/en-us/azure/sql-database/sql-database-managed-instance-get-started-restore
 ^^^ восстановление БД по URL
+
+
+
+ALTER TABLE [core].[FacebookProfiles]
+ALTER TABLE [core].[OkProfiles]
+ALTER TABLE [core].[AdWordsProfiles]
+ALTER TABLE [core].[DirectProfiles]
+ALTER TABLE [core].[YandexDisplayProfiles]
+ALTER TABLE [core].[YmProfiles]
+
+
