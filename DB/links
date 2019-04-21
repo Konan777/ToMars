@@ -1,59 +1,31 @@
-Посмотреть:
+	-- Соберем поля первичного ключа не являющегося identity
+	SELECT @primaryKey = COALESCE(@primaryKey + ', ', '') + c.name,
+		@joinByPrimaryKeyCondition = COALESCE(@joinByPrimaryKeyCondition + ' AND ', '') + 'T.['+c.name+'] = ['+@tableSchema+'].['+@tableName+'].['+c.name+']',
+		@condPKIsNotNull = COALESCE(@condPKIsNotNull + ' AND ', '') + '['+@tableSchema+'].['+@tableName+'].['+c.name+'] IS NOT NULL',
+		@condPKIsNull = COALESCE(@condPKIsNull + ' AND ', '') + '['+@tableSchema+'].['+@tableName+'].['+c.name+'] is null'
+	FROM 
+		sys.tables t 
+		INNER JOIN sys.schemas sch on sch.schema_id= t.schema_id
+		LEFT JOIN sys.columns c ON c.OBJECT_ID = t.OBJECT_ID
+		LEFT JOIN sys.identity_columns idc ON idc.OBJECT_ID = t.OBJECT_ID AND idc.column_id = c.column_id AND idc.is_identity = 1
+		LEFT JOIN sys.index_columns ic ON ic.OBJECT_ID = t.OBJECT_ID AND ic.column_id = c.column_id
+		LEFT JOIN sys.indexes i ON i.OBJECT_ID = t.OBJECT_ID AND i.index_id = ic.index_id AND i.is_primary_key = 1
+	WHERE t.type = 'U' AND (idc.is_identity = 1 OR i.is_primary_key = 1 OR c.name = 'ID') 
+		and idc.is_identity is null and i.is_primary_key IS NOT NULL and t.name=@tableName
+		and sch.name=@tableSchema
 
-https://docs.microsoft.com/ru-ru/azure/sql-database/sql-database-copy
-^^^ Средствами T-SQL
-
-https://github.com/Azure/azure-sdk-for-net/issues/3511
-^^^ рабочий пример
-https://docs.microsoft.com/ru-ru/dotnet/azure/dotnet-sdk-azure-authenticate?view=azure-dotnet
-^^^ Авторизация для примера
-var credentials = SdkContext.AzureCredentialsFactory.FromServicePrincipal(ClientId, ClientSecret, AzureTenantId, AzureEnvironment.AzureGlobalCloud);
-
-        var azure = Microsoft.Azure.Management.Fluent.Azure
-            .Configure()
-            .Authenticate(credentials)
-            .WithSubscription(subscriptionid);
-            
-https://docs.microsoft.com/ru-ru/azure/active-directory/develop/howto-create-service-principal-portal#get-application-id-and-authentication-key
-https://docs.microsoft.com/ru-ru/azure/active-directory/develop/howto-create-service-principal-portal#get-tenant-id
-
-using Microsoft.Azure.Management.Sql.Fluent.Models;
-
-var azure = Microsoft.Azure.Management.Fluent.Azure
-                .Authenticate("authfile").WithDefaultSubscription();
-
-            //This retrieves the SQL server from the resourcegroup where the database needs to be created in
-            var sqlServer = azure.SqlServers.GetByResourceGroup("resourcegroup", "servername");
-
-            //This database is the template database that is used for creating a new database
-            var templatedb = sqlServer.Databases.Get("mytemplatedatabase");
-
-            //Create a new database based on the template database and define your name of your new database
-            var database = sqlServer.Databases.Define("mydatabasename")
-                .WithSourceDatabase(templatedb)
-                .WithMode(CreateMode.Copy)
-                .Create();
-
-public static final String storageConnectionString =
-            "DefaultEndpointsProtocol=http;" +
-            "AccountName=test2rdrhgf62;" +
-            "AccountKey=1gy3lpE7Du1j5ljKiupjhgjghjcbfgTGhbntjnRfr9Yi6GUQqVMQqGxd7/YThisv/OVVLfIOv9kQ==";
-
-https://www.sqlshack.com/how-to-connect-and-perform-a-sql-server-database-restore-from-azure-blob-storage/
-https://docs.microsoft.com/en-us/azure/sql-database/sql-database-managed-instance-get-started-restore
-^^^ восстановление БД по URL
-
-
-
-ALTER TABLE [core].[FacebookProfiles]
-ALTER TABLE [core].[OkProfiles]
-ALTER TABLE [core].[AdWordsProfiles]
-ALTER TABLE [core].[DirectProfiles]
-ALTER TABLE [core].[YandexDisplayProfiles]
-ALTER TABLE [core].[YmProfiles]
-
-В первую очередь нужно Direct, AdWords, Facebook, Ok. 
-три однотипных изменения, одно в коде плюс две хранимки. 
-Тоже самое должно быть и во вконтакте, там такая же процедура CheckCampaigns и две хранимки. 
-Сейчас это не сделано, поэтому из Done в InProc
-Во вторую очередь YandexDisplay и YandexMetrika.
+	-- Соберем поле первичного ключа _являющегося_ identity
+	SELECT @identityKey=c.name,
+		@joinByPrimaryKeyCondition = COALESCE(@joinByPrimaryKeyCondition + ' AND ', '') + 'T.['+c.name+'] = ['+@tableSchema+'].['+@tableName+'].['+c.name+']',
+		@condPKIsNotNull = COALESCE(@condPKIsNotNull + ' AND ', '') + '['+@tableSchema+'].['+@tableName+'].['+c.name+'] IS NOT NULL',
+		@condPKIsNull = COALESCE(@condPKIsNull + ' AND ', '') + '['+@tableSchema+'].['+@tableName+'].['+c.name+'] is null'
+	FROM 
+		sys.tables t 
+		INNER JOIN sys.schemas sch on sch.schema_id= t.schema_id
+		LEFT JOIN sys.columns c ON c.OBJECT_ID = t.OBJECT_ID
+		LEFT JOIN sys.identity_columns idc ON idc.OBJECT_ID = t.OBJECT_ID AND idc.column_id = c.column_id AND idc.is_identity = 1
+		LEFT JOIN sys.index_columns ic ON ic.OBJECT_ID = t.OBJECT_ID AND ic.column_id = c.column_id
+		LEFT JOIN sys.indexes i ON i.OBJECT_ID = t.OBJECT_ID AND i.index_id = ic.index_id AND i.is_primary_key = 1
+	WHERE t.type = 'U' AND (idc.is_identity = 1 OR i.is_primary_key = 1 OR c.name = 'ID') 
+		and idc.is_identity=1 and i.is_primary_key IS NOT NULL and t.name=@tableName
+		and sch.name=@tableSchema
