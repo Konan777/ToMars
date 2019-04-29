@@ -1,16 +1,26 @@
-
 Нужно допилить хранимки, чтобы не удалялись данные с неактивных профилей. Иначе грохнем то, что не можем перегрузить.
-
 Done: GaProfile, VkontakteProfile, CallTouchProfile
-
 ALTER TABLE [core].[FacebookProfiles]
-
 ALTER TABLE [core].[OkProfiles]
-
 ALTER TABLE [core].[AdWordsProfiles]
-
 ALTER TABLE [core].[DirectProfiles]
-
 ALTER TABLE [core].[YandexDisplayProfiles]
-
 ALTER TABLE [core].[YmProfiles]
+
+	IF @cleanup = 1 
+	BEGIN
+		if CHARINDEX('PROFILEID', UPPER(@columns))>0 AND @currentProfileId>0 BEGIN
+			SET @statement = '
+			DECLARE @endDatePlusOneDay DATE
+			SELECT @endDatePlusOneDay = DATEADD(DAY, 1, @endDate)
+			DELETE		'+@tableAndSchema+'
+			WHERE		['+@cleanupFilterColumn+'] >= @startDate AND ['+@cleanupFilterColumn+'] < @endDatePlusOneDay
+				AND ProfileId='+CAST(@currentProfileId AS NVARCHAR)
+		END
+		ELSE BEGIN
+			SET @statement = '
+			DECLARE @endDatePlusOneDay DATE
+			SELECT @endDatePlusOneDay = DATEADD(DAY, 1, @endDate)
+			DELETE		'+@tableAndSchema+'
+			WHERE		['+@cleanupFilterColumn+'] >= @startDate AND ['+@cleanupFilterColumn+'] < @endDatePlusOneDay'
+		END 
