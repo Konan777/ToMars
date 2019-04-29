@@ -1,2 +1,16 @@
 
 Нужно допилить хранимки, чтобы не удалялись данные с неактивных профилей. Иначе грохнем то, что не можем перегрузить.
+
+Done: GaProfile, VkontakteProfile, CallTouchProfile
+
+ALTER TABLE [core].[FacebookProfiles]
+
+ALTER TABLE [core].[OkProfiles]
+
+ALTER TABLE [core].[AdWordsProfiles]
+
+ALTER TABLE [core].[DirectProfiles]
+
+ALTER TABLE [core].[YandexDisplayProfiles]
+
+ALTER TABLE [core].[YmProfiles]
