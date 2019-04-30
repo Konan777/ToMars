@@ -24,3 +24,5 @@ ALTER TABLE [core].[YmProfiles]
 			DELETE		'+@tableAndSchema+'
 			WHERE		['+@cleanupFilterColumn+'] >= @startDate AND ['+@cleanupFilterColumn+'] < @endDatePlusOneDay'
 		END 
+
+STRING_SPLIT
