@@ -36,3 +36,7 @@ SqlParameter parameter = new SqlParameter("UserIds", SqlDbType.Structured);
 parameter.TypeName = "dbo.IntsTTV";
 parameter.Value = dataTable;
 var res = _db.Database.SqlQuery<string>("EXEC dbo.GetUsers @UserIds", parameter).ToList();
+
+1) distinct по profileid в xml
+2) проброс и сплит списка
+
