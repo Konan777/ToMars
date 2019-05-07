@@ -1,42 +1,307 @@
-Нужно допилить хранимки, чтобы не удалялись данные с неактивных профилей. Иначе грохнем то, что не можем перегрузить.
-Done: GaProfile, VkontakteProfile, CallTouchProfile
-ALTER TABLE [core].[FacebookProfiles]
-ALTER TABLE [core].[OkProfiles]
-ALTER TABLE [core].[AdWordsProfiles]
-ALTER TABLE [core].[DirectProfiles]
-ALTER TABLE [core].[YandexDisplayProfiles]
-ALTER TABLE [core].[YmProfiles]
+ALTER PROCEDURE [client].[MapAtomsRegistrations] (@startDate DATE, @endDate DATE)
+AS
+BEGIN
+	SET NOCOUNT ON
 
-	IF @cleanup = 1 
-	BEGIN
-		if CHARINDEX('PROFILEID', UPPER(@columns))>0 AND @currentProfileId>0 BEGIN
-			SET @statement = '
-			DECLARE @endDatePlusOneDay DATE
-			SELECT @endDatePlusOneDay = DATEADD(DAY, 1, @endDate)
-			DELETE		'+@tableAndSchema+'
-			WHERE		['+@cleanupFilterColumn+'] >= @startDate AND ['+@cleanupFilterColumn+'] < @endDatePlusOneDay
-				AND ProfileId='+CAST(@currentProfileId AS NVARCHAR)
-		END
-		ELSE BEGIN
-			SET @statement = '
-			DECLARE @endDatePlusOneDay DATE
-			SELECT @endDatePlusOneDay = DATEADD(DAY, 1, @endDate)
-			DELETE		'+@tableAndSchema+'
-			WHERE		['+@cleanupFilterColumn+'] >= @startDate AND ['+@cleanupFilterColumn+'] < @endDatePlusOneDay'
-		END 
+	DECLARE @endDatePlusOneDay DATE
+	SELECT @endDatePlusOneDay = DATEADD(DAY, 1, @endDate)
 
-STRING_SPLIT
+	-- Сбросим маппинг для указанного диапазона дат
+	UPDATE [crm].[Registrations] SET [AtomId]=NULL, [Version]=NULL, [BindingRuleId]=NULL
+	WHERE [DateTime] >= @startDate AND [DateTime] < @endDatePlusOneDay
 
-var dataTable = new DataTable();
-dataTable.TableName = "dbo.IntsTTV";
-dataTable.Columns.Add("Id", typeof(int));
-dataTable.Rows.Add(1); // Id of '1' is valid for the Person table
+	
+	-- Подхватим атомы из AnalyticsSessions
+	UPDATE		[crm].[Registrations]
+	SET			[AtomId]		= BR.[AtomId],
+				[Version]		= BR.[Version],
+				[BindingRuleId] = 'AnalyticsSessions:' + Cast(BR.[BindingRuleId] as nvarchar)
+	FROM		(
+		SELECT FREG.[id], FREG.[AtomId], FREG.[Version], FREG.[BindingRuleId]
+			,ROW_NUMBER() OVER (PARTITION BY FREG.[Id] ORDER BY FREG.[GASDate]) AS [RowNumber]
+		FROM (
 
-SqlParameter parameter = new SqlParameter("UserIds", SqlDbType.Structured);
-parameter.TypeName = "dbo.IntsTTV";
-parameter.Value = dataTable;
-var res = _db.Database.SqlQuery<string>("EXEC dbo.GetUsers @UserIds", parameter).ToList();
+			-- Ищем по [ClientId]
+			SELECT REG.[id], FSEO.[DateTime] SeoDate, GAS.[AtomId], GAS.[Version], GAS.[BindingRuleId], GAS.[DateTime] GASDate
+			FROM [crm].[Registrations] REG
+			INNER JOIN (
+				SELECT [UserId], [DateTime], SEO.[Value]
+					,ROW_NUMBER() OVER (PARTITION BY SEO.[UserId] ORDER BY SEO.[DateTime]) AS [RowNumber]
+				FROM [crm].[SeoUsersRefs] SEO
+				WHERE SEO.[Source]='google' 
+			) AS FSEO ON FSEO.UserId=REG.UserId 
+			INNER JOIN [core].[AnalyticsSessions] GAS ON 'GA1.2.'+GAS.[ClientId]=FSEO.[Value]
+			WHERE  REG.[DateTime] >= @startDate AND REG.[DateTime] < @endDatePlusOneDay
+				AND REG.[Hostname] IS NOT NULL 
+				AND FSEO.[RowNumber]=1 				-- первая авторизация
+				AND GAS.[DateTime]<=FSEO.[DateTime]	-- отбросим сессии ранее первой авторизации 
 
-1) distinct по profileid в xml
-2) проброс и сплит списка
+			UNION ALL
+			
+			-- Ищем по [Custom3]
+			SELECT REG.[id], FSEO.[DateTime] SeoDate, GAS.[AtomId], GAS.[Version], GAS.[BindingRuleId], GAS.[DateTime] GASDate
+			FROM [crm].[Registrations] REG
+			INNER JOIN (
+				SELECT [UserId], [DateTime]
+					,ROW_NUMBER() OVER (PARTITION BY SEO.[UserId] ORDER BY SEO.[DateTime]) AS [RowNumber]
+				FROM [crm].[SeoUsersRefs] SEO
+				WHERE SEO.[Source]='google' 
+			) AS FSEO ON FSEO.UserId=REG.UserId 
+			INNER JOIN [core].[AnalyticsSessions] GAS ON GAS.[Custom3]=REG.[UserId]
+			WHERE  REG.[DateTime] >= @startDate AND REG.[DateTime] < @endDatePlusOneDay
+				AND REG.[Hostname] IS NOT NULL 
+				AND FSEO.[RowNumber]=1 				-- первая авторизация
+				AND GAS.[DateTime]<=FSEO.[DateTime]	-- отбросим сессии ранее первой авторизации 
+				AND REG.[AtomId] IS NULL			-- Не трогаем ранее примапленные записи
 
+
+		) AS FREG
+	)	AS Br
+	INNER JOIN	[crm].[Registrations]	AS A ON Br.[Id] = A.[Id] AND Br.[RowNumber] = 1
+
+	-- Маппинг на основе AppsFlyerInstalls
+	UPDATE		[crm].[Registrations]
+	SET			[AtomId]		= BR.[AtomId],
+				[Version]		= BR.[Version],
+				[BindingRuleId] = 'AppsFlyer:' + Cast(BR.[BindingRuleId] as nvarchar)
+	FROM		(
+		SELECT FREG.[id], FREG.[AtomId], FREG.[Version], FREG.[BindingRuleId]
+			,ROW_NUMBER() OVER (PARTITION BY FREG.[Id] ORDER BY FREG.[AFIDate]) AS [RowNumber]
+		FROM (
+
+			SELECT REG.[id], FSEO.[DateTime] SeoDate, AFI.[AtomId], AFI.[Version], AFI.[BindingRuleId], AFI.[InstallTime] AFIDate
+			FROM [crm].[Registrations] REG
+			INNER JOIN (
+				SELECT [UserId], [DateTime], SEO.[Value]
+					,ROW_NUMBER() OVER (PARTITION BY SEO.[UserId] ORDER BY SEO.[DateTime]) AS [RowNumber]
+				FROM [crm].[SeoUsersRefs] SEO
+				WHERE SEO.[Source]='appsflyer' 
+			) AS FSEO ON FSEO.UserId=REG.UserId 
+			INNER JOIN [client].[AppsFlyerInstallsDataRaw] AFI ON AFI.[AppsFlyerId]=FSEO.[Value]
+			WHERE  REG.[DateTime] >= @startDate AND REG.[DateTime] < @endDatePlusOneDay
+				AND REG.[Mobile] IS NOT NULL
+				AND FSEO.[RowNumber]=1 		-- первая авторизация
+				AND REG.[AtomId] IS NULL	-- Не трогаем ранее примапленные записи
+		) AS FREG	
+	)	AS Br
+	INNER JOIN	[crm].[Registrations]	AS A ON Br.[Id] = A.[Id] 
+
+	-- Маппинг на основе BindingRulesPromocodes
+	UPDATE		[crm].[Registrations]
+	SET			[AtomId]		= BR.[AtomId],
+				[Version]		= BR.[Version],
+				[BindingRuleId] = 'Promocode:' + Cast(BR.[BindingRuleId] as nvarchar)
+	FROM		(
+		SELECT REG.[id], REG.[AtomId], REG.[Version], REG.[BindingRuleId]
+		FROM (
+			SELECT FREG.[id], FREG.[AtomId], FREG.[Version], FREG.[BindingRuleId]
+				 --,FREG.[SeoDate], FREG.[GASDate] -- Для проверки
+				,ROW_NUMBER() OVER (PARTITION BY FREG.[Id] ORDER BY FREG.[UserId]) AS [RowNumber]
+			FROM (
+				SELECT REG.[id], REG.[DateTime] SeoDate, BR.[AtomId], BR.[Version], BR.[Id] as [BindingRuleId], PROM.[UserId] as [UserId]
+				FROM [crm].[Registrations] REG
+				INNER JOIN [crm].[Promocodes] PROM ON PROM.[UserId]=REG.UserId
+				INNER JOIN [client].[BindingRulesPromocodes] BR ON BR.Promocode=PROM.Promocode
+				WHERE REG.[DateTime] >= @startDate AND REG.[DateTime] < @endDatePlusOneDay
+					AND CAST(PROM.[DateTime] as DATE)<=CAST(REG.[DateTime] as DATE)
+					AND REG.[AtomId] IS NULL	-- Не трогаем ранее примапленные записи
+			) FREG
+		) REG 
+		WHERE REG.RowNumber=1
+	)	AS Br
+	INNER JOIN	[crm].[Registrations]	AS A ON Br.[Id] = A.[Id] 
+
+	-- Маппинг на основе BindingRulesPps
+	UPDATE		[crm].[Registrations]
+	SET			[AtomId]		= BR.[AtomId],
+				[Version]		= BR.[Version],
+				[BindingRuleId] = 'Pps:' + Cast(BR.[BindingRuleId] as nvarchar)
+	FROM		(
+		SELECT REG.[id], BR.[AtomId], BR.[Version], BR.[Id] as [BindingRuleId]
+		FROM [crm].[Registrations] REG
+		INNER JOIN [client].[BindingRulesPps] BR ON BR.Pps=REG.Pps
+		WHERE REG.[DateTime] >= @startDate AND REG.[DateTime] < @endDatePlusOneDay
+			AND (REG.[Hostname] IS NULL AND REG.[Mobile] IS NULL)
+			AND REG.[AtomId] IS NULL	-- Не трогаем ранее примапленные записи	
+	)	AS Br
+	INNER JOIN	[crm].[Registrations]	AS A ON Br.[Id] = A.[Id] 
+
+
+	-- Проставим атом по умолчанию для записей оставшихся без атома
+	UPDATE	[crm].[Registrations]
+	SET		[AtomId]		= 0,
+			[Version]		= 1,
+			[BindingRuleId] = NULL
+	WHERE	[DateTime] >= @startDate AND [DateTime] < @endDatePlusOneDay
+			AND ([Hostname] IS NOT NULL OR [Mobile] IS NOT NULL)
+			AND [AtomId] IS NULL 
+			
+
+END
+
+
+SELECT *  FROM [crm].[Registrations] WHERE UserId='10042cb9'
+SELECT *  FROM [crm].[SeoUsersRefs] order by [DateTime]
+SELECT *  FROM [crm].[FixedBets] order by [DateTime]
+SELECT *  FROM [crm].[Registrations] order by [DateTime]
+SELECT *  FROM [crm].[FixedBets] WHERE UserId='26b1be83' order by [DateTime]
+SELECT *  FROM [crm].[SeoUsersRefs] WHERE UserId='19251806' order by [DateTime]
+SELECT *  FROM [crm].[FixedBets] where id=450655
+
+
+SELECT top 500 FB.[Id], FB.[UserId], FB.[DateTime] FB_Date, FB.[Amount], SEO.[DateTime] SEO_DATE
+FROM [crm].[FixedBets] FB
+INNER JOIN [crm].[SeoUsersRefs] SEO ON SEO.[UserId]=FB.[UserId] AND SEO.[DateTime]<FB.[DateTime]
+WHERE FB.UserId='10093aea'
+ORDER BY SEO.[DateTime]
+
+
+-- Проверка для поиска реактивации для [Registrations]
+select FB.[Id], FB.[UserId], REG.[DateTime] REG_Date, FB.[DateTime] FB_Date
+	, DATEDIFF(DAY, REG.[DateTime], FB.[DateTime]) DaysFromReg
+	, LAG(FB.[DateTime]) OVER (PARTITION BY FB.[UserId] ORDER BY FB.[DateTime]) Prev_FB_Date
+FROM [crm].[FixedBets] FB
+INNER JOIN [crm].[Registrations] REG ON REG.[UserId]=FB.[UserId]
+WHERE FB.[UserId]='26ef1072'
+order by FB.[UserId], FB.[DateTime]
+
+-- Поиск реактивации для [Registrations]
+select [Id], [UserId], REG_Date, FB_Date, DaysFromReg, Prev_FB_Date, DaysFromPrevBet
+from (
+	select [Id], [UserId], REG_Date, FB_Date, DaysFromReg, Prev_FB_Date, 
+		DATEDIFF(DAY, ISNULL(Prev_FB_Date, REG_Date), FB_Date) DaysFromPrevBet
+	FROM (
+		select FB.[Id], FB.[UserId], REG.[DateTime] REG_Date, FB.[DateTime] FB_Date
+			, DATEDIFF(DAY, REG.[DateTime], FB.[DateTime]) DaysFromReg
+			, LAG(FB.[DateTime]) OVER (PARTITION BY FB.[UserId] ORDER BY FB.[DateTime]) Prev_FB_Date
+		FROM [crm].[FixedBets] FB
+		INNER JOIN [crm].[Registrations] REG ON REG.[UserId]=FB.[UserId]
+		--WHERE FB.[UserId]='26b574d2'
+	) as ZZ
+) AS QQ 
+where DaysFromPrevBet>90
+
+-- Проверка для поиска реактивации для записей у которых нет [Registrations] но есть авторизация в [SeoUsersRefs]
+select [Id], [UserId], FB_Date
+	,DATEDIFF(DAY, Prev_FB_Date, FB_Date) DaysFromPrevBet
+from (
+	select FB.[Id], FB.[UserId], FB.[DateTime] FB_Date
+		, LAG(FB.[DateTime]) OVER (PARTITION BY FB.[UserId] ORDER BY FB.[DateTime]) Prev_FB_Date
+	FROM [crm].[FixedBets] FB
+	WHERE NOT EXISTS (SELECT ID FROM [crm].[Registrations] REG where REG.[UserId]=FB.[UserId])
+		AND FB.[UserId]='19251806'
+) ZZ
+order by [UserId], FB_Date
+
+
+-- Поиск реактивации для записей у которых нет [Registrations] но есть авторизация в [SeoUsersRefs] AND IsMobile=1
+select [Id], [UserId], FB_Date, SEO_ID,  Prev_FB_Date, DaysFromSeo, IsSite, IsMobile, SEO_Date, DaysFromPrevBet
+FROM (
+	select [Id], [UserId], FB_Date, SEO_ID,  Prev_FB_Date, DaysFromSeo, IsSite, IsMobile, SEO_Date
+		,DATEDIFF(DAY, ISNULL(Prev_FB_Date, SEO_Date), FB_Date) DaysFromPrevBet
+		,ROW_NUMBER() OVER (PARTITION BY [UserId] ORDER BY SEO_DATE desc) AS [RowNumber]
+		-- ^^^ берем сессию ближайжую к ставке по дате
+	FROM (
+		select ZZ.[Id], ZZ.[UserId], FB_Date, SEO.[Id] SEO_ID, SEO.[DateTime] as SEO_Date, Prev_FB_Date, IsSite, IsMobile
+			,DATEDIFF(DAY, SEO.[DateTime], FB_Date) DaysFromSeo
+		FROM (
+			select FB.[Id], FB.[UserId], FB.[DateTime] FB_Date, FB.IsSite, FB.IsMobile
+				, LAG(FB.[DateTime]) OVER (PARTITION BY FB.[UserId] ORDER BY FB.[DateTime]) Prev_FB_Date
+			FROM [crm].[FixedBets] FB
+			WHERE NOT EXISTS (SELECT ID FROM [crm].[Registrations] REG where REG.[UserId]=FB.[UserId])
+				--AND FB.[UserId]='19251806'
+		) ZZ 
+		INNER JOIN [crm].[SeoUsersRefs] SEO ON SEO.UserId=ZZ.[UserId] AND SEO.DateTime<=FB_Date
+	
+	) QQ
+	where DATEDIFF(DAY, ISNULL(Prev_FB_Date, SEO_Date), FB_Date)>90
+		AND IsMobile=1
+) WW
+where [RowNumber]=1
+
+
+-- Поиск реактивации для записей у которых нет [Registrations] но есть авторизация в [SeoUsersRefs] AND IsSite=1
+select [Id], [UserId], FB_Date, SEO_ID,  Prev_FB_Date, DaysFromSeo, IsSite, IsMobile, SEO_Date, DaysFromPrevBet
+FROM (
+	select [Id], [UserId], FB_Date, SEO_ID,  Prev_FB_Date, DaysFromSeo, IsSite, IsMobile, SEO_Date
+		,DATEDIFF(DAY, ISNULL(Prev_FB_Date, SEO_Date), FB_Date) DaysFromPrevBet
+		,ROW_NUMBER() OVER (PARTITION BY [UserId] ORDER BY SEO_DATE asc) AS [RowNumber]
+		-- ^^^ берем первую сессию 
+	FROM (
+		select ZZ.[Id], ZZ.[UserId], FB_Date, SEO.[Id] SEO_ID, SEO.[DateTime] as SEO_Date, Prev_FB_Date, IsSite, IsMobile
+			,DATEDIFF(DAY, SEO.[DateTime], FB_Date) DaysFromSeo
+		FROM (
+			select FB.[Id], FB.[UserId], FB.[DateTime] FB_Date, FB.IsSite, FB.IsMobile
+				, LAG(FB.[DateTime]) OVER (PARTITION BY FB.[UserId] ORDER BY FB.[DateTime]) Prev_FB_Date
+			FROM [crm].[FixedBets] FB
+			WHERE NOT EXISTS (SELECT ID FROM [crm].[Registrations] REG where REG.[UserId]=FB.[UserId])
+				--AND FB.[UserId]='19251806'
+		) ZZ 
+		INNER JOIN [crm].[SeoUsersRefs] SEO ON SEO.UserId=ZZ.[UserId] AND SEO.DateTime<=FB_Date
+	
+	) QQ
+	where DATEDIFF(DAY, ISNULL(Prev_FB_Date, SEO_Date), FB_Date)>90
+		AND IsSite=1
+) WW
+where [RowNumber]=1
+
+CREATE TABLE [client].[BindingRulesPromocodes](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[AtomId] [int] NOT NULL,
+	[Version] [int] NOT NULL,
+	[Promocode] [nvarchar](100) NOT NULL,
+	[StartDate] [date] NOT NULL DEFAULT (N'2000-01-01'),
+	[EndDate] [date] NOT NULL DEFAULT (N'2100-12-31'),
+	[Priority] [int] NOT NULL,
+ CONSTRAINT [PK_BindingRulesPromocodes] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+
+
+CREATE TABLE [client].[BindingRulesPps](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[AtomId] [int] NOT NULL,
+	[Version] [int] NOT NULL,
+	[Pps] [nvarchar](300) NOT NULL,
+	[StartDate] [date] NOT NULL DEFAULT (N'2000-01-01'),
+	[EndDate] [date] NOT NULL DEFAULT (N'2100-12-31'),
+	[Priority] [int] NOT NULL,
+ CONSTRAINT [PK_BindingRulesPps] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+в регистрациях:
+- сделать общую таблицу для маппинга
+- для ГА брать только первый по дате то ли UserRefs толи ГА
+- убрать из селекта лишнюю связку с UserRef
+ 
+в рекативации
+- брать только первый по дате ГА
+
+
+
+Правила привязки регистраций  к атомам
+Схема
+
+В качестве источника регистрации (таблица Registrations) используем источник первой авторизации (таблица SeoUsersRefs). Если одно из значения hostname или mobile не пустое то, для каждого пользователя из таблицы Registrations находим первую авторизацию в таблице SeoUsersRefs.
+Если в записи первой авторизации Source = google, то значение Value будет соответствовать ClientId в данных GA. В таком случае источник регистрации привязываем к атому из таблицы GA (AnalyticsSessions). Если ClientId не удалось найти в GA, то по UserId ищем, использованный до авторизации промокод, в таблице Promocodes. Привязываем к атому промокода. (Нужно создать таблицу с правилами привязки для промокодов)
+Если в записи первой авторизации Source = appsflyer, то Value = AppsFlayer. DeviceID. В таком случае привязываем к атому из таблицы с установками из AppsFlyer Installs. Если DeviceId не удалось найти в таблице с установками из AppsFlyer, то по UserId ищем, использованный до авторизации промокод, в таблице Promocodes. Привязываем к атому промокода.
+Если у пользователя не удалось найти ClientId в GA и DeviceId в AppsFlyers и также у пользователя нет использованных до авторизации промокодов — привязываем к атомам по умолчанию (атом по умолчанию для регистраций с сайта, если Source = google и к атому по умолчанию для регистраций с мобильного приложения, если Source = appsflyer)
+Если в таблице Registrations поля hostname и mobile пустые и поле PPS не пустое, то привязываем к атому, соответствующему оффлайн-точке. (Нужно создать BindingRulesPPS)
+Определение источника реактивации
+Создаем таблицу соответствия пользователи и его источнику привлечения(активации) — ActivationSource (или считаем всё в представлении).
+Механика связки:
+При регистрации пользователя, его источник активации будет соответствовать источнику регистрации. Срок жизни источника — 90 дней. Т.е дата окончания — дата регистрации + 90 дней.
+При появлении у пользователя записи в таблице FixedBets, дата окончания действия источника привлечения пересчитывается — дата ставки + 90 дней. Если дата ставки больше, чем дата окончания действия источника привлечения, то в таблице создается новая запись, в которой источник привлечения пользователя будет соответствовать источнику с которого была сделана ставка(источник реактивации). Также к записи нужно добавить флаг, что пользователь реактивирован. 
+Логика определения источника реактивации:
+Если ставка была сделана с сайта (Поле isSite = TRUE), то источником будет определяться по первой сессия в день ставки, определенной по UserID. Если UserID в GA не нашли, то берем сессии по всем ClientID найденные в таблице SeoUsersRefs для данного UserID и привязываем к первой сессии в день ставки.
+Если ставка сделана с мобильного приложения  (isMobile= TRUE) то источник определяется из сессии, в которой сработало событие на ставку.
+Логика привязки  данных по ставкам (Таблицы Profits,FixedBets,SettledBets, Payments) к атомам:
