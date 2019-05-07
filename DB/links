@@ -305,3 +305,234 @@ GO
 Если ставка была сделана с сайта (Поле isSite = TRUE), то источником будет определяться по первой сессия в день ставки, определенной по UserID. Если UserID в GA не нашли, то берем сессии по всем ClientID найденные в таблице SeoUsersRefs для данного UserID и привязываем к первой сессии в день ставки.
 Если ставка сделана с мобильного приложения  (isMobile= TRUE) то источник определяется из сессии, в которой сработало событие на ставку.
 Логика привязки  данных по ставкам (Таблицы Profits,FixedBets,SettledBets, Payments) к атомам:
+
+
+
+CREATE TABLE [crm].[Users](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[DateTime] [datetime] NOT NULL,
+	[UserId] [nvarchar](20) NOT NULL,
+	[Lang] [nvarchar](20) NOT NULL,
+	[IsCupis] [bit] NOT NULL,
+ CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [crm].[UserStatuses]    Script Date: 07.05.2019 12:48:04 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [crm].[UserStatuses](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[DateTime] [datetime] NOT NULL,
+	[UserId] [nvarchar](20) NOT NULL,
+	[Status] [nvarchar](50) NULL,
+	[Rate] [int] NULL,
+ CONSTRAINT [PK_UserStatuses] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [crm].[SeoUsersRefs]    Script Date: 07.05.2019 12:48:04 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [crm].[SeoUsersRefs](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[DateTime] [datetime] NOT NULL,
+	[UserId] [nvarchar](20) NOT NULL,
+	[Value] [nvarchar](200) NOT NULL,
+	[Source] [nvarchar](200) NOT NULL,
+ CONSTRAINT [PK_SeoUsersRefs] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [crm].[CupisState]    Script Date: 07.05.2019 12:48:04 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [crm].[CupisState](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[DateTime] [datetime] NOT NULL,
+	[UserId] [nvarchar](20) NOT NULL,
+	[CupisState] [int] NOT NULL,
+ CONSTRAINT [PK_CupisState] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [crm].[FixedBets]    Script Date: 07.05.2019 12:48:04 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [crm].[FixedBets](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[DateTime] [datetime] NOT NULL,
+	[UserId] [nvarchar](20) NOT NULL,
+	[Amount] [money] NULL,
+	[BetsCount] [int] NULL,
+	[PpsName] [nvarchar](200) NULL,
+	[IsPps] [bit] NULL,
+	[IsMobile] [bit] NULL,
+	[IsSite] [bit] NULL,
+	[AtomId] [int] NULL,
+	[Version] [int] NULL,
+	[BindingRuleId] [nvarchar](300) NULL,
+	[Days] [int] NULL,
+ CONSTRAINT [PK_FixedBets] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [crm].[Registrations]    Script Date: 07.05.2019 12:48:04 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [crm].[Registrations](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[DateTime] [datetime] NOT NULL,
+	[UserId] [nvarchar](20) NOT NULL,
+	[SiteId] [int] NULL,
+	[Hostname] [nvarchar](300) NULL,
+	[Pps] [nvarchar](300) NULL,
+	[Mobile] [nvarchar](300) NULL,
+	[AtomId] [int] NULL,
+	[Version] [int] NULL,
+	[BindingRuleId] [nvarchar](300) NULL,
+ CONSTRAINT [PK_Registrations] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [crm].[Promocodes]    Script Date: 07.05.2019 12:48:04 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [crm].[Promocodes](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[DateTime] [datetime] NOT NULL,
+	[UserId] [nvarchar](20) NOT NULL,
+	[Promocode] [nvarchar](100) NULL,
+ CONSTRAINT [PK_Promocodes] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [crm].[Payments]    Script Date: 07.05.2019 12:48:04 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [crm].[Payments](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[DateTime] [datetime] NOT NULL,
+	[UserId] [nvarchar](20) NOT NULL,
+	[Direction] [int] NULL,
+	[Amount] [money] NOT NULL,
+	[Bonus] [bit] NOT NULL,
+ CONSTRAINT [PK_Payments] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [crm].[Profits]    Script Date: 07.05.2019 12:48:04 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [crm].[Profits](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[DateTime] [datetime] NOT NULL,
+	[UserId] [nvarchar](20) NOT NULL,
+	[ProfitValue] [money] NOT NULL,
+ CONSTRAINT [PK_Profits] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [crm].[SettledBets]    Script Date: 07.05.2019 12:48:04 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [crm].[SettledBets](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[DateTime] [datetime] NOT NULL,
+	[UserId] [nvarchar](20) NULL,
+	[WinSum] [money] NULL,
+	[BetsCount] [int] NULL,
+	[PpsName] [nvarchar](200) NULL,
+	[IsPps] [bit] NULL,
+	[IsMobile] [bit] NULL,
+	[IsSite] [bit] NULL,
+ CONSTRAINT [PK_SettledBets] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [crm].[Persons]    Script Date: 07.05.2019 12:48:04 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [crm].[Persons](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[DateTime] [datetime] NOT NULL,
+	[PersonId] [nvarchar](50) NULL,
+	[UserId] [nvarchar](20) NOT NULL,
+ CONSTRAINT [PK_Persons] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
