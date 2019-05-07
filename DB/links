@@ -1,1 +1,20 @@
 
+CREATE TABLE [crm].[BindingRules](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[AtomId] [int] NOT NULL,
+	[Version] [int] NOT NULL,
+
+	[Promocode] [nvarchar](100) NULL,
+	[Pps] [nvarchar](300) NULL,
+	[Hostname] [nvarchar](300) NULL,
+	[Mobile] [nvarchar](300) NULL,
+
+	[StartDate] [date] NOT NULL DEFAULT (N'2000-01-01'),
+	[EndDate] [date] NOT NULL DEFAULT (N'2100-12-31'),
+	[Priority] [int] NOT NULL
+ CONSTRAINT [PK_BindingRules] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
