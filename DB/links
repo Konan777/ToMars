@@ -1,21 +1,150 @@
 https://github.com/JanKallman/EPPlus
 
-CREATE TABLE [crm].[BindingRules](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[AtomId] [int] NOT NULL,
-	[Version] [int] NOT NULL,
+ALTER PROCEDURE [client].[MapAtomsFixedBets] (@startDate DATE, @endDate DATE)
+AS
+BEGIN
+	SET NOCOUNT ON
 
-	[Promocode] [nvarchar](100) NULL,
-	[Pps] [nvarchar](300) NULL,
-	[Hostname] [nvarchar](300) NULL,
-	[Mobile] [nvarchar](300) NULL,
+	DECLARE @endDatePlusOneDay DATE
+	SELECT @endDatePlusOneDay = DATEADD(DAY, 1, @endDate)
 
-	[StartDate] [date] NOT NULL DEFAULT (N'2000-01-01'),
-	[EndDate] [date] NOT NULL DEFAULT (N'2100-12-31'),
-	[Priority] [int] NOT NULL
- CONSTRAINT [PK_BindingRules] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
+	DECLARE @reactivationDays [INT] = 90
+
+	-- TODO: Тащить все рекативации во временную таблицу и дальше работать с ней
+
+	-- Сбросим маппинг для указанного диапазона дат
+	UPDATE [crm].[FixedBets] SET [AtomId]=NULL, [Version]=NULL, [BindingRuleId]=NULL
+	WHERE [DateTime] >= @startDate AND [DateTime] < @endDatePlusOneDay
+
+	-- Подхватим атомы из AnalyticsSessions (для [Registrations])
+	UPDATE		[crm].[FixedBets]
+	SET			[AtomId]		= BR.[AtomId],
+				[Version]		= BR.[Version],
+				[BindingRuleId] = 'AnalyticsSessions:' + Cast(BR.[BindingRuleId] as nvarchar),
+				[ReactivatedDays] = DaysFromPrevBet
+	FROM		(
+		-- Поиск реактивации для [Registrations]
+		SELECT [Id], [AtomId], [Version], [BindingRuleId], [RowNumber], DaysFromPrevBet
+		FROM (
+			SELECT QR.[Id], GAS.[AtomId], GAS.[Version], GAS.[BindingRuleId], DaysFromPrevBet
+				--[UserId], REG_Date, FB_Date, DaysFromReg, Prev_FB_Date, DaysFromPrevBet, GAS.[DateTime]
+				,ROW_NUMBER() OVER (PARTITION BY [UserId] ORDER BY GAS.[DateTime] DESC) AS [RowNumber]
+			FROM (
+				SELECT [Id], [UserId], REG_Date, FB_Date, DaysFromReg, Prev_FB_Date, 
+					DATEDIFF(DAY, ISNULL(Prev_FB_Date, REG_Date), FB_Date) DaysFromPrevBet
+				FROM (
+					select FB.[Id], FB.[UserId], REG.[DateTime] REG_Date, FB.[DateTime] FB_Date
+						, DATEDIFF(DAY, REG.[DateTime], FB.[DateTime]) DaysFromReg
+						, LAG(FB.[DateTime]) OVER (PARTITION BY FB.[UserId] ORDER BY FB.[DateTime]) Prev_FB_Date
+					FROM [crm].[FixedBets] FB
+					INNER JOIN [crm].[Registrations] REG ON REG.[UserId]=FB.[UserId]
+					WHERE FB.[DateTime] >= @startDate AND FB.[DateTime] < @endDatePlusOneDay
+				) as FR
+			) AS QR
+			INNER JOIN [core].[AnalyticsSessions] GAS ON GAS.[Custom3]=[UserId]
+			WHERE DaysFromPrevBet>@reactivationDays
+		) AS WR
+		WHERE [RowNumber]=1 -- Ближайшая по дате и времени запись в ГА к сессии 
+
+	)	AS Br
+	INNER JOIN	[crm].[FixedBets]	AS A ON Br.[Id] = A.[Id] AND Br.[RowNumber] = 1
+
+
+	-- { Найдем реактивации для записей у которых нет [Registrations] но есть авторизация в [SeoUsersRefs] AND IsMobile=1
+	DECLARE @t TABLE
+	(
+		[Id]		BIGINT			NOT NULL,
+		[UserId]	[NVARCHAR](20)	NOT NULL,
+		[Value]		[NVARCHAR](200) NOT NULL,
+		[IsSite]	[BIT]			NULL,
+		[IsMobile]	[BIT]			NULL,
+		[SEO_Date]	[DateTime]		NULL,
+		[DaysFromPrevBet]	[INT]	NULL
+	)
+
+	INSERT INTO @t
+				([Id], [UserId], [Value], [IsSite], [IsMobile], [SEO_Date], [DaysFromPrevBet])
+	SELECT [Id], [UserId], [Value], IsSite, IsMobile, [SEO_Date], [DaysFromPrevBet]
+		--FB_Date, SEO_ID,  Prev_FB_Date, DaysFromSeo, IsSite, IsMobile, SEO_Date, DaysFromPrevBet
+	FROM (
+		select [Id], [UserId], FB_Date, SEO_ID,  Prev_FB_Date, DaysFromSeo, IsSite, IsMobile, SEO_Date, [Value]
+			,DATEDIFF(DAY, ISNULL(Prev_FB_Date, SEO_Date), FB_Date) DaysFromPrevBet
+			,ROW_NUMBER() OVER (PARTITION BY [UserId] ORDER BY SEO_DATE desc) AS [RowNumber]
+			-- ^^^ берем сессию ближайжую к ставке по дате
+		FROM (
+			select WB.[Id], WB.[UserId], FB_Date, SEO.[Id] SEO_ID, SEO.[DateTime] as SEO_Date, Prev_FB_Date, IsSite, IsMobile, SEO.[Value] AS [Value]
+				,DATEDIFF(DAY, SEO.[DateTime], FB_Date) DaysFromSeo
+			FROM (
+				select FB.[Id], FB.[UserId], FB.[DateTime] FB_Date, FB.IsSite, FB.IsMobile
+					, LAG(FB.[DateTime]) OVER (PARTITION BY FB.[UserId] ORDER BY FB.[DateTime]) Prev_FB_Date
+				FROM [crm].[FixedBets] FB
+				WHERE NOT EXISTS (SELECT ID FROM [crm].[Registrations] REG where REG.[UserId]=FB.[UserId])
+					AND FB.[DateTime] >= @startDate AND FB.[DateTime] < @endDatePlusOneDay
+			) WB 
+			INNER JOIN [crm].[SeoUsersRefs] SEO ON SEO.UserId=WB.[UserId] AND SEO.DateTime<=FB_Date
+	
+		) QB
+		WHERE DATEDIFF(DAY, ISNULL(Prev_FB_Date, SEO_Date), FB_Date)>@reactivationDays
+	) WW
+	WHERE [RowNumber]=1
+	-- } Найдем реактивации для записей у которых нет [Registrations] но есть авторизация в [SeoUsersRefs] AND IsMobile=1
+
+	-- Мапим реактивации для IsMobile=1 по [AnalyticsSessions]
+	UPDATE		[crm].[FixedBets]
+	SET			[AtomId]		= BR.[AtomId],
+				[Version]		= BR.[Version],
+				[BindingRuleId] = 'AnalyticsSessions:' + Cast(BR.[BindingRuleId] as nvarchar),
+				[ReactivatedDays] = DaysFromPrevBet
+	FROM		(
+		SELECT [Id], [AtomId], [Version], [BindingRuleId], [DaysFromPrevBet]
+			--, [SEO_Date], [GAS_Date]
+		FROM (
+
+			SELECT PT.[Id], GAS.[AtomId], GAS.[Version], GAS.[BindingRuleId], [IsMobile], [DaysFromPrevBet]
+				--[UserId], [Value], [IsSite], [IsMobile], [SEO_Date], GAS.[DateTime] AS [GAS_Date]
+				,ROW_NUMBER() OVER (PARTITION BY [UserId] ORDER BY GAS.[DateTime] DESC) AS [RowNumber]
+			FROM @t AS PT
+			INNER JOIN [core].[AnalyticsSessions] GAS ON 'GA1.2.'+GAS.[ClientId]=[Value]
+			WHERE GAS.[DateTime]<=[SEO_Date]	-- отбросим сессии ранее первой авторизации 
+				AND [IsMobile]=1
+
+			UNION ALL
+
+			SELECT PT.[Id], GAS.[AtomId], GAS.[Version], GAS.[BindingRuleId], [IsMobile], [DaysFromPrevBet]
+				--[UserId], [Value], [IsSite], [IsMobile], [SEO_Date], GAS.[DateTime] AS [GAS_Date]
+				,ROW_NUMBER() OVER (PARTITION BY [UserId] ORDER BY GAS.[DateTime] DESC) AS [RowNumber]
+			FROM @t AS PT
+			INNER JOIN [core].[AnalyticsSessions] GAS ON GAS.[Custom3]=[UserId]
+			WHERE GAS.[DateTime]<=[SEO_Date]	-- отбросим сессии ранее первой авторизации 
+				AND [IsMobile]=1
+
+		) AS SB
+		WHERE [RowNumber]=1
+			
+	)	AS Br
+	INNER JOIN	[crm].[FixedBets]	AS A ON Br.[Id] = A.[Id] 
+
+	-- Маппинг недомапленного по PpsName
+	UPDATE		[crm].[FixedBets]
+	SET			[AtomId]		= BR.[AtomId],
+				[Version]		= BR.[Version],
+				[BindingRuleId] = 'AnalyticsSessions:' + Cast(BR.[BindingRuleId] as nvarchar),
+				[ReactivatedDays] = DaysFromPrevBet
+	FROM		(
+		SELECT [Id], [AtomId], [Version], [BindingRuleId], [DaysFromPrevBet]
+		FROM (
+
+			SELECT PT.[Id], BR.[AtomId], BR.[Version], BR.[Id] AS [BindingRuleId], [DaysFromPrevBet]
+			FROM @t AS PT
+			INNER JOIN [crm].[FixedBets] FB ON FB.AtomId=PT.Id
+			INNER JOIN [crm].[BindingRules] BR ON BR.[Pps]=FB.[PpsName]
+			
+		) AS SB
+	) AS br
+	INNER JOIN	[crm].[FixedBets]	AS A ON Br.[Id] = A.[Id] 
+	WHERE A.[AtomId] IS NULL
+
+	-- Маппинг записей не являющихся реактивацией. Атомы берем из Registration
+
+END
+
