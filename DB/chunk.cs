@@ -1,4 +1,6 @@
-    public class MTWriter<T> where T : class
+C:\Work\Seolution\Programs\Eleanor\ITA.Eleanor.Core\Db\ObjectContextHelper.cs
+
+public class MTWriter<T> where T : class
     {
         private List<List<T>> _colls;
         private string _tableName;
