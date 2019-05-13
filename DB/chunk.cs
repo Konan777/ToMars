@@ -1,6 +1,10 @@
-C:\Work\Seolution\Programs\Eleanor\ITA.Eleanor.Core\Db\ObjectContextHelper.cs
+сдалеть из CoreHelper'a singleton
+многопоточная вставка в элли
+пофразовый анализатор для яндекса
+дробить на периоды в днях
 
-public class MTWriter<T> where T : class
+
+    public class MTWriter<T> where T : class
     {
         private List<List<T>> _colls;
         private string _tableName;
@@ -24,9 +28,16 @@ public class MTWriter<T> where T : class
         }
         public async void Write(string tableName, string cleanUpField, DateTime startDate, DateTime endDate, string profileTable = null)
         {
+            _tableName = tableName;
+            _cleanUpField = cleanUpField;
+            _profileTable = profileTable;
+            _startDate = startDate;
+            _endDate = endDate;
+
             InProgress = true;
             var cleanup = true;
             List<Task> Writers = new List<Task>();
+            var q = CoreHelper.DbConnectionString;
             foreach (var coll in _colls)
             {
                 CancellationContext.ThrowIfCancellationRequested();
@@ -40,7 +51,7 @@ public class MTWriter<T> where T : class
         {
             try
             {
-                CoreHelper.InsertData<T>(rows, false, cleanup, _startDate, _endDate, _tableName, _cleanUpField);
+                CoreHelper.InserdData<T>(rows, false, cleanup, _startDate, _endDate, _tableName, _cleanUpField);
                 //CoreHelper.InsertDailyData<T>(rows, false, cleanup, _startDate, _endDate, _tableName, _cleanUpField, _profileTable);
             }
             catch (Exception ex)
@@ -56,3 +67,30 @@ public class MTWriter<T> where T : class
             }
         }
     }
+
+C:\Work\Seolution\Programs\Eleanor\ITA.Eleanor.Core\Infrastructure\EntityToXml.cs
+	using (var connection = new SqlConnection(CoreHelper.DbConnectionString))
+C:\Work\Seolution\Programs\Eleanor\ITA.Eleanor.Core\Db\EleanorCoreModel.Context.cs
+        public EleanorCoreEntities(string dbConnectionString)
+            : base(ObjectContextHelper.CreateConnectionString("EleanorCoreEntities", dbConnectionString))
+        { }
+C:\Work\Seolution\Programs\Eleanor\ITA.Eleanor.Core\Infrastructure\CoreHelper.cs
+        public static string dbConnectionString;
+        public static string DbConnectionString { get { return dbConnectionString; } }
+
+        static CoreHelper()
+        {
+            ((IObjectContextAdapter) _entities).ObjectContext.CommandTimeout = Int32.MaxValue;
+            dbConnectionString = ObjectContextHelper.DbConnectionString;
+        }
+
+        public static void InserdData<T>(List<T> data, bool mapOnly, bool cleanup, DateTime? startDate, DateTime? endDate, string tableAndSchema, string cleanupFilterColumn)
+            where T : class
+        {
+            var serializer = new EntityToXml<T>(tableAndSchema);
+            var xmlString = serializer.GetXmlString(data, mapOnly);
+            using (var ctx = new EleanorCoreEntities(dbConnectionString))
+            {
+                ctx.UniversalBulkInsert(xmlString, cleanup, startDate, endDate, mapOnly, tableAndSchema, cleanupFilterColumn);
+            }
+        }
