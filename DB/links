@@ -1,5 +1,9 @@
 https://github.com/JanKallman/EPPlus
 
+Качественных регистраций - все заплатившие юзеры, не важно когда
+Качественных регистраций, вал - юзеры заплатившие в дату из первой колонки
+
+
 ALTER PROCEDURE [client].[MapAtomsFixedBets] (@startDate DATE, @endDate DATE)
 AS
 BEGIN
