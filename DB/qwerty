@@ -56,19 +56,32 @@
 
         private async Task Map(DateTime fromDate, DateTime toDate, int thread)
         {
-            var sw = new System.Diagnostics.Stopwatch();
-            sw.Start();
-
-            var startDateParameter = new ObjectParameter("startDate", fromDate);
-            var endDateParameter = new ObjectParameter("endDate", toDate);
-            using (var ctx = new EleanorCoreEntities())
+            try
             {
-                ((IObjectContextAdapter)ctx).ObjectContext.CommandTimeout = Int32.MaxValue;
-                ((IObjectContextAdapter)ctx).ObjectContext.ExecuteFunction(_storedProcName, startDateParameter, endDateParameter);
+                var sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+
+                if (thread == 1)
+                    throw new Exception("qweqwe");
+                var startDateParameter = new ObjectParameter("startDate", fromDate);
+                var endDateParameter = new ObjectParameter("endDate", toDate);
+                using (var ctx = new EleanorCoreEntities())
+                {
+                    ((IObjectContextAdapter)ctx).ObjectContext.CommandTimeout = Int32.MaxValue;
+                    ((IObjectContextAdapter)ctx).ObjectContext.ExecuteFunction(_storedProcName, startDateParameter, endDateParameter);
+                }
+
+                sw.Stop();
+                _logger?.Log(LogLevel.Message,
+                    $"Поток {thread} с {fromDate.ToShortDateString()} по {toDate.ToShortDateString()} время {sw.Elapsed.ToString(@"m\:ss\.ff")}"
+                 );
             }
-            sw.Stop();
-            _logger?.Log(LogLevel.Message, 
-                $"Поток {thread} с {fromDate.ToShortDateString()} по {toDate.ToShortDateString()} время {sw.Elapsed.ToString(@"m\:ss\.ff")}"
-             );
+            catch (Exception ex)
+            {
+                _logger?.Log(LogLevel.Message,
+                    $"Поток {thread} ошибка:{ex.Message}"
+                 );
+            }
         }
     }
+ }
