@@ -1,6 +1,30 @@
 https://scottiestech.info/2015/11/12/fix-uefi-bios-boot-problems-on-a-new-motherboard/
 
-Ita.Eleanor.Ibs\Readers\Crm\Proxy\ICommon.cs
-https://stackoverflow.com/questions/51404705/how-to-connect-or-login-with-odoo-using-c-sharp-code-and-after-connect-with-odo
+Set xmlrpc.net service url at runtime
 
-Нужно модифицировать импортёр CRM. Сейчас url подключения прошит в коде через атрибуты классов ICommon и IObject, нужно чтобы url брался из mgmt.Settings, как параметры CrmDb, CrmLogin и CrmPassword
+public interface IStateName : IXmlRpcProxy
+    {
+        [XmlRpcMethod("authenticate")]
+        int Authenticate(string db, string username, string password, Dictionary<string, string> parameters);
+    }
+    public interface IMath : IXmlRpcProxy
+    {
+        [XmlRpcMethod("authenticate")]
+        int Authenticate(string db, string username, string password, Dictionary<string, string> parameters);
+    }
+
+
+    /*[XmlRpcUrlAttribute("https://maxx.hro.ru/xmlrpc/2/common")]
+    public class WP : XmlRpcClientProtocol
+    {
+        [XmlRpcMethod("authenticate")]
+        public WP(string db, string username, string password, Dictionary<string, string> parameters) { }
+    }*/
+    
+    (_common as XmlRpcClientProtocol).Url = "https://maxx.hro.ru/xmlrpc/2/common";
+
+            IStateName proxy1 = XmlRpcProxyGen.Create<IStateName>();
+            (proxy1 as XmlRpcClientProtocol).Url = "https://maxx.hro.ru/xmlrpc/2/common";
+
+            var qq = proxy1.Authenticate(_db, _login, _password, null);
+            IStateName proxy2 = XmlRpcProxyGen.Create<IStateName>();
