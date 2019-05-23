@@ -1,30 +1,11 @@
 https://scottiestech.info/2015/11/12/fix-uefi-bios-boot-problems-on-a-new-motherboard/
 
-Set xmlrpc.net service url at runtime
-
-public interface IStateName : IXmlRpcProxy
-    {
-        [XmlRpcMethod("authenticate")]
-        int Authenticate(string db, string username, string password, Dictionary<string, string> parameters);
-    }
-    public interface IMath : IXmlRpcProxy
-    {
-        [XmlRpcMethod("authenticate")]
-        int Authenticate(string db, string username, string password, Dictionary<string, string> parameters);
-    }
-
-
-    /*[XmlRpcUrlAttribute("https://maxx.hro.ru/xmlrpc/2/common")]
-    public class WP : XmlRpcClientProtocol
-    {
-        [XmlRpcMethod("authenticate")]
-        public WP(string db, string username, string password, Dictionary<string, string> parameters) { }
-    }*/
-    
-    (_common as XmlRpcClientProtocol).Url = "https://maxx.hro.ru/xmlrpc/2/common";
-
-            IStateName proxy1 = XmlRpcProxyGen.Create<IStateName>();
-            (proxy1 as XmlRpcClientProtocol).Url = "https://maxx.hro.ru/xmlrpc/2/common";
-
-            var qq = proxy1.Authenticate(_db, _login, _password, null);
-            IStateName proxy2 = XmlRpcProxyGen.Create<IStateName>();
+Right click on the database name
+Choose Tasks > Generate scripts
+Depending on your settings the intro page may show or not
+Choose 'Select specific database objects',
+Expand the tree view and check the relevant tables
+Click Next
+Click Advanced
+Under General section, choose the appropriate option for 'Types of data to script'
+Complete the wizard
