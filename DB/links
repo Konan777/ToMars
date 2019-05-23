@@ -11,37 +11,15 @@ Under General section, choose the appropriate option for 'Types of data to scrip
 Complete the wizard
 
 
-CREATE VIEW [pivotparts].[Reactivation]
-AS
-	SELECT [DateTime], [AtomId], [Version], SUM([Уснувшие игроки]) AS [Уснувшие игроки], SUM([Реактивированные игроки]) AS [Реактивированные игроки]
-	FROM (
-		SELECT CAST(SB.[DateTime] AS DATE) AS [DateTime], SB.[VirtAtomId] AS [AtomId], SB.[VirtVersion] AS [Version], 0 AS [Уснувшие игроки], COUNT(*) AS [Реактивированные игроки]
-		FROM [crm].[FixedBets] SB
-		WHERE SB.ReactivatedDays>90
-		GROUP BY CAST(SB.[DateTime] AS DATE), SB.[VirtAtomId], SB.[VirtVersion]
-	
-		UNION ALL
-
-		-- Уснувшие игроки где [DateTime] дата из [UserRegistrations]
-		-- При этом игрок считается уснувши если у него дни между ставками >90
-		SELECT CAST(UR.[DateTime] AS DATE) as [DateTime], [AtomId], [Version], COUNT(*) AS [Уснувшие игроки], 0 AS [Реактивированные игроки]
-		FROM (
-			SELECT [UserId]
-				,DATEDIFF(DAY, DI.Prev_FB_Date, DI.FB_Date) InactivieDays
-			FROM (
-				SELECT FB.[Id], FB.[UserId], FB.[DateTime] FB_Date, FB.IsSite, FB.IsMobile
-				, LAG(FB.[DateTime]) OVER (PARTITION BY FB.[UserId] ORDER BY FB.[DateTime]) Prev_FB_Date
-				FROM [crm].[FixedBets] FB
-				WHERE FB.ReactivatedDays is null
-			) DI
-			WHERE DATEDIFF(DAY, Prev_FB_Date, FB_Date)>90
-		) DII
-		INNER JOIN [crm].[UserRegistrations] UR on UR.[UserId]=DII.[UserId]
-		WHERE AtomId IS NOT NULL
-		GROUP BY CAST(UR.[DateTime] AS DATE), [AtomId], [Version]
-
-		UNION ALL
-
-	) AS GD
-	GROUP BY [DateTime], [AtomId], [Version]
-GO
+		-- Игроки у которых нет ставок >90 дней но есть запись в таблице UserRegistrations
+		-- при этом берем только 1 запись в FixedBets у которой DateTime<90 дней от текущей даты
+		SELECT CAST(UR.[DateTime] AS DATE) as [DateTime], UR.[AtomId], UR.[Version], COUNT(*) AS [Уснувшие игроки], 0 AS [Реактивированные игроки]
+		FROM [crm].[UserRegistrations] UR 
+		INNER JOIN (
+			SELECT UserID, DateTime
+				,ROW_NUMBER() OVER (PARTITION BY UserId ORDER BY DateTime) AS [RowNumber]
+				FROM [crm].[FixedBets]
+				WHERE DateTime<(GetDate()-90)
+		) FB on FB.[UserId]=UR.[UserId]
+		WHERE UR.AtomId IS NOT NULL AND [RowNumber]=1
+		GROUP BY CAST(UR.[DateTime] AS DATE), UR.[AtomId], UR.[Version]
