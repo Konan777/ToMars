@@ -44,4 +44,29 @@ Complete the wizard
 нужна) или в БД (и тогда нужна). Маппинга нет.
 
 
+-- По дням
+SELECT distinct CAST([DateTime] AS DATE) 
+FROM [core].[AnalyticsSessions] 
+ORDER BY CAST([DateTime] AS DATE) 
+
+-- По месяцам
+SELECT distinct LEFT(CONVERT(VARCHAR, [DateTime], 120), 7)+'-01'
+FROM [core].[AnalyticsSessions]
+ORDER BY LEFT(CONVERT(VARCHAR, [DateTime], 120), 7)+'-01'
+
+-- По неделям
+SELECT distinct 
+CAST(year([DateTime]) AS VARCHAR)+' Week ' + cast(datepart(wk, [DateTime]) as varchar(2)) Week
+FROM [core].[AnalyticsSessions]
+ORDER BY CAST(year([DateTime]) AS VARCHAR)+' Week ' + cast(datepart(wk, [DateTime]) as varchar(2))
+
+
+SELECT distinct 
+	DateAdd(day,-DATEPart(DW,CAST([DateTime] AS DATE))+2, CAST([DateTime] AS DATE)) [FirstDayOfWeek] ,
+	DateAdd(day,-DATEPart(DW,CAST([DateTime] AS DATE))+8, CAST([DateTime] AS DATE)) [LastDayOfWeek]
+FROM [core].[AnalyticsSessions]
+order by 	
+	DateAdd(day,-DATEPart(DW,CAST([DateTime] AS DATE))+2, CAST([DateTime] AS DATE)),
+	DateAdd(day,-DATEPart(DW,CAST([DateTime] AS DATE))+8, CAST([DateTime] AS DATE))
+
 
