@@ -3,70 +3,15 @@
 1) Начальный атом для автогенерации
 2) Атом по умолчанию и Начальный атом для автогенерации это одно и тоже?
 
-https://scottiestech.info/2015/11/12/fix-uefi-bios-boot-problems-on-a-new-motherboard/
-https://egigiena.ru/kupi/detyam/gc-tooth-mousse-klubnika/?utm_source=market.yandex.ru&utm_medium=price&utm_campaign=xml&utm_content=goodprogrammist&_openstat=bWFya2V0LnlhbmRleC5ydTtHQyBUb290aCBNb3Vzc2Ug0YDQtdC80LjQvdC10YDQsNC70LjQt9C40YDRg9GO0YnQuNC5INCz0LXQu9GMLCDQutC70YPQsdC90LjQutCwO0p3d3F0Ty1ySXlKWTRMU3lxYUxTd1E7&frommarket=https%3A%2F%2Fmarket.yandex.ru%2Fproduct--zubnoi-gel-gc-corporation-t&ymclid=15586733034109507693300002
-
-Right click on the database name
-Choose Tasks > Generate scripts
-Depending on your settings the intro page may show or not
-Choose 'Select specific database objects',
-Expand the tree view and check the relevant tables
-Click Next
-Click Advanced
-Under General section, choose the appropriate option for 'Types of data to script'
-Complete the wizard
-
-Выберем во временную таблицу данные:
-
--- Связка ставки у которых есть регистрации, и нет записей в [SeoUsersRefs]
--- и интервал в днях между ставками >90 дней
-
--- записи из [FixedBets] у которых интервал в днях между ставками >90 дней
--- и нет регистраций и есть записи в SeoUsersRefs 
-
-Разметим атомы во врменной таблице:
-
-Атомы ищем в AnalyticsSessions для тех записей у которых есть регистрация
-и [Custom3]=[UserId]
-
-Атомы ищем в AnalyticsSessions для тех записей у которых нет регистрация и [IsMobile]=1 
-и DateTime в ГА <= Дата из SeoUsersRefs 
-и ([Custom3]=[UserId] или 'GA1.2.'+GAS.[ClientId]=[Value])
-
-подхватим атомы по PpsName для записей без атомов
-подхватим атомы по isMobile для записей без атомов
-подхватим атомы по isSite для записей без атомов
-если не найден атом то проставит 0 как атом по умолчанию
-
-Во-вторых к DirectPhraseAnalyzerImporter (тоже в Ita.Eleanor.Import). Там точно нужно чтение "по кускам" 
-(не за весь период, а порциями по одной-две недели, иначе отваливается всё), и кол-во одновременных потоков 
-на чтение не более пяти (ограничение яндекса). Запись там происходит или в файл (и тогда многопоточность не 
-нужна) или в БД (и тогда нужна). Маппинга нет.
+ALTER TABLE [core].[FacebookDataRaw]
+ADD	[AdSetId] [bigint] NULL,
+	[AdSetName] [nvarchar](200) NULL,
+	[AdId] [bigint] NULL,
+	[AdName] [nvarchar](200) NULL
 
 
--- По дням
-SELECT distinct CAST([DateTime] AS DATE) 
-FROM [core].[AnalyticsSessions] 
-ORDER BY CAST([DateTime] AS DATE) 
-
--- По месяцам
-SELECT distinct LEFT(CONVERT(VARCHAR, [DateTime], 120), 7)+'-01'
-FROM [core].[AnalyticsSessions]
-ORDER BY LEFT(CONVERT(VARCHAR, [DateTime], 120), 7)+'-01'
-
--- По неделям
-SELECT distinct 
-CAST(year([DateTime]) AS VARCHAR)+' Week ' + cast(datepart(wk, [DateTime]) as varchar(2)) Week
-FROM [core].[AnalyticsSessions]
-ORDER BY CAST(year([DateTime]) AS VARCHAR)+' Week ' + cast(datepart(wk, [DateTime]) as varchar(2))
-
-
-SELECT distinct 
-	DateAdd(day,-DATEPart(DW,CAST([DateTime] AS DATE))+2, CAST([DateTime] AS DATE)) [FirstDayOfWeek] ,
-	DateAdd(day,-DATEPart(DW,CAST([DateTime] AS DATE))+8, CAST([DateTime] AS DATE)) [LastDayOfWeek]
-FROM [core].[AnalyticsSessions]
-order by 	
-	DateAdd(day,-DATEPart(DW,CAST([DateTime] AS DATE))+2, CAST([DateTime] AS DATE)),
-	DateAdd(day,-DATEPart(DW,CAST([DateTime] AS DATE))+8, CAST([DateTime] AS DATE))
-
+Маппинг атомов (через процедуру core.FacebookDataRawMapAtoms) сделать с дополнительным параметром, в зависимости от этого параметра 
+сравнивать содержимое таблицы core.AdEngineCampaigns (поле CampaignId) с одним из трёх полей в таблице core.FacebookDataRaw 
+(CampaignId или AdSetId или AdId). Проверочные ф-ции (core.FacebookDataRawCheckCampaignsForMapping и core.FacebookGetMissingCampaigns) 
+тоже с этим же параметром.
 
