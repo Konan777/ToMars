@@ -1,17 +1,158 @@
-Вопросы:
-0) Посмотреть что пишем в UserRegistrations для FixedBets
-1) Начальный атом для автогенерации
-2) Атом по умолчанию и Начальный атом для автогенерации это одно и тоже?
+CREATE VIEW [pivotparts].[IbsToClients]
+AS
+--Первые кандидаты для конкретного соискателя
+WITH FirstApplicants
+AS
+(
+	SELECT	* 
+	FROM	(
+			SELECT	*, ROW_NUMBER() OVER (PARTITION BY [PartnerId] ORDER BY [CreateDate]) AS [RowNum] 
+			FROM	[client].[CrmApplicants]
+			) AS A
+	WHERE [RowNum] = 1
+)
+--Дата входа в воронку соискателя
+,StartDateApplicants
+AS
+(
+	SELECT		FA.[Id], 
+				FA.[PartnerId],
+				CASE WHEN MIN(CAST(L.[CreateDate] AS DATE)) IS NULL THEN P.[CreateDate]
+					 ELSE MIN(CAST(L.[CreateDate] AS DATE)) END 
+								AS [CreateDate]
+	FROM		FirstApplicants AS FA
+	LEFT JOIN	[client].[CrmLog]			AS L ON FA.[Id] = L.[ApplicantId] AND L.[State] <> 'cancel' 
+	LEFT JOIN	[client].[CrmPartners]	AS P ON FA.[PartnerId] = P.[Id]
+	GROUP BY	FA.[Id], FA.[PartnerId], P.[CreateDate], L.State
+)
+--Последние кандидаты для конкретного соискателя
+,LastApplicants
+AS
+(
+	SELECT	* 
+	FROM	(
+			SELECT	A.*, L.[State] ,ROW_NUMBER() OVER (PARTITION BY [PartnerId] ORDER BY A.[CreateDate] DESC) AS [RowNum] 
+			FROM	[client].[CrmApplicants] A
+			LEFT JOIN	[client].[CrmLog] AS L ON A.[Id] = L.[ApplicantId] 
+			) AS A
+	WHERE [RowNum] = 1 
+)
+--Атомы соискателей
+,PartnersAtoms
+AS
+(
+	SELECT		P.[Id],
+				COALESCE(D.[AtomId], 3200)	AS [AtomId],
+				COALESCE(D.[Version], 1)	AS [Version]
+	FROM		[client].[CrmPartners]	AS P
+	LEFT JOIN 	(
+					SELECT	[PartnerId], [AtomId] ,[Version], [CreateDate],
+							ROW_NUMBER() OVER (PARTITION BY [PartnerId] ORDER BY [CreateDate]) AS [RowNum] 
+					FROM	[client].[CrmResumeDaxtra]
+				)						AS D ON D.[PartnerId] = P.[Id]
+	WHERE ([RowNum] = 1 AND [PartnerId] IS NOT NULL) OR [PartnerId] IS NULL
+)
 
-ALTER TABLE [core].[FacebookDataRaw]
-ADD	[AdSetId] [bigint] NULL,
-	[AdSetName] [nvarchar](200) NULL,
-	[AdId] [bigint] NULL,
-	[AdName] [nvarchar](200) NULL
+SELECT		CAST([Date] AS DATETIME) AS [Дата],
+			[AtomId],
+			[Version],
+			SUM([Принят по дате входа в воронку])						AS [Принят по дате входа в воронку],
+			SUM([Принят по дате действия])								AS [Принят по дате действия],
+			SUM([Отказ руководителя по дате входа в воронку])			AS [Отказ руководителя по дате входа в воронку],
+			SUM([Отказ руководителя по дате действия])					AS [Отказ руководителя по дате действия],
+			SUM([Отказ СЭБ по дате входа в воронку])					AS [Отказ СЭБ по дате входа в воронку],
 
 
-Маппинг атомов (через процедуру core.FacebookDataRawMapAtoms) сделать с дополнительным параметром, в зависимости от этого параметра 
-сравнивать содержимое таблицы core.AdEngineCampaigns (поле CampaignId) с одним из трёх полей в таблице core.FacebookDataRaw 
-(CampaignId или AdSetId или AdId). Проверочные ф-ции (core.FacebookDataRawCheckCampaignsForMapping и core.FacebookGetMissingCampaigns) 
-тоже с этим же параметром.
+			SUM([Отказ СЭБ по дате действия])							AS [Отказ СЭБ по дате действия],
+			SUM([Отказ кандидата по дате входа в воронку])				AS [Отказ кандидата по дате входа в воронку],
+			SUM([Отказ кандидата по дате действия])						AS [Отказ кандидата по дате действия],
+
+			SUM([Обработка по дате входа в воронку])					AS [Обработка по дате входа в воронку],
+			SUM([Обработка по дате действия])							AS [Обработка по дате действия],
+			SUM([Интервью с руководителем по дате входа в воронку])		AS [Интервью с руководителем по дате входа в воронку],
+			SUM([Интервью с руководителем по дате действия])			AS [Интервью с руководителем по дате действия],
+			SUM([СЭБ по дате входа в воронку])							AS [СЭБ по дате входа в воронку],
+			SUM([СЭБ по дате действия])									AS [СЭБ по дате действия],
+			SUM([Оформление по дате входа в воронку])					AS [Оформление по дате входа в воронку],
+			SUM([Оформление по дате действия])							AS [Оформление по дате действия]
+FROM		(
+			SELECT		COALESCE(SDA.[CreateDate], LA.[CreateDate])
+													AS [Date],
+						COALESCE(PA.[AtomId], 3300) AS [AtomId],
+						COALESCE(PA.[Version], 1)	AS [Version],
+						SUM(CASE WHEN LA.[StageId] = 11 THEN 1 ELSE 0 END)
+													AS [Принят по дате входа в воронку],
+						0							AS [Принят по дате действия],
+						SUM(CASE WHEN LA.[StageId] = 12 THEN 1 ELSE 0 END)
+													AS [Отказ руководителя по дате входа в воронку],
+						0							AS [Отказ руководителя по дате действия],
+						SUM(CASE WHEN LA.[StageId] = 15 THEN 1 ELSE 0 END)
+													AS [Отказ СЭБ по дате входа в воронку],
+						0							AS [Отказ СЭБ по дате действия],
+						SUM(CASE WHEN LA.[StageId] = 13 THEN 1 ELSE 0 END)
+													AS [Отказ кандидата по дате входа в воронку],
+						0							AS [Отказ кандидата по дате действия],
+
+						SUM(CASE WHEN LA.[StageId] = 7 AND LA.[State] <> 'cancel' THEN 1 ELSE 0 END)
+													AS [Обработка по дате входа в воронку],
+						0							AS [Обработка по дате действия],
+						SUM(CASE WHEN LA.[StageId] = 8 AND LA.[State] <> 'cancel' THEN 1 ELSE 0 END)
+													AS [Интервью с руководителем по дате входа в воронку],
+						0							AS [Интервью с руководителем по дате действия],
+						SUM(CASE WHEN LA.[StageId] = 9 AND LA.[State] <> 'cancel' THEN 1 ELSE 0 END)
+													AS [СЭБ по дате входа в воронку],
+						0							AS [СЭБ по дате действия],
+						SUM(CASE WHEN LA.[StageId] = 10 AND LA.[State] <> 'cancel' THEN 1 ELSE 0 END)
+													AS [Оформление по дате входа в воронку],
+						0							AS [Оформление по дате действия]
+			FROM		LastApplicants		AS LA
+			LEFT JOIN	StartDateApplicants AS SDA ON LA.[PartnerId] = SDA.[PartnerId]
+			LEFT JOIN	PartnersAtoms		AS PA ON LA.[PartnerId] = PA.[Id]
+			GROUP BY	COALESCE(SDA.[CreateDate], LA.[CreateDate]), PA.[AtomId], PA.[Version]
+
+
+			UNION ALL
+
+
+			SELECT		LA.[DateLastStageUpdate]	AS [Date],
+						COALESCE(PA.[AtomId], 3300) AS [AtomId],
+						COALESCE(PA.[Version], 1)	AS [Version],
+						0							AS [Принят по дате входа в воронку],
+						SUM(CASE WHEN LA.[StageId] = 11 THEN 1 ELSE 0 END)
+													AS [Принят по дате действия],
+						0							AS [Отказ руководителя по дате входа в воронку],
+						SUM(CASE WHEN LA.[StageId] = 12 THEN 1 ELSE 0 END)
+													AS [Отказ руководителя по дате действия],
+						0							AS [Отказ СЭБ по дате входа в воронку],
+						SUM(CASE WHEN LA.[StageId] = 15 THEN 1 ELSE 0 END)
+													AS [Отказ СЭБ по дате действия],
+						0							AS [Отказ кандидата по дате входа в воронку],
+						SUM(CASE WHEN LA.[StageId] = 13 THEN 1 ELSE 0 END)
+													AS [Отказ кандидата по дате действия],
+						
+						0							AS [Обработка по дате входа в воронку],
+						SUM(CASE WHEN LA.[StageId] = 7 AND LA.[State] <> 'cancel' THEN 1 ELSE 0 END)
+													AS [Обработка по дате действия],
+						0							AS [Интервью с руководителем по дате входа в воронку],
+						SUM(CASE WHEN LA.[StageId] = 8 AND LA.[State] <> 'cancel' THEN 1 ELSE 0 END)
+													AS [Интервью с руководителем по дате действия],
+						0							AS [СЭБ по дате входа в воронку],
+						SUM(CASE WHEN LA.[StageId] = 9 AND LA.[State] <> 'cancel' THEN 1 ELSE 0 END)
+													AS [СЭБ по дате действия],
+						0							AS [Оформление по дате входа в воронку],
+						SUM(CASE WHEN LA.[StageId] = 10 AND LA.[State] <> 'cancel' THEN 1 ELSE 0 END)
+													AS [Оформление по дате действия]
+
+			FROM		LastApplicants		AS LA
+			LEFT JOIN	StartDateApplicants AS SDA ON LA.[PartnerId] = SDA.[PartnerId]
+			LEFT JOIN	PartnersAtoms		AS PA ON LA.[PartnerId] = PA.[Id]
+			GROUP BY	LA.[DateLastStageUpdate], PA.[AtomId], PA.[Version]
+			) AS q
+GROUP BY	[Date], [AtomId], [Version]
+
+
+
+
+GO
+
 
