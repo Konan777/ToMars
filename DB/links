@@ -19,3 +19,16 @@
          "id": "23843518725390632",
          "name": "Level Group 2019-06-19-128aeeb27a990656b80a77b11fe886eb"
       },
+
+
+CREATE TABLE [core].[FacebookDataRaw](
+	[CampaignId] [bigint] NOT NULL,
+	[CampaignName] [nvarchar](200) NOT NULL,
+	[AdSetId] [bigint] NOT NULL,
+	[AdSetName] [nvarchar](200) NOT NULL,
+	[AdId] [bigint] NOT NULL,
+	[AdName] [nvarchar](200) NOT NULL,
+
+CREATE TABLE [core].[FacebookProfiles](
+	[DetailLevel] [int] NOT NULL
+  
