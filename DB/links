@@ -1,36 +1,11 @@
   http://www.lagom.nl/lcd-test/inversion.php
   
-  {
-         "campaign_id": "23843488530730632",
-         "adset_id": "23843488530710632",
-         "id": "23843488530700632"
-      },
-      {
-         "campaign_id": "23843488530730632",
-         "adset_id": "23843488530710632",
-         "id": "23843488530720632"
-      },
-      
-      
-      {
-         "id": "23843520651940632",
-         "name": "\u041f\u043e\u0432\u044b\u0448\u0435\u043d\u0438\u0435 \u0446\u0435\u043d 30 \u0438\u044e\u043d\u044f 2019-06-20-b6c0181ccb00f6ea9acc551d213852bb",
-         "url_tags": "utm_campaign={{campaign.id}}|{{adset.id}}&utm_content={{ad.id}}"
-      },
-      {
-         "id": "23843518725390632",
-         "name": "Level Group 2019-06-19-128aeeb27a990656b80a77b11fe886eb"
-      },
-
-
-CREATE TABLE [core].[FacebookDataRaw](
-	[CampaignId] [bigint] NOT NULL,
-	[CampaignName] [nvarchar](200) NOT NULL,
-	[AdSetId] [bigint] NOT NULL,
-	[AdSetName] [nvarchar](200) NOT NULL,
-	[AdId] [bigint] NOT NULL,
-	[AdName] [nvarchar](200) NOT NULL,
-
-CREATE TABLE [core].[FacebookProfiles](
-	[DetailLevel] [int] NOT NULL
-  
+  // aborting Task
+  int Foo(CancellationToken token)
+{
+    Thread t = Thread.CurrentThread;
+    using (token.Register(t.Abort))
+    {
+        // compute-bound work here
+    }
+}
