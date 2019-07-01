@@ -1,15 +1,3 @@
   http://www.lagom.nl/lcd-test/inversion.php
   
-  // aborting Task
-  int Foo(CancellationToken token)
-{
-    Thread t = Thread.CurrentThread;
-    using (token.Register(t.Abort))
-    {
-        // compute-bound work here
-    }
-}
-
-добавить вывод в лог
-добавить host в ключ utm
-разобраться где брать host
+ 
