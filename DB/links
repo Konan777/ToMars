@@ -2,3 +2,9 @@ http://www.lagom.nl/lcd-test/inversion.php
 
 проверять на дубли после записи в utm
 анализ {{ad.id}} на предмет {{опа.ру}}
+
+            string sampleInput = "soap{{small}}_{{999}}";
+            Regex regex = new Regex(@"\{{.*?\}}");
+            MatchCollection matches = regex.Matches(sampleInput);
+            foreach (var m in matches)
+                Console.WriteLine(m.ToString());
