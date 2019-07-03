@@ -8,3 +8,6 @@ http://www.lagom.nl/lcd-test/inversion.php
             MatchCollection matches = regex.Matches(sampleInput);
             foreach (var m in matches)
                 Console.WriteLine(m.ToString());
+
+дата группировки - из текста
+атом с отклика или (нет отклика) соискателя (CrmPartners)
