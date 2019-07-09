@@ -4,6 +4,11 @@ https://docs.microsoft.com/ru-ru/aspnet/core/web-api/action-return-types?view=as
 https://msdn.microsoft.com/en-us/magazine/dn802603.aspx
 https://stackoverflow.com/questions/41953102/using-async-await-or-task-in-web-api-controller-net-core
 
+            services.AddMvc()
+                .AddJsonOptions(
+                    options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+
 
 дата группировки - из текста
 атом с отклика или (нет отклика) соискателя (CrmPartners)
