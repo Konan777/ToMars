@@ -3,6 +3,8 @@ http://www.lagom.nl/lcd-test/inversion.php
 https://docs.microsoft.com/ru-ru/aspnet/core/web-api/action-return-types?view=aspnetcore-2.2
 https://msdn.microsoft.com/en-us/magazine/dn802603.aspx
 https://stackoverflow.com/questions/41953102/using-async-await-or-task-in-web-api-controller-net-core
+https://docs.microsoft.com/en-us/aspnet/web-api/overview/testing-and-debugging/unit-testing-with-aspnet-web-api
+https://code-maze.com/unit-testing-aspnetcore-web-api/
 
             services.AddMvc()
                 .AddJsonOptions(
