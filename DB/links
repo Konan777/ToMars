@@ -1,28 +1,3 @@
 http://www.lagom.nl/lcd-test/inversion.php
 
-select [ClientId] from [core].[AnalyticsSessions]
-group by [ClientId] 
-having count(*)>2
-
-select [ClientId] from [core].[AnalyticsSessions]
-group by [ClientId] 
-having count(*)=1
-
-select Id, [DateTime], [ClientId], [DAYZ] FROM (
-	select Id, [DateTime], [ClientId],
-		DATEDIFF(day, LAG([DateTime]) OVER (PARTITION BY [ClientId] ORDER BY [DateTime]), [DateTime]) DAYZ
-	from [core].[AnalyticsSessions]
-	where [ClientId]='1000253272.1552373078'
-) AS QQ
-	where (QQ.DAYZ>=30 or QQ.DAYZ is null)
-order by [DateTime]
-
-                var idata = data.Cast<ISpike>().ToList();
-                var newestDupes = idata
-                    .GroupBy(c => c.Id)
-                    .Where(a => a.Count() > 1)
-                    .Select(g => g.OrderByDescending(i => i.DateTime).First())
-                    .ToList();
-                var nonDupes = idata.Where(w => !newestDupes.Select(s => s.Id).Contains(w.Id)).ToList();
-                nonDupes.AddRange(newestDupes);
-                data = nonDupes.Cast<T>().ToList();
+магнит [pivotparts].[IbsToClients] проблемка
