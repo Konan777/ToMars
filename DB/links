@@ -1,3 +1,14 @@
 http://www.lagom.nl/lcd-test/inversion.php
 
 магнит [pivotparts].[IbsToClients] проблемка
+
+
+представление по данным из AppsFlyer. Показатели:
+
+Установки — количество установок приложения на дату (Install Time) и атом в таблице appsflyerinstallsdataraw. Считаем по количеству событий Install в поле EventName.
+Аккаунт создан — сумма событий account_created по дате события (Event Time) и атом в таблице appsflyereventsdataraw.
+Регистрация завершена — сумма событий registration_completed по дате события (Event Time) и атом  в таблице appsflyereventsdataraw.
+Первый депозит — сумма событий first_deposit по дате события (Event Time) и атом в таблице appsflyereventsdataraw.
+Аккаунт создан, по дате установки — сумма событий account_created по дате установки (Install Time) и атом в таблице appsflyereventsdataraw.
+Регистрация завершена, по дате установки — сумма событий registration_completed по дате установки (Install Time) и атом в таблице appsflyereventsdataraw.
+Первый депозит, по дате установки — сумма событий first_deposit по дате установки (Install Time) и атом в таблице appsflyereventsdataraw. 
