@@ -1,38 +1,13 @@
 http://www.lagom.nl/lcd-test/inversion.php
 
-adwords click perfomance скачивает данные по дням, что съедает весь лимит.
-Сделайть чтобы скачивал за весь выбранный период.
-больше чем за 90 дней площадка не отдает
 
-WITH 
--- Группировка по 4м показателям. Выбираем самый ранний в группе
-LogsGroupedByFourRows 
-AS (
-SELECT * FROM (
-	SELECT [ApplicantId], [CreateDate], [ActivityId], [FunnelId], [StageId], [ResultId],
-		ROW_NUMBER() OVER (PARTITION BY [ApplicantId], [ActivityId], [FunnelId], [StageId], [ResultId] ORDER BY [CreateDate] ASC) AS [RowNum] 
-	FROM [client].[CrmLog] L
-	WHERE ISNULL([State],'') != 'cancel'
-) AS Q
-WHERE [RowNum] = 1 
+WITH LastApplicantLog AS (
+	SELECT * FROM (
+		SELECT [ApplicantId], [Date], [StageId], [ResultId],
+			ROW_NUMBER() OVER (PARTITION BY [ApplicantId] ORDER BY [DateCreate] DESC, [ID] DESC) AS [RowNum] 
+		FROM [client].[CrmLog] L
+		WHERE ISNULL([State],'') != 'cancel'
+	) AS Q
+	WHERE [RowNum] = 1 
 )
--- Группировка по 3м показателям. Выбираем самый ранний в группе
-, LogsGroupedByThree AS (
-SELECT * FROM (
-	SELECT [ApplicantId], [CreateDate], [FunnelId], [StageId], [ResultId],
-		ROW_NUMBER() OVER (PARTITION BY [ApplicantId], [FunnelId], [StageId], [ResultId] ORDER BY [CreateDate] ASC) AS [RowNum] 
-	FROM [client].[CrmLog] L
-	WHERE ISNULL([State],'') != 'cancel'
-) AS Q
-WHERE [RowNum] = 1
-)
--- Группировка по 2м показателям. Выбираем самый ранний в группе
-, LogsGroupedByTwo AS (
-SELECT * FROM (
-	SELECT [ApplicantId], [CreateDate], [FunnelId], [StageId],
-		ROW_NUMBER() OVER (PARTITION BY [ApplicantId], [FunnelId], [StageId] ORDER BY [CreateDate] ASC) AS [RowNum] 
-	FROM [client].[CrmLog] L
-	WHERE ISNULL([State],'') != 'cancel'
-) AS Q
-WHERE [RowNum] = 1
-)
+
