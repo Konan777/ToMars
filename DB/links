@@ -1,13 +1,324 @@
 http://www.lagom.nl/lcd-test/inversion.php
 
 
-WITH LastApplicantLog AS (
-	SELECT * FROM (
-		SELECT [ApplicantId], [Date], [StageId], [ResultId],
-			ROW_NUMBER() OVER (PARTITION BY [ApplicantId] ORDER BY [DateCreate] DESC, [ID] DESC) AS [RowNum] 
-		FROM [client].[CrmLog] L
-		WHERE ISNULL([State],'') != 'cancel'
-	) AS Q
-	WHERE [RowNum] = 1 
-)
+	DECLARE @currentDate DATETIME
+	SELECT @currentDate = GETDATE()
 
+	DECLARE @atoms TABLE
+	(
+		[AtomId]				INT				NULL,
+		[Version]				INT				NULL,
+		[AdEngineId]			INT				NOT NULL,
+		[ProfileId]				INT				NOT NULL,
+		[CampaignId]			BIGINT			NOT NULL,
+		[CampaignName]			NVARCHAR(255)	NOT NULL,
+		[SourceId]				INT				NULL,
+		[AdWordsAdNetworkType2] NVARCHAR(255)	NULL,
+		[DirectAdNetworkType]	NVARCHAR(255)	NULL,
+		[DirectCampaignType]	NVARCHAR(255)	NULL,
+		[BrandId]				BIT				NULL,
+		[RemarketingId]			BIT				NULL
+	)
+
+	DECLARE @XMLDocPointer INT    
+
+	EXEC sp_xml_preparedocument @XMLDocPointer OUTPUT, @campaigns
+	INSERT INTO @atoms
+				([AtomId], [Version], [AdEngineId], [ProfileId], [CampaignId], [CampaignName], [SourceId], [AdWordsAdNetworkType2],
+				[DirectAdNetworkType], [DirectCampaignType])
+	SELECT		NULL AS [AtomId], NULL AS [Version], [AdEngineId], [ProfileId], [CampaignId], [CampaignName], NULL AS [SourceId], [AdWordsAdNetworkType2],
+				[DirectAdNetworkType], [DirectCampaignType]
+	FROM		OPENXML(@XMLDocPointer,'/ROOT/ITEM', 1)    
+	WITH		(
+				[AtomId]				INT,
+				[Version]				INT,
+				[AdEngineId]			INT,
+				[ProfileId]				INT,
+				[CampaignId]			BIGINT,
+				[CampaignName]			NVARCHAR(255),
+				[SourceId]				INT,
+				[AdWordsAdNetworkType2] NVARCHAR(255),
+				[DirectAdNetworkType]	NVARCHAR(255),
+				[DirectCampaignType]	NVARCHAR(255)
+				)
+	EXEC sp_xml_removedocument @XMLDocPointer	
+
+	DECLARE @bindingRules TABLE
+	(
+		[AtomId]			INT				NULL,
+		[Version]			INT				NULL,
+		[AdEngineId]		INT				NOT NULL,
+		[ProfileId]			INT				NOT NULL,
+		[CampaignId]		BIGINT			NOT NULL,
+		[Source]			NVARCHAR(MAX)	NULL,
+		[Medium]			NVARCHAR(MAX)	NULL,
+		[Campaign]			NVARCHAR(MAX)	NULL,
+		[HostName]			NVARCHAR(MAX)	NULL,
+		[DuplicateRules]	NVARCHAR(MAX)	NULL
+	)
+
+	EXEC sp_xml_preparedocument @XMLDocPointer OUTPUT, @utms
+	INSERT INTO @bindingRules
+				([AtomId], [Version], [AdEngineId], [ProfileId], [CampaignId], [Source], [Medium], [Campaign], [HostName])
+	SELECT		NULL AS [AtomId], NULL AS [Version], [AdEngineId], [ProfileId], [CampaignId], [Source], [Medium], [Campaign], [HostName]
+	FROM		OPENXML(@XMLDocPointer,'/ROOT/ITEM', 1)    
+	WITH		(
+				[AdEngineId]	INT,
+				[ProfileId]		INT,
+				[CampaignId]	BIGINT,
+				[Source]		NVARCHAR(MAX),
+				[Medium]		NVARCHAR(MAX),
+				[Campaign]		NVARCHAR(MAX),
+				[HostName]		NVARCHAR(MAX)
+				)
+	EXEC sp_xml_removedocument @XMLDocPointer
+
+	DECLARE @log TABLE
+	(
+		[AdEngineId]	INT				NOT NULL,
+		[ProfileId]		INT				NOT NULL,
+		[CampaignId]	BIGINT			NOT NULL,
+		[Error]			NVARCHAR(MAX)	NOT NULL
+	)
+
+
+	EXEC sp_xml_preparedocument @XMLDocPointer OUTPUT, @errors
+	INSERT INTO @log
+				([AdEngineId], [ProfileId], [CampaignId], [Error])
+	SELECT		[AdEngineId], [ProfileId], [CampaignId], [Error]
+	FROM		OPENXML(@XMLDocPointer,'/ROOT/ITEM', 1)    
+	WITH		(
+				[AdEngineId]	INT,
+				[ProfileId]		INT,
+				[CampaignId]	BIGINT,
+				[Error]			NVARCHAR(MAX)
+				)
+	EXEC sp_xml_removedocument @XMLDocPointer
+
+
+	DECLARE	@maxAtomId INT
+	SELECT @maxAtomId = MAX([Id]) FROM [core].[Atoms]
+
+	BEGIN TRANSACTION
+		-- Атомы
+
+		-- Если CampaignId уже есть в БД, то значит атом тоже есть, берём AtomId из core.AdEngineCampaigns
+		UPDATE		A
+		SET			[AtomId]	= C.[AtomId],
+					[Version]	= C.[Version]
+		FROM		@atoms						AS A
+		INNER JOIN	[core].[AdEngineCampaigns]	AS C ON C.[CampaignId] = A.[CampaignId] AND C.[AdEngineId] = A.[AdEngineId]
+
+		-- Если CampaignId нет в БД, значит надо создавать новый атом, инкрементим AtomId
+		UPDATE		A
+		SET			[AtomId]	= @maxAtomId + Numbers.[RowNumber],
+					[Version]	= 1
+		FROM		@atoms	AS A
+		INNER JOIN	(
+					SELECT		[CampaignId],
+								ROW_NUMBER() OVER (ORDER BY [CampaignId]) 
+										AS [RowNumber]
+					FROM		@atoms
+					)		AS Numbers ON Numbers.[CampaignId] = A.[CampaignId]
+		WHERE		A.[AtomId] IS NULL
+
+		-- Кусок, специфичный для адвордса
+		DECLARE	@defaultSourceIdAdWords INT
+		SELECT @defaultSourceIdAdWords = [SourceId] FROM [mgmt].[AutoGeneratorAdWordsSources] WHERE [AdNetworkType2] IS NULL
+
+		UPDATE		A
+		SET			A.[SourceId] = ISNULL(S.[SourceId], @defaultSourceIdAdWords)
+		FROM		@atoms									AS A
+		LEFT JOIN	[mgmt].[AutoGeneratorAdWordsSources]	AS S ON A.[AdWordsAdNetworkType2] = S.[AdNetworkType2]
+		WHERE		A.[AdEngineId] = 2 -- адвордс
+		-- Кусок, специфичный для адвордса
+
+		-- Кусок, специфичный для директа
+		DECLARE	@defaultSourceIdDir INT
+		SELECT @defaultSourceIdDir = [SourceId] FROM [mgmt].[AutoGeneratorDirectSources] WHERE [AdNetworkType] IS NULL AND [CampaignType] IS NULL
+
+		UPDATE		A
+		SET			A.[SourceId] = ISNULL(S.[SourceId], @defaultSourceIdDir)
+		FROM		@atoms									AS A
+		LEFT JOIN	[mgmt].[AutoGeneratorDirectSources]	AS S ON A.[DirectAdNetworkType] = S.[AdNetworkType]
+															AND A.[DirectCampaignType] = S.[CampaignType]
+		WHERE		A.[AdEngineId] = 1 -- директа
+		-- Кусок, специфичный для директа
+
+		-- { Кусок, специфичный для фэйсбука
+		DECLARE	@defaultSourceIdFace INT
+		SELECT @defaultSourceIdFace = [SourceId] FROM [mgmt].[AutoGeneratorFacebookSources] WHERE [Name] IS NULL 
+
+		UPDATE		A
+		SET			A.[SourceId] = @defaultSourceIdFace
+		FROM		@atoms									AS A
+		WHERE		A.[AdEngineId] = 4 -- фэйсбука
+		-- } Кусок, специфичный для фэйсбука
+
+		-- { Кусок, специфичный для MyTarget
+		DECLARE	@defaultSourceIdMyTarget INT
+		SELECT @defaultSourceIdMyTarget = [SourceId] FROM [mgmt].[AutoGeneratorMyTargetSources] WHERE [Name] IS NULL 
+
+		UPDATE		A
+		SET			A.[SourceId] = @defaultSourceIdMyTarget
+		FROM		@atoms									AS A
+		WHERE		A.[AdEngineId] = 5 -- MyTarget
+		-- } Кусок, специфичный для MyTarget
+
+		-- { Кусок, специфичный для Vk
+		DECLARE	@defaultSourceIdVk INT
+		SELECT @defaultSourceIdVk = [SourceId] FROM [mgmt].[AutoGeneratorVkSources] WHERE [Name] IS NULL 
+
+		UPDATE		A
+		SET			A.[SourceId] = @defaultSourceIdVk
+		FROM		@atoms									AS A
+		WHERE		A.[AdEngineId] = 3 -- Vk
+		-- } Кусок, специфичный для Vk
+
+		UPDATE		@atoms
+		SET			[BrandId]		= CASE WHEN [CampaignName] LIKE N'%brand%' OR [CampaignName] LIKE N'%brend%' OR [CampaignName] LIKE N'%бренд%' THEN 2 ELSE 0 END,
+					[RemarketingId] = CASE WHEN [CampaignName] LIKE N'%ремаркетинг%' OR [CampaignName] LIKE N'%ретаргетинг%' OR [CampaignName] LIKE N'%remarketing%' OR [CampaignName] LIKE N'%retargeting%' THEN 2 ELSE 0 END
+
+		UPDATE		[core].[Atoms]
+		SET			[Name]			= A.[CampaignName],
+					[BrandId]		= A.[BrandId],
+					[RemarketingId] = A.[RemarketingId]
+		FROM		[core].[Atoms]
+		INNER JOIN	@atoms AS A ON [core].[Atoms].[Id] = A.[AtomId] AND [core].[Atoms].[Version] = A.[Version]
+
+		INSERT INTO [core].[Atoms]
+					([Id], [Version], [Name], [SourceId], [CityId], [CampaignId], [StartDate], [EndDate], [IsEnabled], [IsAutoGenerated], [BrandId], [RemarketingId])
+		SELECT		A.[AtomId],
+					A.[Version],
+					A.[CampaignName]		AS [Name],
+					ISNULL(A.[SourceId], 0)	AS [SourceId],
+					0						AS [CityId],
+					0						AS [CampaignId],
+					N'2001-01-01'			AS [StartDate],
+					NULL					AS [EndDate],
+					1						AS [IsEnabled],
+					1						AS [IsAutogenerated],
+					A.[BrandId]				AS [BrandId],
+					A.[RemarketingId]		AS [RemarketingId]
+		FROM		@atoms AS A
+		LEFT JOIN	[core].[Atoms] ON [core].[Atoms].[Id] = A.[AtomId] AND [core].[Atoms].[Version] = A.[Version]
+		WHERE		[core].[Atoms].[Id] IS NULL
+
+		-- Правила привязки (AdEngineCampaigns)
+		INSERT INTO [core].[AdEngineCampaigns]
+					([AtomId], [Version], [AdEngineId], [CampaignId], [ProfileId])
+		SELECT		[AtomId], [Version], [AdEngineId], [CampaignId], [ProfileId]
+		FROM		@atoms
+
+		-- Правила привязки (BindingRulesUtm)
+		-- Проставляем AtomId из переданных @campaigns (уже должно быть заполнено, либо из core.AdEngineCampaign, либо инкремент)
+		UPDATE		B
+		SET			[AtomId]	= A.[AtomId],
+					[Version]	= A.[Version]
+		FROM		@bindingRules	AS B
+		INNER JOIN	@atoms			AS A ON B.[CampaignId] = A.[CampaignId]
+
+		-- Проставляем AtomId для атомов, не переданных в campaigns
+		UPDATE		B
+		SET			[AtomId]	= AEC.[AtomId],
+					[Version]	= AEC.[Version]
+		FROM		@bindingRules				AS B
+		INNER JOIN	[core].[AdEngineCampaigns]	AS AEC	ON B.[AtomId] IS NULL AND B.[CampaignId] = AEC.[CampaignId]
+
+		-- Удаляем дубли для новых правил привязки к уже существующим атомам (совпадает всё, включая AtomId)
+		DELETE		B
+		FROM		@bindingRules				AS B
+		INNER JOIN	[client].[BindingRulesUtm]	AS B1 ON	B.[AtomId] = B1.[AtomId] AND B.[Version] = B1.[Version] AND
+															(B.[Source] = B1.[Source] OR (B.[Source] IS NULL AND B1.[Source] IS NULL)) AND
+															(B.[Medium] = B1.[Medium] OR (B.[Medium] IS NULL AND B1.[Medium] IS NULL)) AND
+															(B.[Campaign] = B1.[Campaign] OR (B.[Campaign] IS NULL AND B1.[Campaign] IS NULL)) AND
+															(B.[HostName] = B1.[HostName] OR (B.[HostName] IS NULL AND B1.[HostName] IS NULL))
+
+		-- Маркируем "почти дубли" в правилах привязки (совпадает всё, кроме AtomId)
+		;WITH
+		d1 AS
+		(
+			SELECT		CAST(CAST(B1.[AtomId] AS NVARCHAR(MAX)) + N'/' + CAST(B1.[Version] AS NVARCHAR(MAX)) AS NVARCHAR(MAX)) AS [Atom],
+						B.[Source], B.[Medium], B.[Campaign], B.[HostName],
+						ROW_NUMBER() OVER (PARTITION BY B.[Source], B.[Medium], B.[Campaign], B.[HostName] ORDER BY B.[Source], B.[Medium], B.[Campaign], B.[HostName]) AS [RowNumber]
+			FROM		@bindingRules				AS B
+			INNER JOIN	[client].[BindingRulesUtm]	AS B1 ON	(B.[Source] = B1.[Source] OR (B.[Source] IS NULL AND B1.[Source] IS NULL)) AND
+																(B.[Medium] = B1.[Medium] OR (B.[Medium] IS NULL AND B1.[Medium] IS NULL)) AND
+																(B.[Campaign] = B1.[Campaign] OR (B.[Campaign] IS NULL AND B1.[Campaign] IS NULL)) AND
+																(B.[HostName] = B1.[HostName] OR (B.[HostName] IS NULL AND B1.[HostName] IS NULL))
+		),
+		dr ([Source], [Medium], [Campaign], [HostName], [Atom], [Level]) AS
+		(
+			SELECT		d1.[Source], d1.[Medium], d1.[Campaign], d1.[HostName], CAST(d1.[Atom] AS NVARCHAR(MAX)), 2 AS [Level] FROM d1 WHERE d1.[RowNumber] = 1
+			UNION ALL 
+			SELECT		d1.[Source], d1.[Medium], d1.[Campaign], d1.[HostName], CAST(dr.[Atom] + N', ' + d1.[Atom] AS NVARCHAR(MAX)), [Level] + 1
+			FROM		d1
+			INNER JOIN	dr ON	(d1.[RowNumber] = dr.[Level]) AND
+								(d1.[Source] = dr.[Source] OR (d1.[Source] IS NULL AND dr.[Source] IS NULL)) AND
+								(d1.[Medium] = dr.[Medium] OR (d1.[Medium] IS NULL AND dr.[Medium] IS NULL)) AND
+								(d1.[Campaign] = dr.[Campaign] OR (d1.[Campaign] IS NULL AND dr.[Campaign] IS NULL)) AND
+								(d1.[HostName] = dr.[HostName] OR (d1.[HostName] IS NULL AND dr.[HostName] IS NULL))
+
+		)
+		UPDATE		B
+		SET			B.[DuplicateRules] = B1.[DuplicateRules]
+		FROM		@bindingRules				AS B
+		INNER JOIN	(
+					SELECT		[Source], [Medium], [Campaign], [HostName], MAX([Atom]) AS [DuplicateRules]
+					FROM		dr
+					GROUP BY	[Source], [Medium], [Campaign], [HostName]
+					)							AS B1 ON	(B.[Source] = B1.[Source] OR (B.[Source] IS NULL AND B1.[Source] IS NULL)) AND
+															(B.[Medium] = B1.[Medium] OR (B.[Medium] IS NULL AND B1.[Medium] IS NULL)) AND
+															(B.[Campaign] = B1.[Campaign] OR (B.[Campaign] IS NULL AND B1.[Campaign] IS NULL)) AND
+															(B.[HostName] = B1.[HostName] OR (B.[HostName] IS NULL AND B1.[HostName] IS NULL))
+
+		-- Вставка новых правил привязки
+		INSERT INTO [client].[BindingRulesUtm]
+					([AtomId], [Version], [Source], [Medium], [Campaign], [HostName], [StartDate], [EndDate], [Priority])
+		SELECT		[AtomId], [Version], [Source], [Medium], [Campaign], [HostName],
+					N'2000-01-01' AS [StartDate], N'2100-12-31' AS [EndDate], 1000 AS [Priority]
+		FROM		@bindingRules
+
+		-- Логирование
+		INSERT INTO	[mgmt].[AutoGeneratorLog]
+					([LogType], [DateTime], [IsSent],
+					[AdEngineId], [ProfileId], [CampaignId],
+					[CampaignName], [AdWordsAdNetworkType2],
+					[AtomId], [Version], [SourceId],
+					[DirectAdNetworkType], [DirectCampaignType])
+		SELECT		N'Atom' AS [LogType], @currentDate AS [DateTime], 0 AS [IsSent],
+					[AdEngineId], [ProfileId], [CampaignId],
+					[CampaignName], [AdWordsAdNetworkType2],
+					[AtomId], [Version], [SourceId],
+					[DirectAdNetworkType], [DirectCampaignType]
+		FROM		@atoms
+
+		INSERT INTO	[mgmt].[AutoGeneratorLog]
+					([LogType], [DateTime], [IsSent],
+					[AdEngineId], [ProfileId], [CampaignId],
+					[Source], [Medium], [Campaign], [HostName], [AtomId], [Version], [DuplicateRules])
+		SELECT		N'BindingRule' AS [LogType], @currentDate AS [DateTime], 0 AS [IsSent],
+					[AdEngineId], [ProfileId], [CampaignId],
+					[Source], [Medium], [Campaign], [HostName], [AtomId], [Version], [DuplicateRules]
+		FROM		@bindingRules
+
+		INSERT INTO	[mgmt].[AutoGeneratorLog]
+					([LogType], [DateTime], [IsSent],
+					[AdEngineId], [ProfileId], [CampaignId],
+					[Error])
+		SELECT		N'Error' AS [LogType], @currentDate AS [DateTime], 0 AS [IsSent],
+					[AdEngineId], [ProfileId], [CampaignId],
+					[Error]
+		FROM		@log
+
+		-- если вдруг пришло правило привязки с CampaignId, которого нет ни в @campaigns (для генерации нового атома), ни в core.AdEngineCampaigns (для привязки к существующему атому)
+		-- то что-то пошло не так
+		INSERT INTO [mgmt].[AutoGeneratorLog]
+					([LogType], [DateTime], [IsSent],
+					[AdEngineId], [ProfileId], [CampaignId],
+					[Error])
+		SELECT		N'Error' AS [LogType], @currentDate AS [DateTime], 0 AS [IsSent],
+					[AdEngineId], [ProfileId], [CampaignId],
+					N'Неизвестный CampaignId в правиле привязки'
+		FROM		@bindingRules
+		WHERE		[AtomId] IS NULL
