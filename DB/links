@@ -3,36 +3,89 @@ private dynamic[] ReadDataForModel(string model, object[] ids)
 
 http://forum.stom.ru/index.php?app=forums&module=post&section=post&do=new_post&f=13
 
-Доброго времени суток!
+/****** Object:  StoredProcedure [crm].[FillUserRegistrations]    Script Date: 10.09.2019 20:29:11 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [crm].[FillUserRegistrations] 
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	--DELETE FROM [crm].[UserRegistrations]
+
+	-- Добавляем только новые записи
+
+	INSERT INTO [crm].[UserRegistrations] ([DateTime], [UserId], [SourceTable]) 
+	SELECT JT.[DateTime], JT.[UserId], 'Registrations' AS [SourceTable] FROM [crm].[Registrations] AS JT
+	LEFT JOIN [crm].[UserRegistrations] REG ON REG.[UserId]=JT.[UserId] AND REG.[SourceTable]='Registrations'
+	WHERE REG.[UserId] IS NULL 
+
+	INSERT INTO [crm].[UserRegistrations] ([DateTime], [UserId], [SourceTable]) 
+	SELECT DISTINCT CAST('2000-02-01' AS DATETIME) AS [DateTime], JT.[UserId], 'FixedBets' AS [SourceTable] FROM [crm].[FixedBets] JT
+	LEFT JOIN [crm].[UserRegistrations] REG ON REG.[UserId]=JT.[UserId]
+	WHERE REG.[UserId] IS NULL
+
+	INSERT INTO [crm].[UserRegistrations] ([DateTime], [UserId], [SourceTable]) 
+	SELECT DISTINCT CAST('2000-02-01' AS DATETIME) AS [DateTime], JT.[UserId], 'Payments' AS [SourceTable] FROM [crm].[Payments] JT
+	LEFT JOIN [crm].[UserRegistrations] REG ON REG.[UserId]=JT.[UserId]
+	WHERE REG.[UserId] IS NULL
+
+	INSERT INTO [crm].[UserRegistrations] ([DateTime], [UserId], [SourceTable]) 
+	SELECT DISTINCT CAST('2000-02-01' AS DATETIME) AS [DateTime], JT.[UserId], 'Profits' AS [SourceTable] FROM [crm].[Profits] JT
+	LEFT JOIN [crm].[UserRegistrations] REG ON REG.[UserId]=JT.[UserId]
+	WHERE REG.[UserId] IS NULL
+
+	INSERT INTO [crm].[UserRegistrations] ([DateTime], [UserId], [SourceTable]) 
+	SELECT DISTINCT CAST('2000-02-01' AS DATETIME) AS [DateTime], JT.[UserId], 'SeoUsersRefs' AS [SourceTable] FROM [crm].[SeoUsersRefs] JT
+	LEFT JOIN [crm].[UserRegistrations] REG ON REG.[UserId]=JT.[UserId]
+	WHERE REG.[UserId] IS NULL
+
+	INSERT INTO [crm].[UserRegistrations] ([DateTime], [UserId], [SourceTable]) 
+	SELECT DISTINCT CAST('2000-02-01' AS DATETIME) AS [DateTime], JT.[UserId], 'CupisState' AS [SourceTable] FROM [crm].[CupisState] JT
+	LEFT JOIN [crm].[UserRegistrations] REG ON REG.[UserId]=JT.[UserId]
+	WHERE REG.[UserId] IS NULL
 
 
+	INSERT INTO [crm].[UserRegistrations] ([DateTime], [UserId], [SourceTable]) 
+	SELECT DISTINCT CAST('2000-02-01' AS DATETIME) AS [DateTime], JT.[UserId], 'SettledBets' AS [SourceTable] FROM [crm].[SettledBets] JT
+	LEFT JOIN [crm].[UserRegistrations] REG ON REG.[UserId]=JT.[UserId]
+	WHERE REG.[UserId] IS NULL
 
-Подскажите пожалуйста, у ребенка 14ти лет в гипоплазия эмали коренных зубов.
+	INSERT INTO [crm].[UserRegistrations] ([DateTime], [UserId], [SourceTable]) 
+	SELECT DISTINCT CAST('2000-02-01' AS DATETIME) AS [DateTime], JT.[UserId], 'Promocodes' AS [SourceTable] FROM [crm].[Promocodes] JT
+	LEFT JOIN [crm].[UserRegistrations] REG ON REG.[UserId]=JT.[UserId]
+	WHERE REG.[UserId] IS NULL
 
-Очень ярко выражена на передних зубах. Много белых пятен, многие из которых выкрошились и на их месте стоят пломбы.
+	-- Удалим дубликаты оставив только одну запись. 
+	-- Записи с AtomId имеют < Id чем дубли и не удаляются
+	DELETE FROM [crm].[UserRegistrations] WHERE Id IN (
+		SELECT Id FROM (
+			SELECT Id, ROW_NUMBER() OVER (PARTITION BY [UserId] ORDER BY Id DESC) AS [ItemNumber]
+			-- Change the partition columns to include the ones that make the row distinct
+			FROM [crm].[UserRegistrations]
+			--WHERE CAST([DateTime] AS DATE) >= @startDate AND CAST([DateTime] AS DATE) < @endDatePlusOneDay
+		) a WHERE ItemNumber > 1 -- Keep only the first unique item
+	)
 
-Несколько коренных зубов поражены глубоким кариесом под пломбами 3х летней давности. 
+	-- Удалим дубликаты оставив только одну запись. 
+	-- Записи с AtomId имеют < Id чем дубли и не удаляются
+	DELETE FROM [crm].[UserStatuses] WHERE Id IN (
+		SELECT Id FROM (
+			SELECT Id, ROW_NUMBER() OVER (PARTITION BY [UserId] ORDER BY Id DESC ) AS [ItemNumber]
+			-- Change the partition columns to include the ones that make the row distinct
+			FROM [crm].[UserStatuses]
+			--WHERE CAST([DateTime] AS DATE) >= @startDate AND CAST([DateTime] AS DATE) < @endDatePlusOneDay
+		) a WHERE ItemNumber > 1 -- Keep only the first unique item
+	) 	
 
-Стоматолог во время лечения употребляла термин "все рыхло" в отношении дентина который прилегает к пульпе. 
-
-И это "все рыхло" она связывает непосредственно с кариесом.
-
-У меня есть сомнения что это кариес, т.к. цвет дентина не изменен относительно остальных тканей зуба.
-
-
-
-Возможно ли что "рыхлый" дентин это именно следствие гипоплазии а не кариеса?
-
-И можно ли как то отличить одно от другого? 
-
-
-
-Стоит ли при лечении коренных зубов пораженных глубоким кариесом использовать сэндвич технику со стеклоиономерным цементом? 
-
-
-
-Просто хотелось бы избежать повторного лечения зуба как можно дольше.. 2-3 года и повторное лечение это как то чересчур.
-Тем более что речь идет о том, что нужно полностью реставрировать коронки 2х зубов, и в данный момент непонятно нужно ли будет убивать нерв т.к. стоит временная пломба с кальцием.
+	-- Дуполовка
+	/*select UserId, count(*) from [crm].[UserRegistrations]
+	group by UserId
+	having count(*)>1*/
+END
 
 
 
