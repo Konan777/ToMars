@@ -1,92 +1,21 @@
 http://www.lagom.nl/lcd-test/inversion.php
-private dynamic[] ReadDataForModel(string model, object[] ids)
 
-http://forum.stom.ru/index.php?app=forums&module=post&section=post&do=new_post&f=13
+https://developers.facebook.com/docs/marketing-api/reference/ad-creative/
+https://developers.facebook.com/docs/marketing-api/insights-api
 
-/****** Object:  StoredProcedure [crm].[FillUserRegistrations]    Script Date: 10.09.2019 20:29:11 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
+импорт данных из GA, при котором будут получены данные с Custom3, без ClientId
 
-ALTER PROCEDURE [crm].[FillUserRegistrations] 
-AS
-BEGIN
-	SET NOCOUNT ON
+Параметры которые нужно получить:
 
-	--DELETE FROM [crm].[UserRegistrations]
+DateTime
+Custom3
+Source
+Medium
+Campaign
+Content
+LandingPage
+Показатель — количество сессий
 
-	-- Добавляем только новые записи
+Данные записывать в отдельную таблицу и привязывать к атомам.
 
-	INSERT INTO [crm].[UserRegistrations] ([DateTime], [UserId], [SourceTable]) 
-	SELECT JT.[DateTime], JT.[UserId], 'Registrations' AS [SourceTable] FROM [crm].[Registrations] AS JT
-	LEFT JOIN [crm].[UserRegistrations] REG ON REG.[UserId]=JT.[UserId] AND REG.[SourceTable]='Registrations'
-	WHERE REG.[UserId] IS NULL 
-
-	INSERT INTO [crm].[UserRegistrations] ([DateTime], [UserId], [SourceTable]) 
-	SELECT DISTINCT CAST('2000-02-01' AS DATETIME) AS [DateTime], JT.[UserId], 'FixedBets' AS [SourceTable] FROM [crm].[FixedBets] JT
-	LEFT JOIN [crm].[UserRegistrations] REG ON REG.[UserId]=JT.[UserId]
-	WHERE REG.[UserId] IS NULL
-
-	INSERT INTO [crm].[UserRegistrations] ([DateTime], [UserId], [SourceTable]) 
-	SELECT DISTINCT CAST('2000-02-01' AS DATETIME) AS [DateTime], JT.[UserId], 'Payments' AS [SourceTable] FROM [crm].[Payments] JT
-	LEFT JOIN [crm].[UserRegistrations] REG ON REG.[UserId]=JT.[UserId]
-	WHERE REG.[UserId] IS NULL
-
-	INSERT INTO [crm].[UserRegistrations] ([DateTime], [UserId], [SourceTable]) 
-	SELECT DISTINCT CAST('2000-02-01' AS DATETIME) AS [DateTime], JT.[UserId], 'Profits' AS [SourceTable] FROM [crm].[Profits] JT
-	LEFT JOIN [crm].[UserRegistrations] REG ON REG.[UserId]=JT.[UserId]
-	WHERE REG.[UserId] IS NULL
-
-	INSERT INTO [crm].[UserRegistrations] ([DateTime], [UserId], [SourceTable]) 
-	SELECT DISTINCT CAST('2000-02-01' AS DATETIME) AS [DateTime], JT.[UserId], 'SeoUsersRefs' AS [SourceTable] FROM [crm].[SeoUsersRefs] JT
-	LEFT JOIN [crm].[UserRegistrations] REG ON REG.[UserId]=JT.[UserId]
-	WHERE REG.[UserId] IS NULL
-
-	INSERT INTO [crm].[UserRegistrations] ([DateTime], [UserId], [SourceTable]) 
-	SELECT DISTINCT CAST('2000-02-01' AS DATETIME) AS [DateTime], JT.[UserId], 'CupisState' AS [SourceTable] FROM [crm].[CupisState] JT
-	LEFT JOIN [crm].[UserRegistrations] REG ON REG.[UserId]=JT.[UserId]
-	WHERE REG.[UserId] IS NULL
-
-
-	INSERT INTO [crm].[UserRegistrations] ([DateTime], [UserId], [SourceTable]) 
-	SELECT DISTINCT CAST('2000-02-01' AS DATETIME) AS [DateTime], JT.[UserId], 'SettledBets' AS [SourceTable] FROM [crm].[SettledBets] JT
-	LEFT JOIN [crm].[UserRegistrations] REG ON REG.[UserId]=JT.[UserId]
-	WHERE REG.[UserId] IS NULL
-
-	INSERT INTO [crm].[UserRegistrations] ([DateTime], [UserId], [SourceTable]) 
-	SELECT DISTINCT CAST('2000-02-01' AS DATETIME) AS [DateTime], JT.[UserId], 'Promocodes' AS [SourceTable] FROM [crm].[Promocodes] JT
-	LEFT JOIN [crm].[UserRegistrations] REG ON REG.[UserId]=JT.[UserId]
-	WHERE REG.[UserId] IS NULL
-
-	-- Удалим дубликаты оставив только одну запись. 
-	-- Записи с AtomId имеют < Id чем дубли и не удаляются
-	DELETE FROM [crm].[UserRegistrations] WHERE Id IN (
-		SELECT Id FROM (
-			SELECT Id, ROW_NUMBER() OVER (PARTITION BY [UserId] ORDER BY Id DESC) AS [ItemNumber]
-			-- Change the partition columns to include the ones that make the row distinct
-			FROM [crm].[UserRegistrations]
-			--WHERE CAST([DateTime] AS DATE) >= @startDate AND CAST([DateTime] AS DATE) < @endDatePlusOneDay
-		) a WHERE ItemNumber > 1 -- Keep only the first unique item
-	)
-
-	-- Удалим дубликаты оставив только одну запись. 
-	-- Записи с AtomId имеют < Id чем дубли и не удаляются
-	DELETE FROM [crm].[UserStatuses] WHERE Id IN (
-		SELECT Id FROM (
-			SELECT Id, ROW_NUMBER() OVER (PARTITION BY [UserId] ORDER BY Id DESC ) AS [ItemNumber]
-			-- Change the partition columns to include the ones that make the row distinct
-			FROM [crm].[UserStatuses]
-			--WHERE CAST([DateTime] AS DATE) >= @startDate AND CAST([DateTime] AS DATE) < @endDatePlusOneDay
-		) a WHERE ItemNumber > 1 -- Keep only the first unique item
-	) 	
-
-	-- Дуполовка
-	/*select UserId, count(*) from [crm].[UserRegistrations]
-	group by UserId
-	having count(*)>1*/
-END
-
-
-
-
+В [client].[MapAtomsUserRegistrations] искать данные в новой таблице, там где привязка идет по Custom3 (UserId)
