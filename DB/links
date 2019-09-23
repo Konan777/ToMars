@@ -1,23 +1,55 @@
 http://www.lagom.nl/lcd-test/inversion.php
 
-https://developers.facebook.com/docs/marketing-api/reference/ad-creative/
-https://developers.facebook.com/docs/marketing-api/insights-api
 
-PassportIssueDate="12/06/0018 00:00:00"
+ALTER FUNCTION [core].[OkDataRawCheckAtomCountForMapping](@fromDate datetime, @toDate datetime)
+RETURNS TABLE 
+AS
+RETURN 
+(
+	WITH OkProfilesWithGlobalSettings AS
+	(
+		SELECT OP.*,
+			(CASE WHEN ISNULL(OP.[DetailLevel],0)>0 THEN OP.[DetailLevel] ELSE ISNULL(ST.[Value],1) END) AS CurDetailLevel
+		FROM [core].[OkProfiles] OP
+		LEFT JOIN [mgmt].[Settings] ST on ST.[Key]=N'MyTargetDetailLevel'
+	)
+	, atoms AS
+	(
+			SELECT	P.[Id]				AS [ProfileId], 
+					P.[Name]			AS [ProfileName], 
+					Dr.[CampaignId], 
+					Dr.[CampaignName], 
+					Dr.[Date],
+					A.[Id]				AS [AtomId], 
+					A.[Version]
+			FROM		[core].[OkDataRaw]			AS Dr
+			LEFT JOIN	OkProfilesWithGlobalSettings			AS P	ON  Dr.[ProfileId] = P.[Id]
+			LEFT JOIN	[core].[AdEngineCampaigns]	AS Aec	ON	
+						--Dr.[CampaignId] = Aec.[CampaignId] AND [AdEngineId] = 5
+						(
+							(P.CurDetailLevel> = 1 AND Dr.[CampaignId] = Aec.[CampaignId])
+							OR (P.CurDetailLevel = 2 AND Dr.[BannerId] = Aec.[CampaignId])
+						) AND [AdEngineId] = 5
 
-импорт данных из GA, при котором будут получены данные с Custom3, без ClientId
-
-Параметры которые нужно получить:
-
-DateTime
-Custom3
-Source
-Medium
-Campaign
-Content
-LandingPage
-Показатель — количество сессий
-
-Данные записывать в отдельную таблицу и привязывать к атомам.
-
-PassportIssueDate
+			LEFT JOIN	[core].[Atoms]				AS A	ON  A.[Id] = Aec.[AtomId] AND 
+																A.[Version] = Aec.[Version] AND
+																A.[IsEnabled] = 1 AND
+																Dr.[Date] >= A.[StartDate] AND (Dr.[Date] <= A.[EndDate] OR A.[EndDate] IS NULL)
+			WHERE		Dr.[Date] >= @fromDate AND Dr.[Date] <= @toDate AND A.[Id] IS NOT NULL
+			GROUP BY	P.[Id], P.[Name], Dr.[CampaignId], Dr.[CampaignName], Dr.[Date], A.[Id], A.[Version]
+	)
+	SELECT DISTINCT
+			[ProfileId],
+			[ProfileName],
+			[CampaignId],
+			[CampaignName],
+			[AtomId],
+			[Version] 
+	FROM	atoms 
+	WHERE	[CampaignId] IN (
+								SELECT		[CampaignId] 
+								FROM		atoms 
+								GROUP BY	[CampaignId], [Date]
+								HAVING		COUNT(*) > 1 
+							)
+)
