@@ -2,6 +2,7 @@ RU515754536HK
 
 http://www.lagom.nl/lcd-test/inversion.php
 
+https://www.ozon.ru/category/fantastika-i-fentezi-40002/
 
 логика поиска "чужих" соискателей
         SELECT P.[Id] from [client].[CrmPartners] P
