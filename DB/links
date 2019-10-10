@@ -8,3 +8,12 @@ https://www.ozon.ru/category/fantastika-i-fentezi-40002/
         SELECT P.[Id] from [client].[CrmPartners] P
         LEFT join [client].[CrmApplicants] A ON A.[PartnerId]=P.[Id]
         WHERE A.[PartnerId] is  null
+
+во всех таблицах ключевых импортеров DirectDataRaw добавить 2 поля 
+НДС (cost_vat), комисиию подрядчика (cost_commision)
+написать хранимку которая пересчитывает эти 2 поля
+и бюджет с комиссией с помощью таблицы [core].[AdEngineFactors]
+учесть поле Date и если profileid=0 то по всем профилям
+убрать расчет из элли
+довавить вызов хранимки пересчета в элли
+ 
