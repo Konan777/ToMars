@@ -7,3 +7,22 @@ https://www.ozon.ru/category/fantastika-i-fentezi-40002/
 посмотреть разные ли срезы на каком то примере
 посмотреть маппинг по нескольким условиям (и пустым условиям) на каком то примере
 
+		SELECT * FROM (
+			SELECT [ApplicantId], [Date], [StageId], [ResultId],
+				ROW_NUMBER() OVER (PARTITION BY [ApplicantId] ORDER BY [CreateDate] DESC, [Id] DESC) AS [RowNum] 
+			FROM [client].[CrmLog] L
+			WHERE ISNULL([State],'') != 'cancel'
+				AND (
+					([StageId]=632 AND [ResultId]=2074)
+					OR ([StageId]=908 AND [ResultId]=3083)
+					OR ([StageId]=632 AND [ResultId]=2077)
+					OR ([StageId]=632 AND [ResultId]=2078)
+					OR ([StageId]=908 AND [ResultId]=3087)
+					OR ([StageId]=908 AND [ResultId]=3086)
+					OR ([StageId]=632 AND [ResultId]=2079)
+					OR ([StageId]=908 AND [ResultId]=3088)
+					OR [StageId] in (632, 908)
+				)
+
+		) AS Q
+		WHERE [RowNum] = 1 
