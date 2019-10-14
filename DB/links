@@ -4,8 +4,6 @@ http://www.lagom.nl/lcd-test/inversion.php
 
 https://www.ozon.ru/category/fantastika-i-fentezi-40002/
 
-логика поиска "чужих" соискателей
-        SELECT P.[Id] from [client].[CrmPartners] P
-        LEFT join [client].[CrmApplicants] A ON A.[PartnerId]=P.[Id]
-        WHERE A.[PartnerId] is  null
+посмотреть разные ли срезы на каком то примере
+посмотреть маппинг по нескольким условиям (и пустым условиям) на каком то примере
 
