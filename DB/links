@@ -2,27 +2,21 @@ RU515754536HK
 
 http://www.lagom.nl/lcd-test/inversion.php
 
-https://www.ozon.ru/category/fantastika-i-fentezi-40002/
-
 посмотреть разные ли срезы на каком то примере
 посмотреть маппинг по нескольким условиям (и пустым условиям) на каком то примере
 
-		SELECT * FROM (
-			SELECT [ApplicantId], [Date], [StageId], [ResultId],
-				ROW_NUMBER() OVER (PARTITION BY [ApplicantId] ORDER BY [CreateDate] DESC, [Id] DESC) AS [RowNum] 
-			FROM [client].[CrmLog] L
-			WHERE ISNULL([State],'') != 'cancel'
-				AND (
-					([StageId]=632 AND [ResultId]=2074)
-					OR ([StageId]=908 AND [ResultId]=3083)
-					OR ([StageId]=632 AND [ResultId]=2077)
-					OR ([StageId]=632 AND [ResultId]=2078)
-					OR ([StageId]=908 AND [ResultId]=3087)
-					OR ([StageId]=908 AND [ResultId]=3086)
-					OR ([StageId]=632 AND [ResultId]=2079)
-					OR ([StageId]=908 AND [ResultId]=3088)
-					OR [StageId] in (632, 908)
-				)
+-- Наши соискатели
+SELECT * 
+FROM [client].[CrmApplicants] A
+LEFT JOIN [client].[CrmPartners] P ON P.[Id]=A.[Id]
+LEFT JOIN [client].[CrmResumeDaxtra] D ON D.[PartnerId]=A.[PartnerId]
+--LEFT JOIN [client].[CrmResumeDaxtra] D ON D.[ApplicantId]=A.[Id]
+WHERE P.[Id] IS NOT NULL OR D.[Id] IS NOT NULL
 
-		) AS Q
-		WHERE [RowNum] = 1 
+-- Не наши соискатели
+SELECT * 
+FROM [client].[CrmApplicants] A
+LEFT JOIN [client].[CrmPartners] P ON P.[Id]=A.[Id]
+LEFT JOIN [client].[CrmResumeDaxtra] D ON D.[PartnerId]=A.[PartnerId]
+--LEFT JOIN [client].[CrmResumeDaxtra] D ON D.[ApplicantId]=A.[Id]
+WHERE P.[Id] IS NULL AND D.[Id] IS NULL
