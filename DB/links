@@ -20,3 +20,22 @@ LEFT JOIN [client].[CrmPartners] P ON P.[Id]=A.[Id]
 LEFT JOIN [client].[CrmResumeDaxtra] D ON D.[PartnerId]=A.[PartnerId]
 --LEFT JOIN [client].[CrmResumeDaxtra] D ON D.[ApplicantId]=A.[Id]
 WHERE P.[Id] IS NULL AND D.[Id] IS NULL
+
+	UPDATE [core].[Some_Test]
+		SET [AtomId]=Br.[AtomId],
+			[Version]=Br.[Version]
+	FROM [core].[Some_Test] Z
+	INNER JOIN (
+		SELECT	T.[Id], B.[AtomId], B.[Version]
+			,ROW_NUMBER() OVER (PARTITION BY T.[Id] ORDER BY B.[Priority] DESC) AS [RowNumber]
+		FROM [core].[Some_Test] AS T
+		INNER JOIN [client].[BindingRulesUtm]	AS B ON
+			(B.[Source] = T.[Source] OR B.[Source] IS NULL)
+			AND (B.[Medium] = T.[Medium] OR B.[Medium] IS NULL)
+			AND (B.[Campaign] = T.[Campaign] OR B.[Campaign] IS NULL)
+			AND (B.[HostName] = T.[HostName] OR B.[HostName] IS NULL)
+			--AND T.[Date] >= [StartDate] 
+			--AND T.[Date] <= [EndDate]
+		--WHERE T.[Date] >= @startDate AND A.[Date] < @endDatePlusOneDay
+	) AS Br ON Br.[Id]=Z.[Id]
+	WHERE Br.[RowNumber] = 1
